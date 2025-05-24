@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Academic Nightingale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #374151; /* Tailwind gray-700 */
+            background-color: #f9fafb; /* Tailwind gray-50 */
+        }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        .bg-primary-teal { background-color: #0D9488; } /* teal-700 */
+        .text-primary-teal { color: #0D9488; }
+        .border-primary-teal { border-color: #0D9488; }
+        .site-logo { height: 45px; width: auto; margin-right: 0.75rem; }
+        .footer-logo { height: 35px; width: auto; margin-right: 0.5rem; object-fit: contain; }
+
+        .btn {
+            padding: 0.6rem 1.2rem; border-radius: 0.375rem; font-weight: 600;
+            font-family: 'Montserrat', sans-serif; transition: all 0.2s ease-in-out;
+            text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex;
+            align-items: center; justify-content: center; font-size: 0.875rem; cursor: pointer;
+            line-height: 1.25; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        .btn-primary { background-color: #0D9488; color: white; }
+        .btn-primary:hover { background-color: #0F766E; }
+        .btn-secondary { background-color: transparent; color: #0D9488; border: 2px solid #0D9488; }
+        .btn-secondary:hover { background-color: #0D9488; color: white; }
+        .btn-outline { background-color: transparent; color: #4B5563; border: 1px solid #D1D5DB; }
+        .btn-outline:hover { background-color: #F3F4F6; border-color: #9CA3AF; }
+
+        .nav-auth-item { display: none; }
+        .nav-auth-item.active { display: inline-block; }
+        .nav-auth-item.mobile-active { display: block; }
+        .nav-user-email { font-size: 0.875rem; color: #4B5563; margin-right: 0.75rem; }
+
+        .dashboard-card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+        .plan-expiry-bar-bg {
+            background-color: #e5e7eb; /* gray-200 */
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .plan-expiry-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+        .fill-green { background-color: #10b981; } /* green-500 */
+        .fill-yellow { background-color: #f59e0b; } /* amber-500 */
+        .fill-red { background-color: #ef4444; } /* red-500 */
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .loading-spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px; /* Ensure it's visible */
+        }
+        .loader {
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #0D9488; /* Teal */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .empty-state-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px dashed #d1d5db; /* gray-300 */
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            color: #9ca3af; /* gray-400 */
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="bg-white shadow-md sticky top-0 z-50 w-full">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="index.html#home" class="flex items-center text-2xl font-montserrat font-bold text-primary-teal">
+                <img src="https://i.ibb.co/nNgF9T4T/Adobe-Express-file.png" alt="Academic Nightingale Logo" class="site-logo" onerror="this.onerror=null;this.src='https://placehold.co/180x45/0D9488/FFFFFF?text=Logo&font=montserrat';this.alt='Error loading logo';">
+                <span class="hidden sm:inline">Dashboard</span>
+            </a>
+            <div class="hidden lg:flex space-x-6 items-center">
+                <a href="index.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Home</a>
+                <a href="exam-plans.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Exam Plans</a>
+                <a href="cbt_exam.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">CBT Portal</a>
+                <a href="about-us.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">About Us</a>
+            </div>
+            <div id="navAuthLinksDesktopDashboard" class="hidden lg:flex items-center space-x-3">
+                <span id="navUserEmailDesktopDashboard" class="nav-auth-item nav-user-email"></span>
+                <button id="navLogoutDesktopDashboard" class="nav-auth-item btn btn-secondary text-sm">Logout</button>
+            </div>
+            <div class="lg:hidden">
+                <button id="mobile-menu-button-dashboard" class="text-gray-700 focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu-dashboard" class="lg:hidden hidden bg-white py-2 shadow-xl absolute w-full">
+            <a href="index.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Home</a>
+            <a href="exam-plans.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Exam Plans</a>
+            <a href="cbt_exam.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">CBT Portal</a>
+            <a href="about-us.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">About Us</a>
+            <div id="navAuthLinksMobileDashboard" class="px-6 py-3 mt-2 border-t border-gray-200">
+                <span id="navUserEmailMobileDashboard" class="nav-auth-item block text-center nav-user-email mb-2"></span>
+                <button id="navLogoutMobileDashboard" class="nav-auth-item block text-center w-full btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div id="dashboard-loading" class="loading-spinner-container">
+            <div class="loader"></div>
+        </div>
+
+        <div id="dashboard-content" class="hidden">
+            <section id="welcome-section" class="mb-10 fade-in-section">
+                <h1 class="text-3xl md:text-4xl font-montserrat font-bold text-gray-800">Welcome back, <span id="userDisplayName" class="text-primary-teal">User</span>!</h1>
+                <p class="text-gray-600 mt-2 text-lg">Here's an overview of your learning journey with Academic Nightingale.</p>
+            </section>
+
+            <section id="subscriptions-section" class="mb-12 fade-in-section">
+                <h2 class="text-2xl font-montserrat font-semibold text-gray-700 mb-6">My Active Subscriptions</h2>
+                <div id="activePlansContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                <div id="noActivePlansMessage" class="empty-state-card hidden">
+                    <i class="fas fa-folder-open empty-state-icon"></i>
+                    <h3 class="text-xl font-montserrat font-semibold text-gray-700 mb-2">No Active Subscriptions Yet</h3>
+                    <p class="text-gray-500 mb-6">It looks like you don't have any active exam plans. Explore our offerings to kickstart your preparation!</p>
+                    <a href="exam-plans.html" class="btn btn-primary">Explore Exam Plans</a>
+                </div>
+            </section>
+
+            <section id="quick-actions-section" class="mb-12 fade-in-section">
+                <h2 class="text-2xl font-montserrat font-semibold text-gray-700 mb-6">Quick Actions</h2>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="exam-plans.html" class="dashboard-card p-6 flex flex-col items-center text-center hover:bg-teal-50 transition-colors">
+                        <div class="bg-teal-100 text-primary-teal rounded-full w-16 h-16 flex items-center justify-center mb-4 text-2xl">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                        <h3 class="font-montserrat font-semibold text-gray-800 text-lg">Explore New Plans</h3>
+                        <p class="text-gray-500 text-sm mt-1">Discover other exam packages or our intensive refresher program.</p>
+                    </a>
+                    <a href="index.html#blog" class="dashboard-card p-6 flex flex-col items-center text-center hover:bg-teal-50 transition-colors">
+                        <div class="bg-teal-100 text-primary-teal rounded-full w-16 h-16 flex items-center justify-center mb-4 text-2xl">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <h3 class="font-montserrat font-semibold text-gray-800 text-lg">Study Tips & Blog</h3>
+                        <p class="text-gray-500 text-sm mt-1">Get the latest insights and strategies for your exam preparation.</p>
+                    </a>
+                    <a href="cbt_exam.html" class="dashboard-card p-6 flex flex-col items-center text-center hover:bg-teal-50 transition-colors">
+                         <div class="bg-teal-100 text-primary-teal rounded-full w-16 h-16 flex items-center justify-center mb-4 text-2xl">
+                            <i class="fas fa-laptop-medical"></i>
+                        </div>
+                        <h3 class="font-montserrat font-semibold text-gray-800 text-lg">Go to CBT Portal</h3>
+                        <p class="text-gray-500 text-sm mt-1">Access your active mock exams and practice sessions.</p>
+                    </a>
+                </div>
+            </section>
+
+             <section id="study-tip-section" class="fade-in-section">
+                <div class="bg-primary-teal text-white p-8 rounded-xl shadow-lg">
+                    <h3 class="font-montserrat font-bold text-2xl mb-3"><i class="fas fa-lightbulb mr-2"></i>Tip of the Day</h3>
+                    <p id="studyTipText" class="text-teal-100 text-lg leading-relaxed">Consistency is key! Even 15-30 minutes of focused study each day can make a big difference in your long-term retention and confidence.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 pt-16 pb-8 mt-16">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                       <img src="https://i.ibb.co/67Cp3Mz0/Screenshot-2025-05-22-141208.png" alt="Academic Nightingale Icon" class="footer-logo" onerror="this.onerror=null;this.src='https://placehold.co/100x35/FFFFFF/0D9488?text=Icon&font=montserrat';this.alt='Error loading icon';">
+                       <span class="text-xl font-montserrat font-bold text-white ml-2">Academic Nightingale</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Empowering Nigeria's next generation of nurses and midwives.</p>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Quick Links</h5>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white hover:underline">Home</a></li>
+                        <li><a href="exam-plans.html" class="text-gray-400 hover:text-white hover:underline">Exam Plans</a></li>
+                        <li><a href="cbt_exam.html" class="text-gray-400 hover:text-white hover:underline">CBT Portal</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white hover:underline">About Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Support</h5>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="index.html#contact" class="text-gray-400 hover:text-white hover:underline">Contact Us</a></li>
+                        <li><a href="index.html#faq" class="text-gray-400 hover:text-white hover:underline">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Legal</h5>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#privacy" class="text-gray-400 hover:text-white hover:underline">Privacy Policy</a></li>
+                        <li><a href="#terms" class="text-gray-400 hover:text-white hover:underline">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 mt-8 text-center text-sm text-gray-500">
+                &copy; <span id="currentYearDashboard"></span> Academic Nightingale. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc, Timestamp, collectionGroup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0",
+            authDomain: "excellence-cbt.firebaseapp.com",
+            projectId: "excellence-cbt",
+            storageBucket: "excellence-cbt.appspot.com",
+            messagingSenderId: "697190795343",
+            appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a",
+            measurementId: "G-836KHSYF0Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const navUserEmailDesktop = document.getElementById('navUserEmailDesktopDashboard');
+        const navLogoutDesktop = document.getElementById('navLogoutDesktopDashboard');
+        const navUserEmailMobile = document.getElementById('navUserEmailMobileDashboard');
+        const navLogoutMobile = document.getElementById('navLogoutMobileDashboard');
+        
+        const userDisplayNameEl = document.getElementById('userDisplayName');
+        const activePlansContainer = document.getElementById('activePlansContainer');
+        const noActivePlansMessageEl = document.getElementById('noActivePlansMessage');
+        const dashboardLoadingEl = document.getElementById('dashboard-loading');
+        const dashboardContentEl = document.getElementById('dashboard-content');
+        const studyTipTextEl = document.getElementById('studyTipText');
+
+        // Study Tips
+        const studyTips = [
+            "Break down your study material into smaller, manageable chunks. It's less overwhelming and helps with retention.",
+            "Practice active recall: try to retrieve information from memory rather than just rereading notes.",
+            "Use the Feynman technique: explain complex concepts in simple terms as if teaching someone else.",
+            "Don't forget to take regular breaks. The Pomodoro Technique (25 min study, 5 min break) can be very effective.",
+            "Ensure you get enough sleep. Sleep is crucial for memory consolidation and cognitive function.",
+            "Stay hydrated and maintain a balanced diet to keep your brain fueled and focused.",
+            "Simulate exam conditions when doing mock tests to reduce anxiety on the actual exam day.",
+            "Review your mistakes thoroughly. Understanding why you got a question wrong is as important as knowing the right answer."
+        ];
+
+        function displayRandomStudyTip() {
+            if (studyTipTextEl) {
+                const randomIndex = Math.floor(Math.random() * studyTips.length);
+                studyTipTextEl.textContent = studyTips[randomIndex];
+            }
+        }
+
+        // --- Authentication and Data Fetching ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in
+                if (navUserEmailDesktop) { navUserEmailDesktop.textContent = user.email; navUserEmailDesktop.classList.add('active'); }
+                if (navLogoutDesktop) navLogoutDesktop.classList.add('active');
+                if (navUserEmailMobile) { navUserEmailMobile.textContent = user.email; navUserEmailMobile.classList.add('mobile-active'); }
+                if (navLogoutMobile) navLogoutMobile.classList.add('mobile-active');
+                if (userDisplayNameEl) userDisplayNameEl.textContent = user.email.split('@')[0]; // Simple display name
+
+                await loadUserDashboardData(user.uid);
+                displayRandomStudyTip();
+                
+                dashboardLoadingEl.classList.add('hidden');
+                dashboardContentEl.classList.remove('hidden');
+                // Trigger fade-in for sections
+                document.querySelectorAll('.fade-in-section').forEach(section => section.classList.add('is-visible'));
+
+            } else {
+                // User is signed out
+                if (navUserEmailDesktop) navUserEmailDesktop.classList.remove('active');
+                if (navLogoutDesktop) navLogoutDesktop.classList.remove('active');
+                if (navUserEmailMobile) navUserEmailMobile.classList.remove('mobile-active');
+                if (navLogoutMobile) navLogoutMobile.classList.remove('mobile-active');
+                
+                // Redirect to login page if not authenticated
+                window.location.href = 'login.html?redirect=user_dashboard.html';
+            }
+        });
+
+        async function loadUserDashboardData(userId) {
+            if (!activePlansContainer || !noActivePlansMessageEl) return;
+            activePlansContainer.innerHTML = ''; // Clear previous plans
+
+            try {
+                const subscriptionsRef = collection(db, "userSubscriptions", userId, "activePlans");
+                const now = Timestamp.now();
+                // Query for active plans that have not expired
+                const q = query(subscriptionsRef, 
+                                where("status", "==", "active"),
+                                where("expiryDate", ">", now));
+                
+                const querySnapshot = await getDocs(q);
+                
+                let planPromises = []; // Initialize planPromises as an empty array
+                let plansWithDetails = [];
+
+                if (!querySnapshot.empty) {
+                    planPromises = querySnapshot.docs.map(async (subDoc) => { // Assign to planPromises here
+                        const subscription = subDoc.data();
+                        let currentPlanId = subscription.planId; 
+                        
+                        if (!currentPlanId || typeof currentPlanId !== 'string' || currentPlanId.trim() === '') {
+                            console.error(`Subscription document ${subDoc.id} for user ${userId} has a missing, non-string, or empty planId. PlanId value: '${currentPlanId}'. Subscription data:`, subscription);
+                            return { 
+                                ...subscription, 
+                                id: subDoc.id, 
+                                planTitle: subscription.planName || "Invalid Plan Data (Missing ID)", 
+                                questionCount: "N/A", 
+                                error: true 
+                            };
+                        }
+                        if (currentPlanId.includes('/')) {
+                             console.error(`Subscription document ${subDoc.id} for user ${userId} has a planId ("${currentPlanId}") containing an invalid character '/'. Subscription data:`, subscription);
+                            return { 
+                                ...subscription, 
+                                id: subDoc.id, 
+                                planTitle: subscription.planName || "Invalid Plan Data (Bad ID Char)", 
+                                questionCount: "N/A", 
+                                error: true 
+                            };
+                        }
+
+                        const planDocRef = doc(db, "cbtExams", currentPlanId);
+                        const planDocSnap = await getDoc(planDocRef);
+                        
+                        let planTitle = subscription.planName || "Unknown Plan"; 
+                        let questionCount = "N/A";
+
+                        if (planDocSnap.exists()) {
+                            planTitle = planDocSnap.data().title || planTitle; 
+                            const questionsColRef = collection(db, "cbtExams", currentPlanId, "questions");
+                            const questionsSnap = await getDocs(questionsColRef);
+                            questionCount = questionsSnap.size;
+                        } else {
+                             console.warn(`Plan document with ID '${currentPlanId}' not found in cbtExams. Subscription ID: ${subDoc.id}`);
+                        }
+                        
+                        return { ...subscription, id: subDoc.id, planTitle, questionCount, planId: currentPlanId };
+                    });
+                    plansWithDetails = await Promise.all(planPromises); // Now planPromises is defined
+                }
+
+                const validPlans = plansWithDetails.filter(plan => !plan.error);
+
+                if (querySnapshot.empty || validPlans.length === 0) {
+                    noActivePlansMessageEl.classList.remove('hidden');
+                    activePlansContainer.classList.add('hidden');
+                     if (!querySnapshot.empty && validPlans.length === 0) {
+                        console.log("No valid plans to display after filtering. All fetched subscriptions had errors.");
+                    }
+                } else {
+                    noActivePlansMessageEl.classList.add('hidden');
+                    activePlansContainer.classList.remove('hidden');
+                    validPlans.forEach(plan => {
+                        renderPlanCard(plan);
+                    });
+                }
+
+            } catch (error) {
+                console.error("Main error in loadUserDashboardData:", error); 
+                activePlansContainer.innerHTML = `<p class="text-red-500 col-span-full">Error loading your subscription data. Please try again later.</p>`;
+                noActivePlansMessageEl.classList.add('hidden'); 
+                activePlansContainer.classList.remove('hidden'); 
+            }
+        }
+
+        function renderPlanCard(plan) {
+            if (!activePlansContainer || !plan.expiryDate || typeof plan.expiryDate.toDate !== 'function') { 
+                console.error("Cannot render plan card, invalid plan data or missing expiryDate:", plan);
+                return;
+            }
+
+            const expiryDate = plan.expiryDate.toDate(); 
+            const now = new Date();
+            const diffTime = expiryDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            let totalDurationDays = 30; 
+            if (plan.durationDays) { 
+                totalDurationDays = plan.durationDays;
+            } else {
+                 const isRefresher = plan.planTitle && plan.planTitle.toLowerCase().includes("refresher");
+                 totalDurationDays = isRefresher ? 90 : 30;
+            }
+
+
+            let daysRemainingText = `${diffDays} days remaining`;
+            let progressBarColor = 'fill-green'; 
+            let progressPercent = (diffDays / totalDurationDays) * 100;
+
+            if (diffDays <= 0) {
+                daysRemainingText = "Expired";
+                progressBarColor = 'fill-red';
+                progressPercent = 0;
+            } else if (diffDays <= 7) { 
+                progressBarColor = 'fill-red';
+            } else if (diffDays <= 15) { 
+                progressBarColor = 'fill-yellow';
+            }
+            if (progressPercent < 0) progressPercent = 0;
+            if (progressPercent > 100) progressPercent = 100;
+
+            const isRefresherProgram = plan.planTitle && plan.planTitle.toLowerCase().includes("refresher");
+
+            const card = document.createElement('div');
+            card.className = 'dashboard-card p-6 flex flex-col';
+            const cbtLink = (plan.planId && typeof plan.planId === 'string' && plan.planId.trim() !== '') 
+                            ? `cbt_exam.html?examId=${plan.planId}` 
+                            : '#'; 
+
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="text-xl font-montserrat font-semibold text-primary-teal">${plan.planTitle || 'Unnamed Plan'}</h3>
+                    <span class="text-xs font-medium ${diffDays <= 7 && diffDays > 0 ? 'text-red-500 bg-red-100' : 'text-gray-500 bg-gray-100'} px-2 py-1 rounded-full">${daysRemainingText}</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-1">Expires on: ${expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                
+                ${diffDays > 0 ? `
+                <div class="my-3">
+                    <div class="plan-expiry-bar-bg">
+                        <div class="plan-expiry-bar-fill ${progressBarColor}" style="width: ${progressPercent}%;"></div>
+                    </div>
+                </div>` : ''}
+
+                <div class="text-sm text-gray-600 mt-2 mb-4 flex-grow">
+                    <p><i class="fas fa-layer-group fa-fw mr-2 text-gray-400"></i>Questions Included: <span class="font-medium">${plan.questionCount !== "N/A" ? plan.questionCount : "Info unavailable"}</span></p>
+                    ${isRefresherProgram ? '<p><i class="fas fa-chalkboard-teacher fa-fw mr-2 text-gray-400"></i>Intensive Coaching Program</p>' : ''}
+                </div>
+                
+                <a href="${cbtLink}" class="btn btn-primary w-full mt-auto ${cbtLink === '#' ? 'opacity-50 cursor-not-allowed' : ''}" ${cbtLink === '#' ? 'onclick="return false;"' : ''}>
+                    ${isRefresherProgram ? 'Access Program Content' : 'Practice Now'} <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            `;
+            activePlansContainer.appendChild(card);
+        }
+
+
+        // --- Logout Functionality ---
+        function handleLogout(buttonElement) {
+            if (buttonElement) {
+                buttonElement.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        console.log("User signed out from dashboard");
+                        // onAuthStateChanged will handle redirect to login
+                    }).catch((error) => {
+                        console.error("Sign out error:", error);
+                    });
+                });
+            }
+        }
+        handleLogout(navLogoutDesktop);
+        handleLogout(navLogoutMobile);
+
+        // --- Mobile Menu ---
+        const menuButtonDashboard = document.getElementById('mobile-menu-button-dashboard');
+        const mobileMenuDashboard = document.getElementById('mobile-menu-dashboard');
+        if (menuButtonDashboard && mobileMenuDashboard) {
+            menuButtonDashboard.addEventListener('click', () => {
+                mobileMenuDashboard.classList.toggle('hidden');
+            });
+            // Close menu when a link is clicked
+            mobileMenuDashboard.querySelectorAll('a, button').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (!item.closest('#navAuthLinksMobileDashboard') || item.id === 'navLogoutMobileDashboard') { 
+                         mobileMenuDashboard.classList.add('hidden');
+                    }
+                });
+            });
+        }
+        
+        // --- Footer Year ---
+        const currentYearSpanDashboard = document.getElementById('currentYearDashboard');
+        if (currentYearSpanDashboard) {
+            currentYearSpanDashboard.textContent = new Date().getFullYear();
+        }
+
+    </script>
+</body>
+</html>

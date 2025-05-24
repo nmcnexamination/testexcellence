@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Exam - Academic Nightingale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #374151; /* Tailwind gray-700 */
+            background-color: #f0f4f8;
+        }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        .bg-primary-teal { background-color: #0D9488; }
+        .text-primary-teal { color: #0D9488; }
+        .site-logo { height: 40px; width: auto; margin-right: 0.75rem; }
+
+        .btn {
+            padding: 0.6rem 1.2rem; border-radius: 0.375rem; font-weight: 600;
+            font-family: 'Montserrat', sans-serif; transition: all 0.2s ease-in-out;
+            text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex;
+            align-items: center; justify-content: center; font-size: 0.8rem; cursor: pointer;
+            line-height: 1.25; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        .btn-primary { background-color: #0D9488; color: white; }
+        .btn-primary:hover { background-color: #0F766E; }
+        .btn-primary:disabled { background-color: #9CA3AF; cursor: not-allowed; box-shadow: none; transform: none;}
+        .btn-secondary { background-color: #E0E7FF; color: #3730A3; border: 1px solid #C7D2FE; }
+        .btn-secondary:hover { background-color: #C7D2FE; color: #312E81; }
+        .btn-secondary:disabled { color: #9CA3AF; border-color: #D1D5DB; background-color: #F3F4F6; box-shadow: none; transform: none;}
+        .btn-danger { background-color: #EF4444; color: white; }
+        .btn-danger:hover { background-color: #DC2626; }
+        .btn-warning { background-color: #F59E0B; color: white; }
+        .btn-warning:hover { background-color: #D97706; }
+        .btn-icon { padding: 0.6rem; font-size: 0.9rem; }
+        .btn-filter { background-color: #E5E7EB; color: #374151; font-size: 0.75rem; padding: 0.4rem 0.8rem; text-transform: capitalize; }
+        .btn-filter.active { background-color: #0D9488; color: white; }
+
+
+        .nav-auth-item { display: none; }
+        .nav-auth-item.active { display: inline-block; }
+        .nav-user-email { font-size: 0.875rem; color: #4B5563; margin-right: 0.75rem; }
+        .message-card { background-color: white; padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); text-align: center; }
+
+        /* Exam Layout */
+        .exam-layout { display: flex; flex-direction: column; height: calc(100vh - 64px); } /* 64px is header height */
+        #exam-top-bar {
+            background-color: #ffffff; padding: 0.5rem 1rem; border-bottom: 1px solid #e5e7eb;
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-height: 60px;
+        }
+        #progress-container { display: flex; align-items: center; font-size: 0.8rem; color: #4B5563; flex-shrink: 0; margin-right: auto;}
+        #progress-bar-wrapper { width: 120px; height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden; margin-left: 0.5rem; }
+        #progress-bar-fill { width: 0%; height: 100%; background-color: #0D9488; transition: width 0.3s ease; }
+        #exam-timer-top { font-size: 1rem; font-weight: 700; color: #DC2626; font-family: 'Montserrat', sans-serif; margin: 0 1rem; flex-shrink: 0;}
+        .exam-actions { display: flex; align-items: center; flex-wrap: nowrap; }
+        .exam-actions .btn, .exam-actions .btn-icon { margin-left: 0.5rem; white-space: nowrap; }
+        #network-status-indicator { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 1rem; }
+        #network-status-indicator.online { background-color: #D1FAE5; color: #065F46; } /* Green-100, Green-800 */
+        #network-status-indicator.offline { background-color: #FEE2E2; color: #991B1B; } /* Red-100, Red-800 */
+
+
+        .exam-main-area { display: flex; flex-grow: 1; overflow: hidden; position: relative; }
+        #question-navigation-panel {
+            width: 240px; background-color: #f9fafb; border-right: 1px solid #e5e7eb;
+            padding: 1rem; overflow-y: auto; display: flex; flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(0);
+        }
+        #question-navigation-panel.hidden {
+            transform: translateX(-100%);
+            position: absolute; /* To allow content to take full width */
+        }
+        .nav-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;}
+        .nav-panel-title { font-size: 0.8rem; text-transform: uppercase; color: #6b7280; font-weight: 600; }
+        .question-nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 0.5rem; }
+        .question-nav-item {
+            width: 100%; height: 38px; display: flex; align-items: center; justify-content: center;
+            border: 1px solid #d1d5db; border-radius: 0.25rem; font-size: 0.875rem;
+            cursor: pointer; transition: all 0.2s ease; background-color: white;
+            position: relative;
+        }
+        .question-nav-item .fa-flag { font-size: 0.65rem; color: #EF4444; position: absolute; top: 3px; right: 3px;}
+        .question-nav-item:hover { border-color: #0D9488; background-color: #f0fdfa; }
+        .question-nav-item.current { background-color: #0D9488; color: white; border-color: #0D9488; font-weight: bold; }
+        .question-nav-item.answered { background-color: #A7F3D0; border-color: #059669; color: #047857; }
+        .question-nav-item.seen { background-color: #FFFFFF; border-color: #D1D5DB; color: #4B5563; } /* Default for seen but not answered */
+        .question-nav-item.unseen { background-color: #FFFFFF; border-color: #D1D5DB; color: #4B5563; } /* Default for unseen */
+        .question-nav-item.review-correct { background-color: #A7F3D0 !important; border-color: #059669 !important; color: #047857 !important; }
+        .question-nav-item.review-incorrect { background-color: #FEE2E2 !important; border-color: #EF4444 !important; color: #991B1B !important; }
+        .question-nav-item.review-skipped { background-color: #FEF3C7 !important; border-color: #F59E0B !important; color: #B45309 !important; }
+        .question-nav-item.review-current { /* For highlighting current q in review mode if needed */
+            outline: 2px solid #3B82F6; /* Example: blue outline */
+            outline-offset: 1px;
+        }
+
+
+        #main-exam-content {
+            flex-grow: 1; padding: 1.5rem 2rem; overflow-y: auto; background-color: #ffffff;
+            transition: margin-left 0.3s ease-in-out; /* If nav panel pushes content */
+        }
+        
+        /* Styles for #active-exam-view and #results-view-wrapper */
+        #active-exam-view.hidden, #results-view-wrapper.hidden {
+            display: none;
+        }
+
+        #quiz-content-area.single-question-view { /* No specific styles needed if it's just a container */ }
+        #question-container { /* Styling for the question text box */
+            background-color: #E0F7FA; /* Light cyan background */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.75rem; /* Space before options */
+            border-left: 5px solid #00796B; /* Darker teal accent */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        #examTitleContextInPage { font-size: 0.875rem; color: #004D40; margin-bottom: 0.75rem; font-weight: 500; }
+        #question-text { font-size: 1.25rem; line-height: 1.75; color: #263238; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+        .question-header-actions { margin-bottom: 0.75rem; text-align: right; }
+
+        /* Styles for "All Questions View" */
+        #quiz-content-area.all-questions-view { padding: 0.5rem; } /* Reduce padding for all-questions view */
+        .all-questions-view .question-block { /* Each question item in all-questions view */
+            margin-bottom: 2rem; padding: 0; /* Remove padding from question-block itself */
+            border-radius: 0.5rem; background-color: transparent; /* No distinct background for the block */
+            border: none; box-shadow: none;
+        }
+        .all-questions-view .question-block #question-container { margin-bottom: 1rem; } /* Keep question-container styling */
+        .all-questions-view .question-block:last-child { border-bottom: none; }
+        .all-questions-view .single-question-text-header { font-size: 1.1rem; font-family: 'Montserrat', sans-serif; font-weight: 600; margin-bottom: 0.5rem; color: #00796B;}
+        .all-questions-view #question-container #question-text { font-size: 1.1rem; font-weight: 500; } /* Slightly smaller text for all-view */
+        .all-questions-view .single-question-options { margin-top: 1rem;}
+
+
+        #options-container, .single-question-options { space-y-0.75rem; } /* Container for options */
+
+        .quiz-option-label {
+            display: flex; align-items: center; padding: 0.85rem 1.1rem;
+            border: 1px solid #D1D5DB; border-radius: 0.375rem;
+            cursor: pointer; transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+            background-color: #fff;
+        }
+        .quiz-option-label:hover { background-color: #F9FAFB; border-color: #A5B4FC; box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.2); }
+        .quiz-option-label.selected { background-color: #E0E7FF; border-color: #6366F1; font-weight: 600; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3); }
+        .quiz-option-input { margin-right: 0.75rem; width: 1.1rem; height: 1.1rem; accent-color: #0D9488; }
+
+        #exam-bottom-navigation {
+            margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        #exam-bottom-navigation.hidden { display: none; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; /* Ensure modal is on top */
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            background-color: white; padding: 2rem; border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-width: 500px; width: 90%;
+            transform: translateY(-20px) scale(0.95); /* Initial state for animation */
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .modal-overlay:not(.hidden) .modal-content { /* When modal is shown */
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        .modal-title { font-size: 1.5rem; font-weight: 700; font-family: 'Montserrat'; margin-bottom: 1rem; color: #1f2937;}
+        .modal-body p { margin-bottom: 1rem; color: #4B5563; line-height: 1.6;}
+        .modal-actions { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem; }
+
+        /* Enhanced Results Styling */
+        #results-view-wrapper { padding: 1rem 0; } /* Add padding to the results wrapper */
+        .results-summary-card {
+            background-color: #fff; padding: 1.5rem; border-radius: 0.75rem;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08); margin-bottom: 2rem;
+            text-align: center;
+        }
+        .results-summary-card h2 { font-family: 'Montserrat', sans-serif; color: #0D9488; font-size: 1.75rem; margin-bottom: 1rem;}
+        .score-display-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; align-items: center; margin: 1.5rem 0; }
+
+        .score-overall { text-align: center; }
+        .score-overall .score-value-main { font-size: 3rem; font-weight: 800; color: #0D9488; line-height: 1; }
+        .score-overall .score-total-main { font-size: 1rem; color: #6B7280; }
+
+        .score-percentage-container {
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            display: inline-block; /* Or block if it should take full width */
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 120px; /* Ensure it has some width */
+        }
+        .score-percentage-container.pass { background-color: #0D9488; }
+        .score-percentage-container.fail { background-color: #DC2626; }
+        .score-percentage-main {
+            font-size: 1.75rem;
+            font-weight: 700;
+            font-family: 'Montserrat';
+        }
+
+        .exam-info-details { font-size: 0.85rem; color: #4B5563; margin-top: 1rem; line-height: 1.6; }
+        .exam-info-details span { font-weight: 600; color: #1F2937; }
+
+
+        .score-breakdown-list { list-style: none; padding: 0; margin-top: 1.5rem; }
+        .score-breakdown-list li { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; font-size: 0.95rem; border-bottom: 1px solid #f3f4f6;}
+        .score-breakdown-list li:last-child { border-bottom: none; }
+        .score-breakdown-list li .label { display: flex; align-items: center; font-weight: 500;}
+        .score-breakdown-list li .label::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 0.75rem; }
+        .score-breakdown-list li .label.correct::before { background-color: #10B981; } /* Green */
+        .score-breakdown-list li .label.wrong::before { background-color: #EF4444; }   /* Red */
+        .score-breakdown-list li .label.skipped::before { background-color: #F59E0B; } /* Amber */
+        .score-breakdown-list li .count { font-weight: 600; color: #374151; }
+        .results-summary-card .text-sm.text-gray-500 { margin-top: 1.5rem; font-style: italic; }
+
+        #review-filter-buttons { margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+
+        .detailed-results-container { margin-top: 1.5rem; }
+        .result-question-item {
+            background-color: #FFFFFF; padding: 1.5rem; border-radius: 0.5rem;
+            margin-bottom: 1.5rem; border: 1px solid #E5E7EB; /* Lighter border */
+            box-shadow: 0 3px 7px rgba(0,0,0,0.07); /* Softer shadow */
+        }
+        .result-question-item .result-question-text-container { /* Container for question text in review */
+            background-color: #E8EAF6; /* Light indigo/blue for question text background */
+            padding: 1.25rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid #3F51B5; /* Indigo accent */
+        }
+        .result-question-text { /* Actual question text in review */
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1A237E; /* Dark indigo text */
+            font-family: 'Montserrat', sans-serif;
+        }
+        .result-options-list { list-style-type: none; padding-left: 0; }
+        .result-options-list li {
+            padding: 0.6rem 0.75rem; /* Slightly less padding */
+            border-bottom: 1px solid #F3F4F6; /* Very light separator */
+            border-radius: 0.25rem;
+            margin-bottom: 0.25rem; /* Small gap between options */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .result-options-list li:hover { background-color: #f9fafb; }
+        .result-options-list li:last-child { border-bottom: none; }
+
+        .result-option-text { flex-grow: 1; }
+        .result-option-indicator { margin-left: 0.75rem; font-size: 0.8rem; font-weight: 500; white-space: nowrap;}
+
+        /* Specific styles for correct/incorrect options in review */
+        .result-option.correct-answer-style { /* The actual correct option */
+            color: #065F46; /* Dark Green text */
+            background-color: #D1FAE5; /* Light Green background */
+        }
+        .result-option.user-selected-style.incorrect-answer-style { /* User's incorrect selection */
+            background-color: #FEE2E2; /* Light Red background */
+            color: #991B1B; /* Dark Red text */
+        }
+         .result-option.user-selected-style.correct-answer-style { /* User's correct selection */
+            font-weight: bold; /* Make it bold if user picked the correct one */
+        }
+
+        .result-rationale {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f0f4f8; /* Very light gray/blue */
+            border-radius: 0.375rem;
+            font-size: 0.95rem;
+            border-left: 4px solid #0D9488; /* Teal accent */
+            color: #374151;
+            line-height: 1.6;
+        }
+        .result-rationale strong { font-family: 'Montserrat', sans-serif; color: #0F766E;}
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            #exam-top-bar { flex-direction: column; align-items: stretch; height: auto; padding: 0.75rem 1rem; }
+            #progress-container { order: 1; margin-bottom: 0.5rem; width: 100%; justify-content: space-between;}
+            #progress-bar-wrapper { flex-grow: 1; margin-left: 0.5rem; }
+            #exam-timer-top { order: 2; text-align: center; margin: 0.5rem 0; width: 100%; }
+            .exam-actions { order: 3; width: 100%; display: flex; justify-content: space-around; margin-top: 0.5rem; }
+
+            .exam-main-area { flex-direction: column; }
+            #question-navigation-panel {
+                width: 100%; max-height: 160px; order: -1; /* Display on top on mobile */
+                padding: 0.5rem; border-right: none; border-bottom: 1px solid #e5e7eb;
+                transform: translateY(0); /* Reset transform for mobile flow */
+                 transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
+            }
+            #question-navigation-panel.hidden {
+                max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0;
+                border-bottom: none; overflow: hidden;
+            }
+            .question-nav-grid { grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); gap: 0.25rem;}
+            .question-nav-item { width: 30px; height: 30px; font-size: 0.75rem; }
+            #main-exam-content { padding: 1rem; } /* Reduce padding on mobile */
+            #question-container { padding: 1.25rem; margin-bottom: 1.25rem;} /* Adjust question box padding */
+            #question-text { font-size: 1.1rem; } /* Smaller question text */
+            .all-questions-view #question-container #question-text { font-size: 1rem; }
+            .result-question-item { padding: 1rem; }
+            .result-question-text { font-size: 1rem; }
+            /* Adjust score display on mobile if needed */
+            .score-circle-main { width: 100px; height: 100px; border-width: 6px; }
+            .score-overall .score-percentage-main { font-size: 1.5rem; }
+            .score-percentage-container { padding: 0.5rem 1rem; }
+            .score-display-grid {grid-template-columns: 1fr; text-align:center;} /* Stack score items */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center h-16"> <a href="index.html#home" class="flex items-center text-2xl font-montserrat font-bold text-primary-teal">
+                <img src="https://i.ibb.co/nNgF9T4T/Adobe-Express-file.png" alt="Academic Nightingale Logo" class="site-logo" onerror="this.onerror=null;this.src='https://placehold.co/180x45/0D9488/FFFFFF?text=Logo&font=montserrat';this.alt='Error loading logo';">
+            </a>
+            <div id="navAuthLinksCBT" class="flex items-center space-x-3">
+                <span id="navUserEmailCBT" class="nav-auth-item nav-user-email"></span>
+                <button id="navLogoutCBT" class="nav-auth-item btn btn-secondary text-xs !py-1.5 !px-3">Logout</button>
+                <a href="index.html" id="navHomeCBT" class="text-gray-600 hover:text-primary-teal font-medium ml-2 text-sm">Back to Home</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-16"> <div id="cbtLoadingMessage" class="message-card max-w-lg mx-auto mt-10">
+            <div role="status" class="flex justify-center items-center mb-4">
+                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-primary-teal" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 40.0107 89.3758 44.3488 88.7555 48.5437C88.2905 51.9706 87.1743 55.3379 85.4778 58.3718C84.8704 59.5098 83.9066 60.3978 82.7311 60.972C81.5556 61.5462 80.2297 61.7881 78.9079 61.676C76.3438 61.4343 74.0441 59.9769 72.5564 57.8117C71.0687 55.6466 70.4806 52.9878 70.9138 50.426C71.347 47.8642 72.7926 45.5576 75.0342 44.0095C77.2759 42.4614 80.0691 41.8387 82.8148 42.2466C83.8542 42.3948 84.8707 42.138 85.7529 41.5279C86.6351 40.9178 87.3532 40.0039 87.8314 39.0409Z" fill="currentFill"/></svg>
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p id="loadingStatusText" class="text-xl text-gray-600">Loading exam...</p>
+        </div>
+
+        <div id="accessDeniedMessage" class="message-card max-w-lg mx-auto mt-10 hidden">
+            <h2 class="text-2xl font-montserrat font-semibold text-red-500 mb-4">Access Denied</h2>
+            <p class="text-gray-700 mb-6">You do not have an active subscription to access the CBT exam. Please purchase a plan to continue.</p>
+            <a href="exam-plans.html" class="btn btn-primary">View Exam Plans</a>
+        </div>
+
+        <div id="cbtPageContent" class="exam-layout hidden">
+            <div id="exam-top-bar">
+                <div class="flex items-center flex-grow">
+                    <button id="toggle-nav-panel-btn" class="btn btn-secondary btn-icon mr-3" title="Show/Hide Question Navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div id="progress-container">
+                        <span id="question-progress-text">Question 0/0</span>
+                        <div id="progress-bar-wrapper"><div id="progress-bar-fill"></div></div>
+                    </div>
+                </div>
+                <div id="exam-timer-top">Time Left: 00:00</div>
+                <div class="exam-actions">
+                    <button id="view-mode-btn" class="btn btn-secondary btn-sm" title="Toggle View Mode">One by One</button>
+                    <button id="calculator-btn" class="btn btn-secondary btn-sm btn-icon" title="Calculator">
+                        <i class="fas fa-calculator"></i>
+                    </button>
+                     <button id="help-btn" class="btn btn-secondary btn-sm btn-icon" title="Help/Instructions">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                    <button id="submit-exam-early-btn" class="btn btn-danger btn-sm">Submit Exam</button>
+                </div>
+            </div>
+
+            <div class="exam-main-area">
+                <aside id="question-navigation-panel">
+                    <div class="nav-panel-header">
+                        <h3 class="nav-panel-title">Question Map</h3>
+                        <span id="nav-answered-count" class="text-xs text-gray-500">0/0 Answered</span>
+                    </div>
+                    <div id="question-nav-grid" class="question-nav-grid">
+                        </div>
+                </aside>
+                <section id="main-exam-content">
+                    <div id="active-exam-view"> <div id="quiz-content-area" class="single-question-view">
+                            </div>
+                        <div id="exam-bottom-navigation" class="mt-6 flex justify-between items-center">
+                            <button id="prev-question-btn" class="btn btn-secondary">Previous</button>
+                            <button id="next-question-btn" class="btn btn-primary">Next</button>
+                        </div>
+                    </div>
+
+                    <div id="results-view-wrapper" class="hidden">
+                        </div>
+                </section>
+            </div>
+        </div>
+
+        <div id="submitConfirmationModal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h2 class="modal-title">Confirm Submission</h2>
+                <div class="modal-body">
+                    <p>Are you sure you want to submit your exam? Any unanswered questions will be marked accordingly.</p>
+                </div>
+                <div class="modal-actions">
+                    <button id="cancelSubmitBtn" class="btn btn-secondary">Cancel</button>
+                    <button id="confirmSubmitBtn" class="btn btn-danger">Yes, Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="instructionsModal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="modal-title">Exam Instructions</h2>
+                    <button id="closeInstructionsBtn" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                <div class="modal-body text-sm text-left">
+                    <p>Welcome to the CBT exam!</p>
+                    <ul class="list-disc list-inside space-y-2 my-3">
+                        <li>Use the <strong>Question Map</strong> on the left (toggle with <i class="fas fa-bars"></i>/<i class="fas fa-times"></i> button) to navigate between questions or see their status.</li>
+                        <li>The <strong>Timer</strong> at the top shows your remaining time. The exam will submit automatically if time runs out.</li>
+                        <li>Use the <strong>"Previous"</strong> and <strong>"Next"</strong> buttons to move between questions in "One by One" view.</li>
+                        <li>Click <strong>"View All"</strong> to see all questions on a single page. Click "One by One" to switch back.</li>
+                        <li>You can <strong>Flag</strong> a question for review using the <i class="far fa-flag"></i> button. Flagged questions will be marked in the navigation panel.</li>
+                        <li>Click <strong>"Submit Exam"</strong> in the top bar when you are ready to finish.</li>
+                        <li>A basic <strong>Calculator</strong> is available via the <i class="fas fa-calculator"></i> button (placeholder).</li>
+                    </ul>
+                    <p>Good luck!</p>
+                </div>
+                 <div class="modal-actions">
+                    <button id="gotItInstructionsBtn" class="btn btn-primary">Got it!</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc, query, where, getDocs, Timestamp, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0",
+          authDomain: "excellence-cbt.firebaseapp.com",
+          projectId: "excellence-cbt",
+          storageBucket: "excellence-cbt.appspot.com",
+          messagingSenderId: "697190795343",
+          appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a",
+          measurementId: "G-836KHSYF0Q"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const navUserEmailCBT = document.getElementById('navUserEmailCBT');
+        const navLogoutCBT = document.getElementById('navLogoutCBT');
+        const cbtLoadingMessage = document.getElementById('cbtLoadingMessage');
+        const accessDeniedMessage = document.getElementById('accessDeniedMessage');
+        const cbtPageContent = document.getElementById('cbtPageContent');
+        const questionProgressTextEl = document.getElementById('question-progress-text');
+        const progressBarFillEl = document.getElementById('progress-bar-fill');
+        const examTimerTopEl = document.getElementById('exam-timer-top');
+        const calculatorBtn = document.getElementById('calculator-btn');
+        const submitExamEarlyBtn = document.getElementById('submit-exam-early-btn');
+        const questionNavGridEl = document.getElementById('question-nav-grid');
+        const prevQuestionBtn = document.getElementById('prev-question-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const mainExamContentEl = document.getElementById('main-exam-content'); // Parent of active-exam and results
+        const activeExamViewEl = document.getElementById('active-exam-view');
+        const resultsViewWrapperEl = document.getElementById('results-view-wrapper');
+        const quizContentAreaEl = document.getElementById('quiz-content-area'); // Inside active-exam-view
+        const examBottomNavigationEl = document.getElementById('exam-bottom-navigation'); // Inside active-exam-view
+        const toggleNavPanelBtn = document.getElementById('toggle-nav-panel-btn');
+        const questionNavigationPanelEl = document.getElementById('question-navigation-panel');
+        const viewModeBtn = document.getElementById('view-mode-btn');
+        const navAnsweredCountEl = document.getElementById('nav-answered-count');
+
+        // Modal Elements
+        const submitConfirmationModalEl = document.getElementById('submitConfirmationModal');
+        const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+        const cancelSubmitBtn = document.getElementById('cancelSubmitBtn');
+        const instructionsModalEl = document.getElementById('instructionsModal');
+        const helpBtn = document.getElementById('help-btn');
+        const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+        const gotItInstructionsBtn = document.getElementById('gotItInstructionsBtn');
+
+        // Exam State Variables
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; // Stores { questionId: selectedOptionId }
+        let questionStatus = []; // Stores 'unseen', 'seen', 'answered', 'correct', 'incorrect', 'skipped'
+        let questionFlags = []; // Stores boolean for each question
+
+        let examTimerInterval;
+        let timePerQuestionInSeconds = 90; // Default time per question
+        let totalExamTimeInSeconds = 0; // Calculated based on number of questions
+        let timeLeftInSeconds = 0;
+        let examSubmitted = false;
+        let currentViewMode = 'single'; // 'single' or 'all'
+        let examStartTimeMs = 0; // Timestamp when the exam actually started or resumed
+
+        let currentLoadedExamId = ""; // ID of the currently loaded exam
+        let currentLoadedExamTitle = "CBT Exam"; // Title of the currently loaded exam
+
+        const EXAM_ID_TO_LOAD_DEFAULT = "Nursing Council Professional Exam"; // Fallback exam ID
+        const SESSION_STORAGE_EXAM_STATE_KEY = 'cbtExamInProgressState';
+        const SESSION_STORAGE_REVIEW_STATE_KEY = 'cbtExamReviewState';
+
+
+        // --- Utility Functions ---
+        function formatTime(totalSeconds) {
+            if (totalSeconds < 0) totalSeconds = 0;
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            if (hours > 0) {
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // --- Timer Functions ---
+        function updateTimerDisplay() {
+            if (examTimerTopEl) {
+                examTimerTopEl.textContent = `Time Left: ${formatTime(timeLeftInSeconds)}`;
+            }
+        }
+
+        function startExamTimer() {
+            if (allQuestions.length === 0) return; // Don't start timer if no questions
+            if (examSubmitted) { stopExamTimer(); return; } // Don't start if already submitted
+
+            stopExamTimer(); // Clear any existing timer
+
+            // If timeLeftInSeconds is already set (e.g., from saved state), use it. Otherwise, calculate.
+            // Also ensures totalExamTimeInSeconds is correctly set if not already.
+            if (timeLeftInSeconds <= 0 || totalExamTimeInSeconds <= 0 || timeLeftInSeconds > totalExamTimeInSeconds) {
+                 totalExamTimeInSeconds = allQuestions.length * timePerQuestionInSeconds;
+                 timeLeftInSeconds = totalExamTimeInSeconds;
+            }
+            // Set examStartTimeMs if it's not already set (e.g., from a restored session)
+            // This helps calculate elapsed time accurately if the page was closed and reopened.
+            if (!examStartTimeMs) {
+                examStartTimeMs = Date.now() - ((totalExamTimeInSeconds - timeLeftInSeconds) * 1000);
+            }
+
+            updateTimerDisplay();
+            examTimerInterval = setInterval(() => {
+                if (examSubmitted) { stopExamTimer(); return; } // Double check inside interval
+                timeLeftInSeconds--;
+                updateTimerDisplay();
+                if (timeLeftInSeconds <= 0) {
+                    submitExam(true); // Auto-submit when time runs out
+                }
+            }, 1000);
+        }
+
+        function stopExamTimer() {
+            clearInterval(examTimerInterval);
+        }
+
+        // --- UI Update Functions ---
+        function updateProgressBar() {
+            if (!progressBarFillEl || !questionProgressTextEl || !navAnsweredCountEl) return;
+            const answeredCount = questionStatus.filter(s => s === 'answered').length;
+            // Progress bar shows current question position, not just answered count
+            const progressPercent = allQuestions.length > 0 ? ((currentQuestionIndex + 1) / allQuestions.length) * 100 : 0;
+            progressBarFillEl.style.width = `${progressPercent}%`;
+            questionProgressTextEl.textContent = `Q: ${currentQuestionIndex + 1}/${allQuestions.length}`;
+            navAnsweredCountEl.textContent = `${answeredCount}/${allQuestions.length} Answered`;
+        }
+
+        function renderQuestionNavigationPanel() {
+            if (!questionNavGridEl) return;
+            questionNavGridEl.innerHTML = ''; // Clear existing items
+            allQuestions.forEach((question, index) => {
+                const navItem = document.createElement('button');
+                navItem.className = 'question-nav-item';
+                navItem.textContent = index + 1;
+                navItem.dataset.questionIndex = index;
+
+                // Flag icon logic handled in updateQuestionNavigationHighlights
+                navItem.addEventListener('click', () => {
+                     jumpToQuestion(index); // Navigate to the question
+                });
+                questionNavGridEl.appendChild(navItem);
+            });
+            updateQuestionNavigationHighlights(); // Apply initial styling
+        }
+
+        function updateQuestionNavigationHighlights() {
+            if (!questionNavGridEl) return;
+            const navItems = questionNavGridEl.querySelectorAll('.question-nav-item');
+            navItems.forEach((item, index) => {
+                item.classList.remove('current', 'answered', 'seen', 'unseen', 'review-correct', 'review-incorrect', 'review-skipped', 'review-current');
+
+                let baseContent = index + 1;
+                // Always show flag if flagged, regardless of examSubmitted, but style might differ
+                if (questionFlags[index]) {
+                     item.innerHTML = `${baseContent} <i class="fas fa-flag text-xs ml-1"></i>`;
+                } else {
+                    item.textContent = baseContent;
+                }
+
+                if (examSubmitted) { // In review mode
+                    const questionId = allQuestions[index]?.id;
+                    if (questionId && userAnswers[questionId] === allQuestions[index].correctOptionId) {
+                        item.classList.add('review-correct');
+                    } else if (questionId && userAnswers[questionId] !== undefined) { // Answered but incorrect
+                        item.classList.add('review-incorrect');
+                    } else { // Skipped
+                        item.classList.add('review-skipped');
+                    }
+                    if (index === currentQuestionIndex && currentViewMode === 'single') { // Highlight current in single review
+                        item.classList.add('review-current');
+                    }
+                } else { // During active exam
+                    if (index === currentQuestionIndex && currentViewMode === 'single') {
+                        item.classList.add('current');
+                    }
+                    switch(questionStatus[index]) {
+                        case 'answered': item.classList.add('answered'); break;
+                        case 'seen': item.classList.add('seen'); break; // Use 'seen' for questions visited but not answered
+                        case 'unseen': default: item.classList.add('unseen'); break;
+                    }
+                }
+            });
+        }
+
+        function updateNavigationButtons() {
+            if(prevQuestionBtn) prevQuestionBtn.disabled = currentQuestionIndex === 0 || examSubmitted;
+            if(nextQuestionBtn) {
+                nextQuestionBtn.textContent = (currentQuestionIndex === allQuestions.length - 1 && currentViewMode === 'single' && !examSubmitted) ? "Finish" : "Next";
+                nextQuestionBtn.disabled = examSubmitted;
+                // Reset classes to default primary button style
+                nextQuestionBtn.classList.remove('btn-secondary', 'bg-green-500', 'hover:bg-green-600', 'text-white', 'border-green-500');
+                nextQuestionBtn.classList.add('btn-primary');
+            }
+        }
+
+        // --- Exam State Management ---
+        function saveExamState() {
+            if (examSubmitted) return; // Don't save if exam is already submitted
+            const state = {
+                currentLoadedExamId,
+                currentLoadedExamTitle,
+                allQuestions, // Note: Storing all questions might be large for sessionStorage. Consider storing only IDs and re-fetching if necessary. For now, keeping it simple.
+                userAnswers,
+                questionStatus,
+                questionFlags,
+                currentQuestionIndex,
+                timeLeftInSeconds,
+                examStartTimeMs, // Save the original start time
+                totalExamTimeInSeconds, // Save the total calculated time
+                currentViewMode,
+                inProgress: true
+            };
+            sessionStorage.setItem(SESSION_STORAGE_EXAM_STATE_KEY, JSON.stringify(state));
+            // console.log("Exam state saved.");
+        }
+
+        function loadSavedExamState() {
+            const savedStateString = sessionStorage.getItem(SESSION_STORAGE_EXAM_STATE_KEY);
+            if (savedStateString) {
+                console.log("Found saved exam state. Restoring...");
+                const savedState = JSON.parse(savedStateString);
+                if (savedState.inProgress && savedState.allQuestions && savedState.allQuestions.length > 0) {
+                    currentLoadedExamId = savedState.currentLoadedExamId;
+                    currentLoadedExamTitle = savedState.currentLoadedExamTitle;
+                    allQuestions = savedState.allQuestions;
+                    userAnswers = savedState.userAnswers || {};
+                    questionStatus = savedState.questionStatus || allQuestions.map(() => 'unseen');
+                    questionFlags = savedState.questionFlags || allQuestions.map(() => false);
+                    currentQuestionIndex = savedState.currentQuestionIndex || 0;
+                    examStartTimeMs = savedState.examStartTimeMs; // Restore original start time
+                    totalExamTimeInSeconds = savedState.totalExamTimeInSeconds || (allQuestions.length * timePerQuestionInSeconds); // Restore or recalc total time
+
+                    // Recalculate actual time left based on original start time and current time
+                    const elapsedTimeSinceStartMs = examStartTimeMs ? (Date.now() - examStartTimeMs) : 0;
+                    const actualTimeLeftSeconds = totalExamTimeInSeconds - Math.floor(elapsedTimeSinceStartMs / 1000);
+
+                    if (actualTimeLeftSeconds <= 0 && examStartTimeMs > 0) { // Check if time genuinely expired
+                        console.log("Saved exam state indicates time has expired. Submitting automatically.");
+                        // Directly call submit without re-rendering exam view
+                        // Need to ensure allQuestions, userAnswers etc. are set for submitExam to work
+                        examSubmitted = false; // Temporarily allow submitExam to run fully
+                        submitExam(true);
+                        return true; // Handled by submission
+                    }
+                    timeLeftInSeconds = actualTimeLeftSeconds > 0 ? actualTimeLeftSeconds : (savedState.timeLeftInSeconds || totalExamTimeInSeconds);
+
+
+                    currentViewMode = savedState.currentViewMode || 'single';
+                    examSubmitted = false; // Explicitly set to false for an in-progress exam
+
+                    if(viewModeBtn) viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One';
+                    if(submitExamEarlyBtn) submitExamEarlyBtn.disabled = false;
+                    if(toggleNavPanelBtn && questionNavigationPanelEl.classList.contains('hidden')) {
+                        questionNavigationPanelEl.classList.remove('hidden');
+                        toggleNavPanelBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        toggleNavPanelBtn.title = "Hide Question Navigation";
+                    }
+                    if(examTimerTopEl) examTimerTopEl.classList.remove('hidden');
+
+                    renderQuestionNavigationPanel(); // This calls updateQuestionNavigationHighlights
+                    renderCurrentView(); // This will show activeExamViewEl
+                    updateNavigationButtons();
+                    startExamTimer();
+
+                    if(cbtPageContent) cbtPageContent.classList.remove('hidden');
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden');
+                    if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+                    return true; // Successfully restored
+                }
+            }
+            console.log("No valid saved exam state found or state was not in progress.");
+            return false; // No valid state to restore
+        }
+
+        function saveReviewState() {
+            const reviewState = {
+                currentLoadedExamId,
+                currentLoadedExamTitle,
+                allQuestions,
+                userAnswers,
+                questionFlags,
+                questionStatus, // Save status like 'correct', 'incorrect'
+                examStartTimeMs, // For calculating time spent
+                totalExamTimeInSeconds, // For displaying total exam duration
+                isReviewMode: true
+            };
+            sessionStorage.setItem(SESSION_STORAGE_REVIEW_STATE_KEY, JSON.stringify(reviewState));
+            console.log("Review state saved.");
+        }
+
+        function loadSavedReviewState() {
+            const savedReviewString = sessionStorage.getItem(SESSION_STORAGE_REVIEW_STATE_KEY);
+            if (savedReviewString) {
+                console.log("Found saved review state. Restoring...");
+                const savedReview = JSON.parse(savedReviewString);
+                if (savedReview.isReviewMode && savedReview.allQuestions && savedReview.allQuestions.length > 0) {
+                    currentLoadedExamId = savedReview.currentLoadedExamId;
+                    currentLoadedExamTitle = savedReview.currentLoadedExamTitle;
+                    allQuestions = savedReview.allQuestions;
+                    userAnswers = savedReview.userAnswers || {};
+                    questionFlags = savedReview.questionFlags || allQuestions.map(() => false);
+                    questionStatus = savedReview.questionStatus || allQuestions.map(() => 'unseen'); // Fallback, but should be set
+                    examStartTimeMs = savedReview.examStartTimeMs;
+                    totalExamTimeInSeconds = savedReview.totalExamTimeInSeconds;
+                    examSubmitted = true; // This is key for review mode
+
+                    renderResultsPage(); // This will populate resultsViewWrapperEl
+
+                    if(cbtPageContent) cbtPageContent.classList.remove('hidden');
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden');
+                    if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+                    return true; // Successfully restored review
+                }
+            }
+            console.log("No valid saved review state found.");
+            return false; // No valid review state
+        }
+
+        function clearExamSessionStorage() {
+            sessionStorage.removeItem(SESSION_STORAGE_EXAM_STATE_KEY);
+            sessionStorage.removeItem(SESSION_STORAGE_REVIEW_STATE_KEY);
+            console.log("Exam session storage cleared.");
+        }
+
+        // --- Core Exam Logic ---
+        async function loadExam(examId) {
+            const loadingStatusTextEl = document.getElementById('loadingStatusText');
+            if (!examId) {
+                if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error: Exam ID missing.";
+                if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); // Show loading message div
+                if(cbtPageContent) cbtPageContent.classList.add('hidden');
+                if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+                return;
+            }
+            if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Loading exam questions...";
+
+            currentLoadedExamId = examId;
+            // Clear previous states ONLY if not resuming. Retake button already calls this.
+            // For initial load, it's good to clear too.
+            // clearExamSessionStorage(); // This is now handled by retake button and initial auth check flow
+
+            try {
+                const examDocRef = doc(db, "cbtExams", examId);
+                const examDocSnap = await getDoc(examDocRef);
+
+                if (examDocSnap.exists()) {
+                    currentLoadedExamTitle = examDocSnap.data().title || "CBT Exam";
+                    timePerQuestionInSeconds = examDocSnap.data().timePerQuestion || 90; // Use time from DB or default
+                } else {
+                    currentLoadedExamTitle = "CBT Exam (Default)";
+                    // examId might be invalid, handle this
+                }
+
+                const questionsRef = collection(db, "cbtExams", examId, "questions");
+                // Add orderBy if questions have a specific order field, e.g., orderBy("questionNumber")
+                // For now, fetching in default (Firestore's) order.
+                const qQuery = query(questionsRef); // Potentially add limit() here if needed
+
+                const querySnapshot = await getDocs(qQuery);
+                allQuestions = [];
+                questionStatus = [];
+                questionFlags = [];
+                querySnapshot.forEach((doc) => {
+                    allQuestions.push({ id: doc.id, ...doc.data() });
+                    questionStatus.push('unseen');
+                    questionFlags.push(false);
+                });
+
+                if (allQuestions.length > 0) {
+                    // Reset exam state for a fresh start (or retake)
+                    currentQuestionIndex = 0;
+                    userAnswers = {};
+                    examSubmitted = false;
+                    timeLeftInSeconds = 0; // Will be recalculated by startExamTimer
+                    examStartTimeMs = 0;   // Will be set by startExamTimer
+                    totalExamTimeInSeconds = 0; // Will be recalculated by startExamTimer
+                    currentViewMode = 'single';
+
+                    // UI resets
+                    if(viewModeBtn) { viewModeBtn.textContent = "View All"; viewModeBtn.disabled = false; }
+                    if(submitExamEarlyBtn) submitExamEarlyBtn.disabled = false;
+                    if(toggleNavPanelBtn && questionNavigationPanelEl.classList.contains('hidden')) {
+                        questionNavigationPanelEl.classList.remove('hidden');
+                        toggleNavPanelBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        toggleNavPanelBtn.title = "Hide Question Navigation";
+                    }
+                    if(examTimerTopEl) examTimerTopEl.classList.remove('hidden');
+
+                    // Show active exam view, hide results
+                    if(resultsViewWrapperEl) resultsViewWrapperEl.classList.add('hidden');
+                    if(activeExamViewEl) activeExamViewEl.classList.remove('hidden');
+                    if(quizContentAreaEl) quizContentAreaEl.innerHTML = ''; // Clear any old content
+                    if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden');
+
+
+                    renderQuestionNavigationPanel(); // Sets up nav items
+                    renderCurrentView(); // Displays the first question
+                    updateNavigationButtons(); // Sets initial state of prev/next buttons
+                    startExamTimer(); // Starts the countdown
+
+                    if(cbtPageContent) cbtPageContent.classList.remove('hidden');
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden');
+                    if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+                } else {
+                    if(loadingStatusTextEl) loadingStatusTextEl.textContent = "No questions available for this exam.";
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden');
+                    if(cbtPageContent) cbtPageContent.classList.add('hidden');
+                    if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Error loading exam questions for " + examId + ":", error);
+                if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error loading exam. Please try again.";
+                if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden');
+                if(cbtPageContent) cbtPageContent.classList.add('hidden');
+            }
+        }
+
+        function renderCurrentView() {
+             if (examSubmitted) {
+                renderResultsPage(); // This will hide active-exam-view and show results-view-wrapper
+                return;
+            }
+
+            // Ensure correct views are shown/hidden for an active exam
+            if(resultsViewWrapperEl) resultsViewWrapperEl.classList.add('hidden');
+            if(activeExamViewEl) activeExamViewEl.classList.remove('hidden');
+
+            if (currentViewMode === 'single') {
+                if (quizContentAreaEl) quizContentAreaEl.className = 'single-question-view';
+                displaySingleQuestion();
+                if (examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden');
+            } else { // 'all' view
+                if (quizContentAreaEl) quizContentAreaEl.className = 'all-questions-view';
+                displayAllQuestions();
+                if (examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden');
+            }
+        }
+
+        function createFlagButton(index, uniqueIdPart) { // uniqueIdPart helps differentiate buttons in different views
+            const flagBtn = document.createElement('button');
+            flagBtn.id = `flag-btn-${uniqueIdPart}-${index}`; // Ensure unique ID
+            flagBtn.className = `btn btn-sm !py-1 !px-2 text-xs ${questionFlags[index] ? 'btn-warning' : 'btn-secondary'}`;
+            flagBtn.title = questionFlags[index] ? "Unflag Question" : "Flag for Review";
+            flagBtn.innerHTML = `<i class="fas fa-flag mr-1"></i> ${questionFlags[index] ? 'Flagged' : 'Flag'}`;
+
+            flagBtn.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent option selection if flag is inside label
+                if (examSubmitted) return;
+                questionFlags[index] = !questionFlags[index];
+                // Update this specific button's appearance
+                flagBtn.innerHTML = `<i class="fas fa-flag mr-1"></i> ${questionFlags[index] ? 'Flagged' : 'Flag'}`;
+                flagBtn.classList.toggle('btn-warning', questionFlags[index]);
+                flagBtn.classList.toggle('btn-secondary', !questionFlags[index]);
+                updateQuestionNavigationHighlights(); // Update the main navigation panel
+                saveExamState();
+            });
+            return flagBtn;
+        }
+
+        function displaySingleQuestion() {
+            if (allQuestions.length === 0 || currentQuestionIndex < 0 || currentQuestionIndex >= allQuestions.length || !quizContentAreaEl) return;
+
+            const question = allQuestions[currentQuestionIndex];
+            if (!question) return;
+
+            if (questionStatus[currentQuestionIndex] === 'unseen') {
+                questionStatus[currentQuestionIndex] = 'seen';
+            }
+
+            // Create flag button dynamically to ensure event listener is fresh
+            const flagButton = createFlagButton(currentQuestionIndex, `single_${question.id}`);
+
+            quizContentAreaEl.innerHTML = `
+                <div id="question-container">
+                     <p id="examTitleContextInPage" class="text-sm text-gray-500 mb-2">${currentLoadedExamTitle}</p>
+                     <div class="question-header-actions">
+                        </div>
+                    <p id="question-text">${question.questionText}</p>
+                </div>
+                <div id="options-container" class="space-y-2 mt-4">
+                    ${(question.options && Array.isArray(question.options)) ?
+                        question.options.map(option => `
+                            <label class="quiz-option-label" for="option_single_${question.id}_${option.id}">
+                                <input type="radio" name="question_single_${question.id}" value="${option.id}"
+                                       class="quiz-option-input mr-3" id="option_single_${question.id}_${option.id}"
+                                       ${userAnswers[question.id] === option.id ? 'checked' : ''}>
+                                ${option.id}. ${option.text}
+                            </label>
+                        `).join('') : '<p class="text-red-500">Error: Options not available.</p>'
+                    }
+                </div>`;
+
+            // Append the dynamically created flag button
+            const headerActionsContainer = quizContentAreaEl.querySelector('.question-header-actions');
+            if (headerActionsContainer) {
+                headerActionsContainer.appendChild(flagButton);
+            }
+
+            const optionLabels = quizContentAreaEl.querySelectorAll('.quiz-option-label');
+            optionLabels.forEach(label => {
+                const radio = label.querySelector('input[type="radio"]');
+                // Highlight selected option based on userAnswers
+                if (radio && userAnswers[question.id] === radio.value) {
+                    label.classList.add('selected');
+                }
+                label.addEventListener('click', () => {
+                    if (examSubmitted) return;
+                    if (radio) radio.checked = true; // Ensure radio is checked
+                    userAnswers[question.id] = radio.value;
+                    questionStatus[currentQuestionIndex] = 'answered';
+                    optionLabels.forEach(lbl => lbl.classList.remove('selected')); // Deselect others
+                    label.classList.add('selected'); // Select current
+                    updateQuestionNavigationHighlights();
+                    updateProgressBar();
+                    saveExamState();
+                });
+            });
+
+            updateQuestionNavigationHighlights();
+            updateProgressBar();
+        }
+
+        function displayAllQuestions() {
+            if (!quizContentAreaEl) return;
+            quizContentAreaEl.innerHTML = ''; // Clear previous content
+
+            allQuestions.forEach((question, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'question-block';
+                questionBlock.id = `q-block-${index}`; // For scrolling
+
+                let optionsHTML = '';
+                if (question.options && Array.isArray(question.options)) {
+                    optionsHTML = question.options.map(option => `
+                        <label class="quiz-option-label ${userAnswers[question.id] === option.id ? 'selected' : ''}" for="option_all_${question.id}_${option.id}">
+                            <input type="radio" name="question_all_${question.id}" value="${option.id}"
+                                   class="quiz-option-input mr-3" id="option_all_${question.id}_${option.id}"
+                                   ${userAnswers[question.id] === option.id ? 'checked' : ''}>
+                            ${option.id}. ${option.text}
+                        </label>
+                    `).join('');
+                } else { optionsHTML = '<p class="text-red-500">Error: Options not available.</p>'; }
+
+                const flagButtonInAllView = createFlagButton(index, `all_${question.id}`);
+
+                questionBlock.innerHTML = `
+                    <div id="question-container"> {/* Re-using styling from single view for consistency */}
+                        <div class="flex justify-between items-center">
+                            <p class="single-question-text-header">Question ${index + 1}</p>
+                            <div class="question-header-actions-allview"></div> </div>
+                        <p id="question-text">${question.questionText}</p>
+                    </div>
+                    <div class="single-question-options mt-4">
+                        ${optionsHTML}
+                    </div>
+                `;
+                quizContentAreaEl.appendChild(questionBlock);
+
+                const headerActionsContainerAllView = questionBlock.querySelector('.question-header-actions-allview');
+                if (headerActionsContainerAllView) {
+                     headerActionsContainerAllView.appendChild(flagButtonInAllView);
+                }
+
+
+                const optionLabelsInBlock = questionBlock.querySelectorAll('.quiz-option-label');
+                optionLabelsInBlock.forEach(label => {
+                    const radio = label.querySelector('input[type="radio"]');
+                    label.addEventListener('click', () => {
+                        if (examSubmitted) return;
+                        if (radio) radio.checked = true;
+                        userAnswers[question.id] = radio.value;
+                        questionStatus[index] = 'answered';
+                        // Deselect other options for THIS question block only
+                        const parentBlock = label.closest('.question-block');
+                        if (parentBlock) {
+                            parentBlock.querySelectorAll('.quiz-option-label').forEach(lbl => lbl.classList.remove('selected'));
+                        }
+                        label.classList.add('selected');
+                        updateQuestionNavigationHighlights();
+                        updateProgressBar(); // Update overall progress
+                        saveExamState();
+                    });
+                });
+                // Mark as seen if rendering in "all questions" view
+                if (questionStatus[index] === 'unseen') { questionStatus[index] = 'seen'; }
+            });
+            updateQuestionNavigationHighlights(); // After all questions rendered
+            updateProgressBar(); // Update progress based on newly seen/answered questions
+        }
+
+        function jumpToQuestion(index) {
+            if (index >= 0 && index < allQuestions.length) {
+                currentQuestionIndex = index;
+                if (currentViewMode === 'single') {
+                    if (examSubmitted) { // Review mode, single question view
+                        displaySingleReviewedQuestion(); // This function handles scrolling internally
+                        const targetBlock = document.getElementById(`review-q-block-${index}`);
+                        if(targetBlock) targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        else { // Fallback scroll to top of results if specific question not found
+                             const resultsContainer = document.getElementById('results-view-wrapper');
+                             if(resultsContainer) resultsContainer.scrollTop = 0;
+                        }
+                    } else { // Active exam, single question view
+                        displaySingleQuestion();
+                        if (quizContentAreaEl) quizContentAreaEl.scrollTop = 0; // Scroll to top of question
+                    }
+                } else { // "All questions" view (active or review)
+                    const questionBlockId = examSubmitted ? `review-q-block-${index}` : `q-block-${index}`;
+                    const questionBlock = document.getElementById(questionBlockId);
+                    if (questionBlock) {
+                        questionBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // If active exam and jumping in "all" view, mark as seen if unseen
+                        if (!examSubmitted && questionStatus[index] === 'unseen') {
+                             questionStatus[index] = 'seen';
+                        }
+                    }
+                }
+                if (!examSubmitted) updateNavigationButtons();
+                updateQuestionNavigationHighlights(); // Always update highlights
+                if (!examSubmitted) updateProgressBar();
+                saveExamState(); // Save state after navigation
+            }
+        }
+
+
+        // --- Event Listeners for Navigation and Actions ---
+        if(nextQuestionBtn) {
+            nextQuestionBtn.addEventListener('click', () => {
+                if (examSubmitted) return;
+                if (currentQuestionIndex < allQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    displaySingleQuestion();
+                } else { // Last question, button should say "Finish"
+                    openSubmitModal(); // Confirm before submitting
+                }
+                updateNavigationButtons();
+                saveExamState();
+            });
+        }
+        if(prevQuestionBtn) {
+            prevQuestionBtn.addEventListener('click', () => {
+                if (examSubmitted) return;
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    displaySingleQuestion();
+                    updateNavigationButtons();
+                    saveExamState();
+                }
+            });
+        }
+
+        if(submitExamEarlyBtn) {
+            submitExamEarlyBtn.addEventListener('click', () => {
+                if (examSubmitted) return;
+                openSubmitModal();
+            });
+        }
+        if(calculatorBtn) { calculatorBtn.addEventListener('click', () => alert("Calculator functionality to be implemented.")); } // Placeholder
+
+        if(toggleNavPanelBtn) {
+            toggleNavPanelBtn.addEventListener('click', () => {
+                questionNavigationPanelEl.classList.toggle('hidden');
+                toggleNavPanelBtn.innerHTML = questionNavigationPanelEl.classList.contains('hidden') ?
+                    '<i class="fas fa-bars"></i>' : '<i class="fas fa-times"></i>';
+                toggleNavPanelBtn.title = questionNavigationPanelEl.classList.contains('hidden') ?
+                    "Show Question Navigation" : "Hide Question Navigation";
+            });
+        }
+        if (viewModeBtn) {
+            viewModeBtn.addEventListener('click', () => {
+                if (examSubmitted) { // In review mode
+                     currentViewMode = currentViewMode === 'single' ? 'all' : 'single';
+                     viewModeBtn.textContent = currentViewMode === 'single' ? "View All (Review)" : "One by One (Review)";
+                     viewModeBtn.title = currentViewMode === 'single' ? "Switch to All Questions Review" : "Switch to One by One Review";
+                     if (currentViewMode === 'single') {
+                        currentQuestionIndex = 0; // Reset to first question for single review
+                        displaySingleReviewedQuestion();
+                     } else {
+                        renderDetailedReview(document.querySelector('#review-filter-buttons .btn-filter.active')?.dataset.filter || 'all');
+                     }
+                     return;
+                }
+                // Active exam mode
+                currentViewMode = currentViewMode === 'single' ? 'all' : 'single';
+                viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One';
+                viewModeBtn.title = currentViewMode === 'single' ? 'Switch to All Questions View' : 'Switch to One by One View';
+                renderCurrentView(); // Re-render based on new view mode
+                updateNavigationButtons(); // Next/Prev buttons might hide/show
+                saveExamState();
+            });
+        }
+
+        // Modal Functions & Event Listeners
+        function openSubmitModal() { if(submitConfirmationModalEl) submitConfirmationModalEl.classList.remove('hidden'); }
+        function closeSubmitModal() { if(submitConfirmationModalEl) submitConfirmationModalEl.classList.add('hidden');}
+        function openInstructionsModal() { if(instructionsModalEl) instructionsModalEl.classList.remove('hidden'); }
+        function closeInstructionsModal() { if(instructionsModalEl) instructionsModalEl.classList.add('hidden'); }
+
+        if(confirmSubmitBtn) confirmSubmitBtn.addEventListener('click', () => {
+            submitExam(); // Submit without timedOut flag
+            closeSubmitModal();
+        });
+        if(cancelSubmitBtn) cancelSubmitBtn.addEventListener('click', closeSubmitModal);
+
+        if(helpBtn) helpBtn.addEventListener('click', openInstructionsModal);
+        if(closeInstructionsBtn) closeInstructionsBtn.addEventListener('click', closeInstructionsModal);
+        if(gotItInstructionsBtn) gotItInstructionsBtn.addEventListener('click', closeInstructionsModal);
+
+
+        // --- Results Page Logic ---
+        function renderResultsPage(timedOut = false) {
+            console.log("renderResultsPage called. Timed out:", timedOut);
+            examSubmitted = true; // Mark exam as submitted
+            stopExamTimer();
+
+            // Hide active exam elements and show results elements
+            if(activeExamViewEl) activeExamViewEl.classList.add('hidden');
+            if(resultsViewWrapperEl) resultsViewWrapperEl.classList.remove('hidden');
+
+            if(examTimerTopEl) examTimerTopEl.classList.add('hidden'); // Hide timer display
+            if(submitExamEarlyBtn) { submitExamEarlyBtn.disabled = true; submitExamEarlyBtn.classList.add('hidden');}
+            if(viewModeBtn) {
+                viewModeBtn.disabled = false; // Enable view mode toggle for review
+                currentViewMode = 'all'; // Default to all questions review
+                viewModeBtn.textContent = "One by One (Review)";
+                viewModeBtn.title = "Switch to One by One Review";
+            }
+            if(examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden'); // Hide prev/next during results
+
+            let score = 0;
+            let correctCount = 0;
+            let wrongCount = 0;
+            let skippedCount = 0;
+            const examDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const timeSpentMs = examStartTimeMs > 0 ? (Date.now() - examStartTimeMs) : totalExamTimeInSeconds * 1000; // Use total if start time unknown
+            const timeSpentFormatted = formatTime(Math.floor(timeSpentMs / 1000));
+
+
+            allQuestions.forEach((q, index) => {
+                const userAnswer = userAnswers[q.id];
+                if (userAnswer === q.correctOptionId) {
+                    correctCount++;
+                    questionStatus[index] = 'correct'; // Update status for review
+                } else if (userAnswer !== undefined) { // Answered, but not correct
+                    wrongCount++;
+                    questionStatus[index] = 'incorrect';
+                } else { // Not answered
+                    skippedCount++;
+                    questionStatus[index] = 'skipped';
+                }
+            });
+            score = correctCount;
+            updateQuestionNavigationHighlights(); // Update nav panel for review colors
+
+            const percentageScore = allQuestions.length > 0 ? ((score / allQuestions.length) * 100).toFixed(1) : 0;
+            const percentageContainerClass = parseFloat(percentageScore) >= 50 ? 'score-percentage-container pass' : 'score-percentage-container fail';
+
+
+            let summaryHTML = `
+                <div class="results-summary-card">
+                    <h2 class="text-3xl font-bold text-primary-teal mb-1">Exam Results</h2>
+                    <p class="text-xs text-gray-500 mb-4">For: ${currentLoadedExamTitle} | Date: ${examDate}</p>
+                    ${timedOut ? "<p class='text-red-500 font-semibold mb-3'>Time's up! Exam submitted automatically.</p>" : ""}
+                    <div class="score-display-grid">
+                        <div class="score-overall">
+                            <div class="score-value-main">${score} / ${allQuestions.length}</div>
+                            <div class="${percentageContainerClass} mt-2">
+                                <p class="score-percentage-main">${percentageScore}%</p>
+                            </div>
+                        </div>
+                        <ul class="score-breakdown-list">
+                            <li><span class="label correct">Correct</span> <span class="count">${correctCount}</span></li>
+                            <li><span class="label wrong">Wrong</span> <span class="count">${wrongCount}</span></li>
+                            <li><span class="label skipped">Skipped</span> <span class="count">${skippedCount}</span></li>
+                            <li class="pt-2 mt-2 border-t border-gray-200"><span class="label">Time Spent</span> <span class="count">${timeSpentFormatted}</span></li>
+                            <li><span class="label">Total Exam Time</span> <span class="count">${formatTime(totalExamTimeInSeconds)}</span></li>
+                        </ul>
+                    </div>
+                    <div class="mt-6">
+                        <button id="retakeExamBtnResults" class="btn btn-primary">Retake Exam</button>
+                        <a href="index.html" class="btn btn-secondary mt-4 sm:mt-0 sm:ml-2">Back to Home</a>
+                    </div>
+                </div>
+                <div id="review-filter-buttons" class="my-4 flex justify-center gap-2 flex-wrap">
+                    <button class="btn btn-filter active" data-filter="all">All</button>
+                    <button class="btn btn-filter" data-filter="correct">Correct</button>
+                    <button class="btn btn-filter" data-filter="incorrect">Incorrect</button>
+                    <button class="btn btn-filter" data-filter="skipped">Skipped</button>
+                    <button class="btn btn-filter" data-filter="flagged">Flagged</button>
+                </div>
+                <div id="detailed-results-container" class="detailed-results-container">
+                    </div>`;
+
+            if(resultsViewWrapperEl) resultsViewWrapperEl.innerHTML = summaryHTML;
+
+            // Re-attach event listeners for buttons inside summaryHTML
+            const retakeBtn = document.getElementById('retakeExamBtnResults');
+            if (retakeBtn) {
+                retakeBtn.addEventListener('click', () => {
+                    clearExamSessionStorage(); // Clear all session states
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); // Show main loading
+                    if(cbtPageContent) cbtPageContent.classList.add('hidden'); // Hide whole exam/results page
+                    const loadingStatusTextEl = document.getElementById('loadingStatusText');
+                    if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Restarting exam...";
+
+                    const examIdForRetake = currentLoadedExamId || EXAM_ID_TO_LOAD_DEFAULT;
+                    loadExam(examIdForRetake); // This will set up the active exam view
+                });
+            }
+
+            document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderDetailedReview(e.target.dataset.filter);
+                });
+            });
+
+            renderDetailedReview('all'); // Initial detailed review display
+            saveReviewState(); // Save this state so it can be reloaded if page refreshes
+        }
+
+        function displaySingleReviewedQuestion() {
+            const container = document.getElementById('detailed-results-container');
+            if (!container || allQuestions.length === 0 || !examSubmitted) return;
+
+            // Ensure currentQuestionIndex is valid for review
+            if (currentQuestionIndex < 0 || currentQuestionIndex >= allQuestions.length) {
+                currentQuestionIndex = 0; // Default to first question
+            }
+
+            const q = allQuestions[currentQuestionIndex];
+            const userAnswer = userAnswers[q.id];
+
+            let optionsHTML = (q.options && Array.isArray(q.options)) ? q.options.map(opt => {
+                let liClass = 'result-option';
+                let indicator = '';
+                if (opt.id === q.correctOptionId) {
+                    liClass += ' correct-answer-style';
+                    indicator = ' <i class="fas fa-check text-green-600"></i> (Correct)';
+                }
+                if (userAnswer === opt.id) {
+                    liClass += ' user-selected-style';
+                    if (opt.id === q.correctOptionId) { // User selected the correct answer
+                        indicator += ' (Your Pick)';
+                        // class 'correct-answer-style' already added
+                    } else { // User selected an incorrect answer
+                        liClass += ' incorrect-answer-style';
+                        indicator = ` <i class="fas fa-times text-red-600"></i> (Your Pick)${indicator.includes('(Correct)') ? indicator.replace(' (Correct)', '') : ''}`;
+                    }
+                }
+                return `<li class="${liClass}">
+                            <span class="result-option-text">${opt.id}. ${opt.text}</span>
+                            <span class="result-option-indicator">${indicator}</span>
+                        </li>`;
+            }).join('') : '<li>No options found.</li>';
+
+            container.innerHTML = `
+                <h3 class="text-2xl font-semibold text-gray-800 my-4 text-center font-montserrat">Reviewing Question ${currentQuestionIndex + 1} of ${allQuestions.length}</h3>
+                <div class="result-question-item" id="review-q-block-${currentQuestionIndex}">
+                    <div class="result-question-text-container">
+                        <div class="flex justify-between items-center">
+                            <p class="result-question-text">${currentQuestionIndex + 1}. ${q.questionText}</p>
+                            ${questionFlags[currentQuestionIndex] ? '<i class="fas fa-flag text-red-500" title="Flagged for review"></i>' : ''}
+                        </div>
+                    </div>
+                    <ul class="result-options-list">
+                        ${optionsHTML}
+                    </ul>
+                    ${q.rationale ? `<div class="result-rationale"><strong>Rationale:</strong> ${q.rationale}</div>` : ''}
+                </div>`;
+
+            if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden'); // Show Prev/Next for single review
+            updateNavigationButtons(); // Update Prev/Next button states for review
+            updateQuestionNavigationHighlights(); // Highlight in nav panel
+        }
+
+
+        function renderDetailedReview(filter = 'all') {
+            const container = document.getElementById('detailed-results-container');
+            if (!container || !examSubmitted) return; // Only render if in review mode
+
+            if (currentViewMode === 'single' && examSubmitted) {
+                displaySingleReviewedQuestion(); // Handle single question review separately
+                if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden');
+                return;
+            }
+            // If "all" mode for review, hide bottom navigation
+            if(examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden');
+
+
+            let reviewHTML = `<h3 class="text-2xl font-semibold text-gray-800 my-6 text-center font-montserrat hidden">Detailed Question Review</h3>`; // Title for all questions review
+            reviewHTML += allQuestions.filter((q, index) => {
+                const isCorrect = userAnswers[q.id] === q.correctOptionId;
+                const isAnswered = userAnswers[q.id] !== undefined;
+                const isSkipped = !isAnswered;
+
+                if (filter === 'all') return true;
+                if (filter === 'correct') return isCorrect;
+                if (filter === 'incorrect') return isAnswered && !isCorrect;
+                if (filter === 'skipped') return isSkipped;
+                if (filter === 'flagged') return questionFlags[index];
+                return true; // Should not happen if filter is valid
+            }).map((q, filteredArrayIndex) => {
+                 const displayIndex = allQuestions.findIndex(aq => aq.id === q.id); // Original index
+                 const userAnswer = userAnswers[q.id];
+
+                return `
+                <div class="result-question-item" id="review-q-block-${displayIndex}">
+                    <div class="result-question-text-container">
+                        <div class="flex justify-between items-center">
+                            <p class="result-question-text">${displayIndex + 1}. ${q.questionText}</p>
+                            ${questionFlags[displayIndex] ? '<i class="fas fa-flag text-red-500" title="Flagged for review"></i>' : ''}
+                        </div>
+                    </div>
+                    <ul class="result-options-list">
+                        ${(q.options && Array.isArray(q.options) ? q.options.map(opt => {
+                            let liClass = 'result-option';
+                            let indicator = '';
+                            if (opt.id === q.correctOptionId) {
+                                liClass += ' correct-answer-style';
+                                indicator = ' <i class="fas fa-check text-green-600"></i> (Correct)';
+                            }
+                            if (userAnswer === opt.id) {
+                                liClass += ' user-selected-style';
+                                if (opt.id === q.correctOptionId) {
+                                    indicator += ' (Your Pick)';
+                                } else {
+                                    liClass += ' incorrect-answer-style';
+                                    indicator = ` <i class="fas fa-times text-red-600"></i> (Your Pick)${indicator.includes('(Correct)') ? indicator.replace(' (Correct)', '') : ''}`;
+                                }
+                            }
+                            return `<li class="${liClass}">
+                                        <span class="result-option-text">${opt.id}. ${opt.text}</span>
+                                        <span class="result-option-indicator">${indicator}</span>
+                                    </li>`;
+                        }).join('') : '<li>No options found.</li>')}
+                    </ul>
+                    ${q.rationale ? `<div class="result-rationale"><strong>Rationale:</strong> ${q.rationale}</div>` : ''}
+                </div>`;
+            }).join('');
+            container.innerHTML = reviewHTML;
+        }
+
+
+        function submitExam(timedOut = false) {
+            if (examSubmitted && !timedOut) { // If already submitted by user click, and this isn't a timeout call
+                 console.log("Exam already submitted by user click. Aborting duplicate submission.");
+                 return;
+            }
+            console.log("submitExam called. examSubmitted (before set):", examSubmitted, "Timed out:", timedOut);
+            examSubmitted = true; // Set submission flag
+            renderResultsPage(timedOut); // Display results
+            sessionStorage.removeItem(SESSION_STORAGE_EXAM_STATE_KEY); // Clear in-progress state
+        }
+
+        // --- User Authentication and Subscription Check ---
+        async function checkUserSubscription(userId) {
+            if (!userId) return false;
+            try {
+                const subscriptionsRef = collection(db, "userSubscriptions", userId, "activePlans");
+                const now = Timestamp.now();
+                const q = query(subscriptionsRef,
+                                where("status", "==", "active"),
+                                where("expiryDate", ">", now));
+                const querySnapshot = await getDocs(q);
+                return !querySnapshot.empty; // True if any active subscription found
+            } catch (error) {
+                console.error("cbt_exam.html - Error checking subscription:", error);
+                return false; // Assume no subscription on error
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            const loadingStatusTextEl = document.getElementById('loadingStatusText');
+            if (user) {
+                if(navUserEmailCBT) { navUserEmailCBT.textContent = user.email; navUserEmailCBT.classList.add('active'); }
+                if(navLogoutCBT) navLogoutCBT.classList.add('active');
+
+                if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Verifying subscription...";
+                const hasActiveSubscription = await checkUserSubscription(user.uid);
+
+                if (hasActiveSubscription) {
+                    if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+
+                    // Try to load review state first, then in-progress exam, then new exam
+                    if (loadSavedReviewState()) {
+                        console.log("Loaded saved review state.");
+                    } else if (loadSavedExamState()) {
+                        console.log("Loaded saved in-progress exam state.");
+                    } else {
+                        console.log("No saved state, loading new exam.");
+                        clearExamSessionStorage(); // Ensure clean slate for new exam
+                        await loadExam(EXAM_ID_TO_LOAD_DEFAULT);
+                    }
+                } else {
+                    if(cbtPageContent) cbtPageContent.classList.add('hidden');
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden');
+                    if(accessDeniedMessage) accessDeniedMessage.classList.remove('hidden');
+                }
+            } else { // User is not signed in
+                if(navUserEmailCBT) navUserEmailCBT.classList.remove('active');
+                if(navLogoutCBT) navLogoutCBT.classList.remove('active');
+                if(cbtPageContent) cbtPageContent.classList.add('hidden');
+                if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+                if(cbtLoadingMessage) {
+                    cbtLoadingMessage.classList.remove('hidden');
+                    if(loadingStatusTextEl) loadingStatusTextEl.innerHTML = '<p class="text-xl text-red-500">Access Denied. Please log in to continue. Redirecting...</p>';
+                }
+                setTimeout(() => {
+                    sessionStorage.setItem('redirectAfterLogin', 'cbt_exam.html'); // Save intended page
+                    window.location.href = 'login.html';
+                }, 2500);
+            }
+        });
+
+        if (navLogoutCBT) {
+            navLogoutCBT.addEventListener('click', () => {
+                clearExamSessionStorage(); // Clear any saved exam state on logout
+                signOut(auth).catch((error) => console.error("Sign out error:", error));
+                // onAuthStateChanged will handle redirect to login
+            });
+        }
+
+        // --- Network Status (Optional, for future enhancement) ---
+        const networkStatusEl = document.getElementById('network-status-indicator');
+        function updateNetworkStatusDisplay() {
+            if (networkStatusEl) {
+                if (navigator.onLine) {
+                    networkStatusEl.textContent = 'Online';
+                    networkStatusEl.className = 'online';
+                } else {
+                    networkStatusEl.textContent = 'Offline - Progress saved locally';
+                    networkStatusEl.className = 'offline';
+                }
+            }
+        }
+        // window.addEventListener('online', updateNetworkStatusDisplay);
+        // window.addEventListener('offline', updateNetworkStatusDisplay);
+        // updateNetworkStatusDisplay(); // Initial check
+
+    </script>
+</body>
+</html>

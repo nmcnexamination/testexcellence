@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our NMCN CBT Exam Plans - Academic Nightingale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #374151; /* Tailwind gray-700 */
+            scroll-behavior: smooth;
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .bg-primary-teal {
+            background-color: #0D9488; /* teal-700 */
+        }
+        .text-primary-teal {
+            color: #0D9488; /* teal-700 */
+        }
+        .border-primary-teal {
+            border-color: #0D9488; /* teal-700 */
+        }
+        .accent-gold {
+            color: #FFD700;
+        }
+        .bg-accent-gold {
+            background-color: #FFD700;
+        }
+        .bg-refresher-gradient {
+             background-image: linear-gradient(to bottom right, #0F766E, #14B8A6);
+        }
+        .text-refresher-accent {
+            color: #CCFEF8;
+        }
+         .custom-list-refresher li::marker {
+            color: #5EEAD4;
+        }
+        .btn-refresher {
+            background-color: white;
+            color: #0F766E;
+        }
+        .btn-refresher:hover {
+            background-color: #F0FDFA;
+        }
+        .text-ph-cyan {
+            color: #0891B2;
+        }
+        .border-ph-cyan {
+            border-color: #0891B2;
+        }
+         .custom-list-ph li::marker {
+            color: #0891B2;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer; /* Ensure buttons have pointer cursor */
+        }
+        .btn-primary {
+            background-color: #0D9488;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary:hover {
+            background-color: #0F766E;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #0D9488;
+            border: 2px solid #0D9488;
+        }
+        .btn-secondary:hover {
+            background-color: #0D9488;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-ph-cyan {
+            background-color: #0891B2;
+            color: white;
+        }
+        .btn-ph-cyan:hover {
+            background-color: #0E7490;
+            transform: translateY(-2px);
+        }
+        .site-logo {
+            height: 45px;
+            width: auto;
+            margin-right: 0.75rem;
+            object-fit: contain;
+        }
+        .footer-logo {
+            height: 35px;
+            width: auto;
+            margin-right: 0.5rem;
+            object-fit: contain;
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .plan-detail-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            overflow: hidden;
+        }
+        .plan-detail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        .custom-list li::marker {
+            color: #0D9488;
+        }
+        .hero-bg-pattern {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .stethoscope-svg {
+            width: 2rem;
+            height: 2rem;
+            color: #9CA3AF;
+            opacity: 0.6;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .modal-close-btn {
+            background-color: #E5E7EB;
+            color: #374151;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background-color: #D1D5DB;
+        }
+        /* Styles for auth status in nav */
+        .nav-auth-item { display: none; } /* Hidden by default */
+        .nav-auth-item.active { display: inline-block; } /* Shown by JS for desktop */
+        .nav-auth-item.mobile-active { display: block; } /* Shown by JS for mobile */
+        .nav-user-email {
+            font-size: 0.875rem; /* text-sm */
+            color: #4B5563; /* gray-600 */
+            margin-right: 0.75rem; /* mr-3 */
+        }
+         /* Loading spinner for modal */
+        .loader {
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #0D9488; /* Teal */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="bg-white shadow-lg sticky top-0 z-50 w-full">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="index.html#home" class="flex items-center text-2xl font-montserrat font-bold text-primary-teal">
+                <img src="https://i.ibb.co/67Cp3Mz0/Screenshot-2025-05-22-141208.png" alt="Academic Nightingale Logo" class="site-logo" onerror="this.onerror=null;this.src='https://placehold.co/180x45/0D9488/FFFFFF?text=Logo&font=montserrat';this.alt='Error loading logo';">
+            </a>
+            <div class="hidden lg:flex space-x-6 items-center">
+                <a href="index.html#home" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Home</a>
+                <a href="about-us.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">About Us</a>
+                <a href="#plans-top" class="text-primary-teal font-semibold transition duration-300">Exam Plans</a>
+                <a href="index.html#features" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Features</a>
+                <a href="index.html#testimonials" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Testimonials</a>
+                <a href="index.html#blog" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Blog</a>
+                <a href="index.html#contact" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Contact</a>
+            </div>
+            <div id="navAuthLinksDesktopPlans" class="hidden lg:flex items-center space-x-3">
+                <a href="login.html" id="navLoginDesktopPlans" class="nav-auth-item text-gray-600 hover:text-primary-teal font-semibold py-2 px-4 rounded-lg text-sm transition duration-300">Login</a>
+                <a href="signup.html" id="navSignupDesktopPlans" class="nav-auth-item btn btn-primary text-sm">Sign Up Free</a>
+                <span id="navUserEmailDesktopPlans" class="nav-auth-item nav-user-email"></span>
+                <button id="navLogoutDesktopPlans" class="nav-auth-item btn btn-secondary text-sm">Logout</button>
+            </div>
+            <div class="lg:hidden">
+                <button id="mobile-menu-button-plans" class="text-gray-700 focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu-plans" class="lg:hidden hidden bg-white py-2 shadow-xl absolute w-full">
+            <a href="index.html#home" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Home</a>
+            <a href="about-us.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">About Us</a>
+            <a href="#plans-top" class="block px-6 py-3 text-primary-teal bg-teal-50 transition duration-300 font-semibold">Exam Plans</a>
+            <a href="index.html#features" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Features</a>
+            <a href="index.html#testimonials" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Testimonials</a>
+            <a href="index.html#blog" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Blog</a>
+            <a href="index.html#contact" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Contact</a>
+            <div id="navAuthLinksMobilePlans" class="px-6 py-3 mt-2 border-t border-gray-200">
+                <a href="login.html" id="navLoginMobilePlans" class="nav-auth-item block text-center w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 mb-2">Login</a>
+                <a href="signup.html" id="navSignupMobilePlans" class="nav-auth-item block text-center w-full btn btn-primary mb-2">Sign Up Free</a>
+                <span id="navUserEmailMobilePlans" class="nav-auth-item block text-center nav-user-email mb-2"></span>
+                <button id="navLogoutMobilePlans" class="nav-auth-item block text-center w-full btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="plans-top">
+        <section class="bg-primary-teal text-white py-20 md:py-28 hero-bg-pattern fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-5xl font-montserrat font-extrabold mb-4">Find Your Perfect NMCN CBT Prep Plan</h1>
+                <p class="text-lg md:text-xl text-teal-100 max-w-3xl mx-auto">
+                    Tailored solutions to meet your unique study needs, from intensive coaching to specialized mock exams. Start your journey to success today!
+                </p>
+            </div>
+        </section>
+
+        <section id="refresher-plan-detail" class="py-16 md:py-24 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="plan-detail-card bg-refresher-gradient text-white p-8 md:p-12 rounded-xl shadow-2xl lg:mx-auto lg:max-w-4xl">
+                    <div class="text-center mb-8">
+                        <span class="bg-white text-teal-700 text-sm font-bold px-5 py-2 rounded-full uppercase tracking-wider shadow-lg border-2 border-teal-500">Premium Offering</span>
+                        <h2 class="text-4xl font-montserrat font-bold mt-6 mb-2">Refresher Program</h2>
+                        <p class="text-xl text-refresher-accent mb-4">3-Month Intensive Coaching & Exam Mastery</p>
+                        <p class="text-5xl font-montserrat font-extrabold">₦45,000 <span class="text-2xl text-teal-200">/Month</span></p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-montserrat font-semibold mb-4">Who Is This Program For?</h3>
+                            <p class="mb-6 text-teal-100 leading-relaxed">
+                                Ideal for students seeking a comprehensive review, personalized guidance to overcome specific challenges, or those retaking the exam. This intensive 3-month program provides the structure, support, and in-depth knowledge needed to build unshakable confidence and achieve outstanding results.
+                            </p>
+                             <h3 class="text-2xl font-montserrat font-semibold mb-4">Program Highlights:</h3>
+                        </div>
+                        <div>
+                            <ul class="custom-list-refresher space-y-3 list-disc list-inside text-lg text-teal-100">
+                                <li><strong>Extensive Live Interactive Classes:</strong> Engaging sessions covering all core NMCN topics.</li>
+                                <li><strong>Dedicated Personal Tutor:</strong> One-on-one mentorship and tailored study plans.</li>
+                                <li><strong>Full Mock Exam Access:</strong> Unlimited attempts at all our NMCN standard CBTs.</li>
+                                <li><strong>Develops Clinical Reasoning:</strong> Question styles designed to enhance critical thinking.</li>
+                                <li><strong>Advanced Performance Analytics:</strong> Deep dive into your progress and pinpoint areas for improvement.</li>
+                                <li><strong>Certificate of Completion:</strong> Awarded upon successful program completion (3 months).</li>
+                                <li><strong>Premium Support:</strong> Priority access via WhatsApp & Email.</li>
+                                <li><strong>Resource Library:</strong> Exclusive access to supplementary study materials.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="text-center mt-10">
+                        <button id="enroll-refresher-btn" class="btn btn-refresher text-lg px-10 py-4 shadow-md">Enroll in Refresher Program</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="standard-plans-details" class="py-16 md:py-24 bg-gray-50 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Our Mock Exam Packages</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Focused practice to sharpen your skills and boost your confidence for the NMCN CBT exam. All plans offer 30-day access.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 xl:gap-10">
+                    <div class="plan-detail-card border-t-4 border-primary-teal">
+                        <div class="p-8">
+                            <h3 class="text-3xl font-montserrat font-bold text-primary-teal mb-2">Starter Pack</h3>
+                            <p class="text-gray-500 mb-4 text-lg">100 High-Yield Questions</p>
+                            <p class="text-4xl font-montserrat font-extrabold text-primary-teal mb-1">₦2,000 <span class="text-xl text-gray-500">/30 Days</span></p>
+                            <p class="text-gray-600 my-6 leading-relaxed">Perfect for a quick assessment of your knowledge or a final revision burst. Get a feel for the exam format and identify key areas to focus on.</p>
+                            <ul class="custom-list text-gray-600 space-y-2 mb-8 list-disc list-inside pl-4">
+                                <li>100 NMCN Standard Questions</li>
+                                <li>Develops Clinical Reasoning</li>
+                                <li>Shuffle & Randomization Feature</li>
+                                <li>Immediate Results & Answer Review</li>
+                                <li>Basic Performance Analytics</li>
+                                <li>Email Support</li>
+                            </ul>
+                            <button id="starter-plan-btn" class="btn btn-secondary w-full">Get Started with Starter</button>
+                        </div>
+                    </div>
+
+                    <div class="plan-detail-card border-t-4 border-accent-gold relative">
+                         <span class="absolute top-4 right-4 bg-accent-gold text-teal-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Popular</span>
+                        <div class="p-8">
+                            <h3 class="text-3xl font-montserrat font-bold text-primary-teal mb-2">Booster Pack</h3>
+                            <p class="text-gray-500 mb-4 text-lg">200 Comprehensive Questions</p>
+                            <p class="text-4xl font-montserrat font-extrabold text-primary-teal mb-1">₦4,000 <span class="text-xl text-gray-500">/30 Days</span></p>
+                            <p class="text-gray-600 my-6 leading-relaxed">Our most popular choice for a balanced and thorough preparation. Cover a wider range of topics and gain deeper insights into your performance.</p>
+                            <ul class="custom-list text-gray-600 space-y-2 mb-8 list-disc list-inside pl-4">
+                                <li>200 NMCN Standard Questions</li>
+                                <li>Develops Clinical Reasoning</li>
+                                <li>Shuffle & Randomization Feature</li>
+                                <li>Immediate Results & Answer Review</li>
+                                <li>Advanced Performance Analytics</li>
+                                <li>Priority Email Support</li>
+                            </ul>
+                            <button id="booster-plan-btn" class="btn btn-primary w-full">Choose Booster Pack</button>
+                        </div>
+                    </div>
+
+                    <div class="plan-detail-card border-t-4 border-primary-teal">
+                        <div class="p-8">
+                            <h3 class="text-3xl font-montserrat font-bold text-primary-teal mb-2">Pro Pack</h3>
+                            <p class="text-gray-500 mb-4 text-lg">250 Extensive Questions</p>
+                            <p class="text-4xl font-montserrat font-extrabold text-primary-teal mb-1">₦5,000 <span class="text-xl text-gray-500">/30 Days</span></p>
+                            <p class="text-gray-600 my-6 leading-relaxed">For the most rigorous preparation. Access a vast question bank to ensure you're ready for any challenge the NMCN CBT throws your way.</p>
+                            <ul class="custom-list text-gray-600 space-y-2 mb-8 list-disc list-inside pl-4">
+                                <li>250 NMCN Standard Questions</li>
+                                <li>Develops Clinical Reasoning</li>
+                                <li>Shuffle & Randomization Feature</li>
+                                <li>Immediate Results & Answer Review</li>
+                                <li>Comprehensive Performance Analytics</li>
+                                <li>Full Question Bank Access during subscription</li>
+                                <li>Direct WhatsApp Support</li>
+                            </ul>
+                            <button id="pro-plan-btn" class="btn btn-secondary w-full">Go Pro</button>
+                        </div>
+                    </div>
+
+                    <div class="plan-detail-card border-t-4 border-ph-cyan">
+                        <div class="p-8">
+                            <h3 class="text-3xl font-montserrat font-bold text-ph-cyan mb-2">Public Health CBT</h3>
+                            <p class="text-gray-500 mb-4 text-lg">Specialized Focus Mock Exam</p>
+                            <p class="text-4xl font-montserrat font-extrabold text-ph-cyan mb-1">₦3,500 <span class="text-xl text-gray-500">/30 Days</span></p>
+                            <p class="text-gray-600 my-6 leading-relaxed">Tailored for students focusing on the Public Health or Community Health Nursing CBT. Includes questions specific to this specialization.</p>
+                            <ul class="custom-list-ph text-gray-600 space-y-2 mb-8 list-disc list-inside pl-4">
+                                <li>150+ Specialized Questions</li>
+                                <li>Public/Community Health Focused Content</li>
+                                <li>Develops Clinical Reasoning for PHN</li>
+                                <li>Shuffle & Randomization Feature</li>
+                                <li>Immediate Results & Answer Review</li>
+                                <li>Targeted Progress Tracking</li>
+                                <li>Email Support</li>
+                            </ul>
+                            <button id="publichealth-plan-btn" class="btn btn-ph-cyan w-full">Enroll in Public Health CBT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="plans-faq" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6 lg:max-w-4xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Frequently Asked Questions (Plans)</h2>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-montserrat font-semibold text-lg text-gray-800 mb-2">How long is the access for each mock exam plan?</h3>
+                        <p class="text-gray-600 leading-relaxed">All our standard mock exam packages (Starter, Booster, Pro, Public Health CBT) provide 30 days of full access from the date of subscription. The Premium Refresher Program is a 3-month intensive coaching program, with monthly billing.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-montserrat font-semibold text-lg text-gray-800 mb-2">Can I upgrade my plan?</h3>
+                        <p class="text-gray-600 leading-relaxed">Currently, plans are purchased for their specified duration. If you wish to access more questions or features, you can purchase a new plan once your current one expires or contact support for guidance on the Refresher Program.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-montserrat font-semibold text-lg text-gray-800 mb-2">What payment methods do you accept?</h3>
+                        <p class="text-gray-600 leading-relaxed">We accept secure payments through major Nigerian payment gateways like Paystack, supporting various methods including card payments, bank transfers, and USSD. This is handled via our secure Firebase Function integration.</p>
+                    </div>
+                     <div>
+                        <h3 class="font-montserrat font-semibold text-lg text-gray-800 mb-2">What happens after I complete a mock exam?</h3>
+                        <p class="text-gray-600 leading-relaxed">You will immediately see your score and be able to review the questions to see the correct answers. This allows you to learn from your attempts and understand areas needing more focus.</p>
+                    </div>
+                </div>
+                <div class="text-center mt-10">
+                     <a href="index.html#contact" class="btn btn-primary">Still Have Questions? Contact Us</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="messageModal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modalLoader" class="loader hidden"></div>
+            <h3 id="modalTitle" class="text-xl font-montserrat font-semibold text-gray-800 mb-4">Notification</h3>
+            <p id="modalMessage" class="text-gray-600 mb-6">This is a sample message.</p>
+            <button id="modalCloseButton" class="btn modal-close-btn">Close</button>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-gray-300 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                       <img src="https://i.ibb.co/67Cp3Mz0/Screenshot-2025-05-22-141208.png" alt="Academic Nightingale Icon" class="footer-logo" onerror="this.onerror=null;this.src='https://placehold.co/100x35/FFFFFF/0D9488?text=Icon&font=montserrat';this.alt='Error loading icon';">
+                       <span class="text-xl font-montserrat font-bold text-white ml-2">Academic Nightingale</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Empowering Nigeria's next generation of nurses and midwives with world-class NMCN CBT exam preparation.</p>
+                     <div class="flex items-center mt-2">
+                        <svg class="stethoscope-svg mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243a3 3 0 11-4.243-4.243" />
+                        </svg>
+                        <span class="text-xs text-gray-500">Dedicated to Your Success</span>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Explore</h5>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white hover:underline transition duration-300">About Us</a></li>
+                        <li><a href="#plans-top" class="text-gray-400 hover:text-white hover:underline transition duration-300">Exam Plans</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-white hover:underline transition duration-300">Our Features</a></li>
+                        <li><a href="index.html#how-it-works" class="text-gray-400 hover:text-white hover:underline transition duration-300">How It Works</a></li>
+                        <li><a href="index.html#testimonials" class="text-gray-400 hover:text-white hover:underline transition duration-300">Success Stories</a></li>
+                        <li><a href="index.html#blog" class="text-gray-400 hover:text-white hover:underline transition duration-300">Blog & Resources</a></li>
+                        <li><a href="#plans-faq" class="text-gray-400 hover:text-white hover:underline transition duration-300">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Get In Touch</h5>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                            <a href="mailto:Nightingaleacademic@gmail.com" class="text-gray-400 hover:text-white hover:underline transition duration-300">Nightingaleacademic@gmail.com</a>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fab fa-whatsapp w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://whatsapp.com/channel/0029VaW2i4qJuyAIGj7CRb0W" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">+234 907 710 3590</a>
+                        </li>
+                         <li class="flex items-start">
+                            <i class="fab fa-telegram-plane w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://t.me/AcademicNightingale" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">Join Telegram Channel</a>
+                        </li>
+                        <li class="flex items-start">
+                           <i class="fab fa-twitter w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://x.com/Academicnight?t=WtmtKWPcYkkfinWMxOgUoA&s=09" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">Follow us on X</a>
+                        </li>
+                         <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 mt-1 text-gray-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-400">Lagos, Nigeria (HQ)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Legal</h5>
+                    <ul class="space-y-3 text-sm mb-6">
+                        <li><a href="#privacy-policy" class="text-gray-400 hover:text-white hover:underline transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#terms-of-service" class="text-gray-400 hover:text-white hover:underline transition duration-300">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 mt-8 text-center text-sm text-gray-500">
+                &copy; <span id="currentYearPlans"></span> Academic Nightingale. All Rights Reserved. Designed for Excellence.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, getIdToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0", 
+          authDomain: "excellence-cbt.firebaseapp.com",
+          projectId: "excellence-cbt",
+          storageBucket: "excellence-cbt.appspot.com",
+          messagingSenderId: "697190795343",
+          appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a",
+          measurementId: "G-836KHSYF0Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const functions = getFunctions(app, 'us-central1'); 
+
+        let activeUser = null; 
+
+        const navLoginDesktopPlans = document.getElementById('navLoginDesktopPlans');
+        const navSignupDesktopPlans = document.getElementById('navSignupDesktopPlans');
+        const navUserEmailDesktopPlans = document.getElementById('navUserEmailDesktopPlans');
+        const navLogoutDesktopPlans = document.getElementById('navLogoutDesktopPlans');
+
+        const navLoginMobilePlans = document.getElementById('navLoginMobilePlans');
+        const navSignupMobilePlans = document.getElementById('navSignupMobilePlans');
+        const navUserEmailMobilePlans = document.getElementById('navUserEmailMobilePlans');
+        const navLogoutMobilePlans = document.getElementById('navLogoutMobilePlans');
+
+        onAuthStateChanged(auth, (user) => {
+            console.log("exam-plans.html: onAuthStateChanged triggered. User:", user ? user.email : 'No user', user ? `UID: ${user.uid}` : '');
+            activeUser = user; 
+
+            if (user) { 
+                if(navLoginDesktopPlans) navLoginDesktopPlans.classList.remove('active');
+                if(navSignupDesktopPlans) navSignupDesktopPlans.classList.remove('active');
+                if(navUserEmailDesktopPlans) { navUserEmailDesktopPlans.textContent = user.email; navUserEmailDesktopPlans.classList.add('active'); }
+                if(navLogoutDesktopPlans) navLogoutDesktopPlans.classList.add('active');
+
+                if(navLoginMobilePlans) navLoginMobilePlans.classList.remove('mobile-active');
+                if(navSignupMobilePlans) navSignupMobilePlans.classList.remove('mobile-active');
+                if(navUserEmailMobilePlans) { navUserEmailMobilePlans.textContent = user.email; navUserEmailMobilePlans.classList.add('mobile-active'); }
+                if(navLogoutMobilePlans) navLogoutMobilePlans.classList.add('mobile-active');
+
+            } else { 
+                if(navLoginDesktopPlans) navLoginDesktopPlans.classList.add('active');
+                if(navSignupDesktopPlans) navSignupDesktopPlans.classList.add('active');
+                if(navUserEmailDesktopPlans) navUserEmailDesktopPlans.classList.remove('active');
+                if(navLogoutDesktopPlans) navLogoutDesktopPlans.classList.remove('active');
+
+                if(navLoginMobilePlans) navLoginMobilePlans.classList.add('mobile-active');
+                if(navSignupMobilePlans) navSignupMobilePlans.classList.add('mobile-active');
+                if(navUserEmailMobilePlans) navUserEmailMobilePlans.classList.remove('mobile-active');
+                if(navLogoutMobilePlans) navLogoutMobilePlans.classList.remove('mobile-active');
+            }
+        });
+
+        function handleLogout(buttonElement) {
+            if (buttonElement) {
+                buttonElement.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        console.log("User signed out from exam-plans.html");
+                        activeUser = null; 
+                        window.location.href = 'index.html';
+                    }).catch((error) => {
+                        console.error("Sign out error:", error);
+                    });
+                });
+            }
+        }
+        handleLogout(navLogoutDesktopPlans);
+        handleLogout(navLogoutMobilePlans);
+
+        const menuButtonPlans = document.getElementById('mobile-menu-button-plans');
+        const mobileMenuPlans = document.getElementById('mobile-menu-plans');
+        if (menuButtonPlans && mobileMenuPlans) {
+            menuButtonPlans.addEventListener('click', () => {
+                mobileMenuPlans.classList.toggle('hidden');
+            });
+            const mobileLinksPlans = mobileMenuPlans.querySelectorAll('a:not(.nav-auth-item)');
+            mobileLinksPlans.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!link.closest('#navAuthLinksMobilePlans')) {
+                        mobileMenuPlans.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        const currentYearSpanPlans = document.getElementById('currentYearPlans');
+        if (currentYearSpanPlans) {
+            currentYearSpanPlans.textContent = new Date().getFullYear();
+        }
+
+        const sectionsToFadePlans = document.querySelectorAll('.fade-in-section');
+        const sectionObserverOptionsPlans = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const sectionIntersectionObserverPlans = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, sectionObserverOptionsPlans);
+        sectionsToFadePlans.forEach(section => sectionIntersectionObserverPlans.observe(section));
+
+        const modalOverlay = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCloseButton = document.getElementById('modalCloseButton');
+        const modalLoader = document.getElementById('modalLoader');
+
+        function showModal(title, message, showLoaderSpinner = false) {
+            if (modalTitle) modalTitle.textContent = title;
+            if (modalMessage) modalMessage.textContent = message;
+            if (modalLoader) {
+                if (showLoaderSpinner) {
+                    modalLoader.classList.remove('hidden');
+                    if(modalMessage) modalMessage.classList.add('hidden'); 
+                    if(modalCloseButton) modalCloseButton.classList.add('hidden');
+                } else {
+                    modalLoader.classList.add('hidden');
+                    if(modalMessage) modalMessage.classList.remove('hidden');
+                    if(modalCloseButton) modalCloseButton.classList.remove('hidden');
+                }
+            }
+            if (modalOverlay) modalOverlay.classList.add('active');
+        }
+
+        function hideModal() {
+            if (modalOverlay) modalOverlay.classList.remove('active');
+             if (modalLoader) modalLoader.classList.add('hidden');
+            if(modalMessage) modalMessage.classList.remove('hidden');
+            if(modalCloseButton) modalCloseButton.classList.remove('hidden');
+        }
+
+        if (modalCloseButton) {
+            modalCloseButton.addEventListener('click', hideModal);
+        }
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', function(event) {
+                if (event.target === modalOverlay && modalLoader && !modalLoader.classList.contains('hidden')) {
+                    return; 
+                }
+                if (event.target === modalOverlay) {
+                    hideModal();
+                }
+            });
+        }
+
+        async function initiateFirebasePaymentWithDetails(planDetails) { 
+            if (!activeUser || !activeUser.uid || !activeUser.email) {
+                console.log("User not authenticated or missing UID/email. activeUser:", activeUser);
+                showModal('Login Required', 'Please log in or sign up to subscribe to a plan. Redirecting to login...');
+                setTimeout(() => {
+                    sessionStorage.setItem('redirectAfterLogin', 'exam-plans.html'); 
+                    window.location.href = 'login.html';
+                }, 3000);
+                return;
+            }
+
+            console.log("User authenticated (using activeUser):", activeUser.uid, activeUser.email);
+            console.log("Plan details for payment init:", JSON.stringify(planDetails, null, 2)); 
+            showModal('Processing Payment...', 'Please wait while we initialize your payment.', true);
+
+            try {
+                await getIdToken(activeUser, true); 
+                console.log("ID token refreshed for user:", activeUser.uid);
+
+                const initializePaymentFunction = httpsCallable(functions, 'initializePayment');
+                
+                const paymentData = {
+                    email: activeUser.email,
+                    amount: planDetails.amount * 100, 
+                    planName: planDetails.name,
+                    planId: planDetails.id,           // This uses the 'id' from planDetails
+                    userId: activeUser.uid, 
+                    refPrefix: planDetails.refPrefix,
+                    durationDays: planDetails.durationDays // Pass durationDays
+                };
+
+                console.log("Calling initializePayment Firebase Function with data:", JSON.stringify(paymentData, null, 2));
+                const result = await initializePaymentFunction(paymentData);
+                console.log("Firebase Function result:", result);
+
+                if (result.data && result.data.status === true && result.data.authorization_url) {
+                    window.location.href = result.data.authorization_url;
+                } else {
+                    console.error("Payment initialization error from Firebase Function:", result.data);
+                    let friendlyErrorMessage = 'Could not initialize payment. Please try again or contact support.';
+                    if (result.data && result.data.message) {
+                        friendlyErrorMessage = result.data.message;
+                    }
+                    showModal('Payment Error', friendlyErrorMessage);
+                }
+            } catch (error) {
+                console.error("Error in initiateFirebasePaymentWithDetails:", error);
+                let errorMessage = 'An unexpected error occurred. Please try again.';
+                if (error.code && error.message) { 
+                     // Try to make Firebase HttpsError messages more user-friendly
+                    switch (error.code) {
+                        case 'functions/unauthenticated':
+                            errorMessage = 'Authentication failed. Please ensure you are logged in and try again. If the problem persists, try logging out and back in.';
+                            break;
+                        case 'functions/invalid-argument':
+                            errorMessage = `There was an issue with the information provided. ${error.message}. Please check and try again.`;
+                            break;
+                        case 'functions/internal':
+                            errorMessage = 'A server error occurred while trying to initialize payment. Please try again later or contact support.';
+                            break;
+                        case 'functions/unavailable':
+                             errorMessage = 'The payment service is temporarily unavailable. Please try again shortly.';
+                             break;
+                        default:
+                            errorMessage = `Error: ${error.message} (Code: ${error.code})`;
+                    }
+                    if (error.message.includes("getIdToken")) { // Specific check for token issues
+                       errorMessage = 'Could not verify your session. Please try logging out and logging back in.';
+                    }
+                } else if (error.message) { 
+                    errorMessage = error.message;
+                }
+                
+                showModal('Payment Initialization Failed', errorMessage);
+            }
+        }
+
+        // --- Define Plan Details and Attach Event Listeners ---
+        // It's crucial that the 'id' here matches the Document ID in your cbtExams collection
+
+        const planButtonConfigs = [
+            { 
+                buttonId: 'starter-plan-btn', 
+                details: { 
+                    name: "Starter Pack", 
+                    id: "YOUR_STARTER_PACK_ID_HERE", // <<< YOU MUST CHANGE THIS
+                    amount: 2000, 
+                    refPrefix: "AN-STARTER-",
+                    durationDays: 30 
+                } 
+            },
+            { 
+                buttonId: 'booster-plan-btn', 
+                details: { 
+                    name: "Booster Pack", 
+                    id: "booster_pack_main", 
+                    amount: 4000, 
+                    refPrefix: "AN-BOOSTER-",
+                    durationDays: 30 
+                } 
+            },
+            { 
+                buttonId: 'pro-plan-btn', 
+                details: { 
+                    name: "Pro Pack", 
+                    id: "pro_pack_01",       
+                    amount: 5000, 
+                    refPrefix: "AN-PRO-",
+                    durationDays: 30 
+                } 
+            },
+            { 
+                buttonId: 'publichealth-plan-btn', 
+                details: { 
+                    name: "Public Health CBT", 
+                    id: "public_health_cbt_01", 
+                    amount: 3500, 
+                    refPrefix: "AN-PHCBT-",
+                    durationDays: 30 
+                } 
+            },
+            { 
+                buttonId: 'enroll-refresher-btn', 
+                details: { 
+                    name: "Refresher Program", 
+                    id: "refresher_program_2025", 
+                    amount: 45000, 
+                    refPrefix: "AN-REFRESH-",
+                    durationDays: 90 
+                } 
+            }
+        ];
+
+        planButtonConfigs.forEach(config => {
+            const button = document.getElementById(config.buttonId);
+            if (button) {
+                button.addEventListener('click', () => {
+                    console.log(`CLIENT: ${config.details.name} button clicked. Preparing to send planId: ${config.details.id}, duration: ${config.details.durationDays} days`);
+                    initiateFirebasePaymentWithDetails(config.details);
+                });
+            } else {
+                console.warn(`CLIENT: Button with ID ${config.buttonId} not found.`);
+            }
+        });
+
+    </script>
+
+</body>
+</html>

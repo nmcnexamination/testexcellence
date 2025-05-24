@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Nightingale - Ace Your NMCN CBT Mock Exam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #374151; /* Tailwind gray-700 */
+            scroll-behavior: smooth;
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .bg-primary-teal {
+            background-color: #0D9488; /* teal-700 */
+        }
+        .text-primary-teal {
+            color: #0D9488; /* teal-700 */
+        }
+        .border-primary-teal {
+            border-color: #0D9488; /* teal-700 */
+        }
+        .accent-gold {
+            color: #FFD700;
+        }
+        .bg-accent-gold {
+            background-color: #FFD700;
+        }
+        .bg-refresher-teal {
+            background-color: #0F766E;
+        }
+        .text-refresher-teal {
+            color: #0F766E;
+        }
+         .custom-list-refresher li::marker {
+            color: #14B8A6;
+        }
+        .bg-ph-cyan {
+            background-color: #0891B2;
+        }
+        .text-ph-cyan {
+            color: #0891B2;
+        }
+        .border-ph-cyan {
+            border-color: #0891B2;
+        }
+         .custom-list-ph li::marker {
+            color: #0891B2;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #0D9488;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary:hover {
+            background-color: #0F766E;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #0D9488;
+            border: 2px solid #0D9488;
+        }
+        .btn-secondary:hover {
+            background-color: #0D9488;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-white-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        .btn-white-outline:hover {
+            background-color: white;
+            color: #0D9488;
+            transform: translateY(-2px);
+        }
+        .btn-ph-cyan {
+            background-color: #0891B2;
+            color: white;
+        }
+        .btn-ph-cyan:hover {
+            background-color: #0E7490;
+            transform: translateY(-2px);
+        }
+        .btn-red-solid { /* New style for red button */
+            background-color: #DC2626; /* Tailwind red-600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-red-solid:hover {
+            background-color: #B91C1C; /* Tailwind red-700 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .site-logo {
+            height: 45px;
+            width: auto;
+            margin-right: 0.75rem;
+        }
+        .hero-image-container {
+            margin-bottom: 1.5rem;
+        }
+        .hero-image-display {
+            height: auto;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 0.75rem;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            object-fit: cover;
+            max-height: 400px;
+        }
+        .footer-logo {
+            height: 35px;
+            width: auto;
+            max-width: 100px;
+            margin-right: 0.5rem;
+            object-fit: contain;
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feature-card, .pricing-card, .testimonial-card, .blog-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .feature-card:hover, .pricing-card:hover, .testimonial-card:hover, .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .feature-icon-container {
+            background-color: #0D9488;
+            color: white;
+            border-radius: 50%;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        .feature-icon-container img {
+            width: 2.5rem;
+            height: 2.5rem;
+            object-fit: contain;
+        }
+        .stethoscope-svg {
+            width: 2rem;
+            height: 2rem;
+            color: #9CA3AF;
+            opacity: 0.6;
+        }
+        .hero-bg-pattern {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .custom-list li::marker {
+            color: #0D9488;
+        }
+        #free-quiz-section-content {
+            min-height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .quiz-loader {
+            text-align: center;
+            font-size: 1.25rem;
+            color: #0D9488;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .quiz-loader .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0D9488;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .quiz-question-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transition: all 0.3s ease-out;
+            width: 100%;
+        }
+        .quiz-option {
+            display: block;
+            padding: 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+        }
+        .quiz-option:hover {
+            border-color: #0D9488;
+            background-color: #F0FDFA;
+        }
+        .quiz-option.selected {
+            border-color: #0D9488;
+            background-color: #CCFBF1;
+            color: #0F766E;
+            font-weight: bold;
+        }
+        .quiz-option input[type="radio"] {
+            display: none;
+        }
+        .quiz-navigation button {
+            min-width: 120px;
+        }
+        .quiz-results-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            text-align: center;
+            width: 100%;
+        }
+        .progress-bar-bg {
+            background-color: #E5E7EB;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background-color: #0D9488;
+            height: 0.75rem;
+            transition: width 0.3s ease-in-out;
+        }
+        .correction-item {
+            padding: 1rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        .correction-item p { margin-bottom: 0.25rem; }
+        .correction-options-list { list-style: none; padding-left: 0; margin-top: 0.5rem; }
+        .correction-options-list li {
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+        .option-correct { color: #10B981; font-weight: bold; }
+        .option-user-selected-correct { color: #10B981; font-weight: bold; }
+        .option-user-selected-incorrect { color: #EF4444; text-decoration: line-through; }
+        .rationale {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background-color: #F3F4F6;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            color: #4B5563;
+        }
+        #quiz-timer {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0F766E;
+        }
+        .hero-social-links a {
+            color: white;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+        .hero-social-links a:hover {
+            color: #CCFBF1;
+            transform: scale(1.1);
+        }
+        /* Styles for auth status in nav */
+        .nav-auth-item { display: none; } /* Hidden by default */
+        .nav-auth-item.active { display: inline-block; } /* Shown by JS for desktop */
+        .nav-auth-item.mobile-active { display: block; } /* Shown by JS for mobile */
+
+        .nav-user-email {
+            font-size: 0.875rem; /* text-sm */
+            color: #4B5563; /* gray-600 */
+            margin-right: 0.75rem; /* mr-3 */
+        }
+        .nav-dashboard-link { /* For styling the Dashboard link */
+            font-weight: 500;
+            color: #4B5563; /* gray-600 */
+            transition: color 0.3s ease;
+            padding: 0.5rem 0.75rem; /* py-2 px-3 */
+            border-radius: 0.375rem; /* rounded-md */
+        }
+        .nav-dashboard-link:hover {
+            color: #0D9488; /* text-primary-teal */
+            background-color: #F0FDFA; /* teal-50 for subtle hover */
+        }
+        .nav-dashboard-link.mobile { /* Specific styling for mobile if needed */
+            display: block;
+            padding: 0.75rem 1.5rem; /* Tailwind: py-3 px-6 */
+            text-align: center;
+            width: 100%;
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .nav-dashboard-link.mobile:hover {
+            background-color: #F0FDFA; /* Tailwind: hover:bg-teal-50 */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <header class="bg-white shadow-lg sticky top-0 z-50 w-full">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="#home" class="flex items-center text-2xl font-montserrat font-bold text-primary-teal">
+                <img src="https://i.ibb.co/nNgF9T4T/Adobe-Express-file.png" alt="Academic Nightingale Logo" class="site-logo" onerror="this.onerror=null;this.src='https://placehold.co/180x45/0D9488/FFFFFF?text=Logo&font=montserrat';this.alt='Error loading logo';">
+            </a>
+            <div class="hidden lg:flex space-x-6 items-center">
+                <a href="#home" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Home</a>
+                <a href="about-us.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">About Us</a>
+                <a href="exam-plans.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Exam Plans</a>
+                <a href="#features" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Features</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Testimonials</a>
+                <a href="#free-quiz-section" id="nav-try-quiz-btn" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Free Quiz</a>
+                <a href="#blog" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Blog</a>
+                <a href="#contact" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Contact</a>
+            </div>
+            <div id="navAuthLinksDesktop" class="hidden lg:flex items-center space-x-3">
+                <a href="login.html" id="navLoginDesktop" class="nav-auth-item text-gray-600 hover:text-primary-teal font-semibold py-2 px-4 rounded-lg text-sm transition duration-300">Login</a>
+                <a href="signup.html" id="navSignupDesktop" class="nav-auth-item btn btn-primary text-sm">Sign Up Free</a>
+                
+                <a href="user_dashboard.html" id="navDashboardDesktop" class="nav-auth-item nav-dashboard-link text-sm">Dashboard</a>
+                <span id="navUserEmailDesktop" class="nav-auth-item nav-user-email"></span>
+                <button id="navLogoutDesktop" class="nav-auth-item btn btn-secondary text-sm">Logout</button>
+            </div>
+            <div class="lg:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="lg:hidden hidden bg-white py-2 shadow-xl absolute w-full">
+            <a href="#home" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Home</a>
+            <a href="about-us.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">About Us</a>
+            <a href="exam-plans.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Exam Plans</a>
+            <a href="#features" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Features</a>
+            <a href="#testimonials" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Testimonials</a>
+            <a href="#free-quiz-section" id="mobile-nav-try-quiz-btn" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Free Quiz</a>
+            <a href="#blog" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Blog</a>
+            <a href="#contact" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Contact</a>
+            <div id="navAuthLinksMobile" class="px-6 py-3 mt-2 border-t border-gray-200">
+                <a href="login.html" id="navLoginMobile" class="nav-auth-item block text-center w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 mb-2">Login</a>
+                <a href="signup.html" id="navSignupMobile" class="nav-auth-item block text-center w-full btn btn-primary mb-2">Sign Up Free</a>
+
+                <a href="user_dashboard.html" id="navDashboardMobile" class="nav-auth-item nav-dashboard-link mobile">Dashboard</a>
+                <span id="navUserEmailMobile" class="nav-auth-item block text-center nav-user-email mb-2"></span>
+                <button id="navLogoutMobile" class="nav-auth-item block text-center w-full btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="bg-primary-teal text-white pt-24 pb-32 md:pt-32 md:pb-40 hero-bg-pattern fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <div class="hero-image-container">
+                    </div>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-montserrat font-extrabold mb-6 leading-tight">
+                    Master Your NMCN CBT Exam. <span class="block sm:inline">Achieve Complete Success.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-teal-100 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    Nigeria's Premier Learning Platform for NMCN-Standard Mock Exams. Empowering nursing and midwifery students with expert-crafted questions, realistic simulations, and actionable insights.
+                </p>
+                <div class="space-y-4 sm:space-y-0 sm:space-x-4 mb-10">
+                    <a href="exam-plans.html" id="hero-explore-plans-btn" class="btn btn-primary text-lg px-8 py-4">Explore Exam Plans</a>
+                    <a href="#free-quiz-section" id="hero-try-quiz-btn" class="btn btn-white-outline text-lg px-8 py-4">Try Free Quiz</a>
+                </div>
+                <div class="hero-social-links space-x-6">
+                    <p class="text-teal-200 text-sm mb-3">Connect with our community:</p>
+                    <a href="https://whatsapp.com/channel/0029VaW2i4qJuyAIGj7CRb0W" target="_blank" aria-label="WhatsApp Channel" title="WhatsApp Channel">
+                        <i class="fab fa-whatsapp fa-2x"></i>
+                    </a>
+                    <a href="https://t.me/AcademicNightingale" target="_blank" aria-label="Telegram Channel" title="Telegram Channel">
+                        <i class="fab fa-telegram-plane fa-2x"></i>
+                    </a>
+                    <a href="https://x.com/Academicnight?t=WtmtKWPcYkkfinWMxOgUoA&s=09" target="_blank" aria-label="X (Twitter) Page" title="X (Twitter) Page">
+                        <i class="fab fa-twitter fa-2x"></i> </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Why Choose Academic Nightingale?</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">We provide the unparalleled tools and dedicated support you need to excel in your nursing council exams.</p>
+                </div>
+                 <div class="grid md:grid-cols-3 gap-8">
+                    <div class="feature-card bg-gray-50 p-8 rounded-xl shadow-lg text-center">
+                        <div class="feature-icon-container">
+                            <img src="https://i.ibb.co/67Cp3Mz0/Screenshot-2025-05-22-141208.png" alt="NMCN Q-Bank Icon" onerror="this.onerror=null;this.src='https://placehold.co/64x64/FFFFFF/0D9488?text=Icon&font=montserrat';this.alt='Error loading icon';">
+                        </div>
+                        <h3 class="text-xl font-montserrat font-semibold text-gray-800 mb-3">NMCN-Standard Q-Bank</h3>
+                        <p class="text-gray-600 leading-relaxed">Practice with thousands of questions meticulously aligned with the official NMCN CBT syllabus and difficulty level.</p>
+                    </div>
+                    <div class="feature-card bg-gray-50 p-8 rounded-xl shadow-lg text-center">
+                        <div class="feature-icon-container">
+                             <img src="https://i.ibb.co/67Cp3Mz0/Screenshot-2025-05-22-141208.png" alt="Realistic Exam Simulations Icon" onerror="this.onerror=null;this.src='https://placehold.co/64x64/FFFFFF/0D9488?text=Sim&font=montserrat';this.alt='Error loading icon';">
+                        </div>
+                        <h3 class="text-xl font-montserrat font-semibold text-gray-800 mb-3">Realistic Exam Simulations</h3>
+                        <p class="text-gray-600 leading-relaxed">Experience the true exam environment with timed tests, questions that develop clinical reasoning, shuffled options, and immediate results.</p>
+                    </div>
+                    <div class="feature-card bg-gray-50 p-8 rounded-xl shadow-lg text-center">
+                        <div class="feature-icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-montserrat font-semibold text-gray-800 mb-3">Progress Analytics</h3>
+                        <p class="text-gray-600 leading-relaxed">Track your performance, identify strengths and weaknesses, and focus your study efforts for maximum impact.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="free-quiz-section" class="py-12 md:py-16 bg-teal-50 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Try Our Free 5-Question Challenge!</h2>
+                    <p class="text-lg text-gray-700 max-w-2xl mx-auto">Get a glimpse of the NMCN CBT experience and see how Academic Nightingale can help you succeed.</p>
+                </div>
+                <div id="free-quiz-section-content" class="max-w-2xl mx-auto">
+                    <button id="start-free-quiz-btn" class="btn btn-primary text-lg px-8 py-4 mx-auto block">Start Free Quiz Now</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="plans" class="py-16 md:py-24 bg-gray-100 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Flexible Exam Prep Plans</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Choose a plan that fits your study needs and budget. Options for every stage of your preparation journey.</p>
+                </div>
+
+                <div class="pricing-card bg-gradient-to-br from-teal-600 to-teal-800 text-white p-8 md:p-10 rounded-xl shadow-2xl relative flex flex-col mb-12 lg:mx-auto lg:max-w-3xl">
+                    <span class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-teal-700 text-sm font-bold px-5 py-2 rounded-full uppercase tracking-wider shadow-lg border-2 border-teal-600">Premium Refresher Program</span>
+                    <div class="flex flex-col md:flex-row md:items-center md:gap-8 mt-8">
+                        <div class="md:w-1/3 text-center md:text-left mb-6 md:mb-0">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-white opacity-80 mx-auto md:mx-0 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v11.494m0 0a8.487 8.487 0 01-4.243-.982m4.243.982a8.487 8.487 0 004.243-.982M15 11.25h-6l.383-3.382A1.596 1.596 0 0110.5 6h3a1.596 1.596 0 011.117 1.868L15 11.25z" /><path stroke-linecap="round" stroke-linejoin="round" d="M4.875 4.875l1.521 1.521M17.604 17.604l1.521 1.521M19.125 4.875l-1.521 1.521M6.396 17.604l-1.521 1.521" /></svg>
+                            <h3 class="text-3xl font-montserrat font-bold mb-1">Refresher Program</h3>
+                            <p class="text-teal-100 mb-3">3-Month Intensive Coaching</p>
+                            <div class="my-2">
+                                <span class="text-5xl font-montserrat font-extrabold">₦45,000</span>
+                                <span class="text-teal-200">/Month</span>
+                            </div>
+                        </div>
+                        <div class="md:w-2/3">
+                            <p class="mb-6 text-teal-100 leading-relaxed">Our most comprehensive program designed for students seeking in-depth knowledge reinforcement and personalized guidance. Includes extensive live classes, dedicated mentorship, and a certificate upon successful completion of the 3-month program.</p>
+                            <ul class="custom-list-refresher space-y-3 mb-8 text-left list-disc list-inside flex-grow pl-4 text-teal-100 marker:text-teal-200">
+                                <li>Extensive Live Interactive Classes</li>
+                                <li>Dedicated Personal Tutor & Mentorship</li>
+                                <li>Full Access to NMCN Standard Mock Exams</li>
+                                <li>Develops Clinical Reasoning</li>
+                                <li>Advanced Performance Tracking & Feedback</li>
+                                <li>Certificate of Completion (3-Month Program)</li>
+                                <li>Premium Support (WhatsApp & Email)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="exam-plans.html#refresher-plan-detail" class="mt-auto w-full md:w-auto md:self-center btn bg-white text-teal-700 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg text-center transition duration-300 text-base uppercase tracking-wider shadow-md">Enroll in Refresher Program</a>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                    <div class="pricing-card bg-white p-8 rounded-xl shadow-xl flex flex-col border-t-4 border-primary-teal">
+                        <h3 class="text-2xl font-montserrat font-semibold text-gray-800 mb-2">Starter Pack</h3>
+                        <p class="text-gray-500 mb-4">100 Questions</p>
+                        <div class="my-4">
+                            <span class="text-5xl font-montserrat font-extrabold text-primary-teal">₦2,000</span>
+                            <span class="text-gray-500">/30 Days</span>
+                        </div>
+                        <ul class="custom-list text-gray-600 space-y-3 mb-8 text-left list-disc list-inside flex-grow pl-4">
+                            <li>NMCN Standard Questions</li>
+                            <li>Develops Clinical Reasoning</li>
+                            <li>Shuffle & Randomization</li>
+                            <li>Immediate Results & Answer Review</li>
+                            <li>Basic Performance Analytics</li>
+                        </ul>
+                        <a href="exam-plans.html#standard-plans-details" class="mt-auto w-full btn btn-secondary">Get Started</a>
+                    </div>
+                    <div class="pricing-card bg-primary-teal text-white p-8 rounded-xl shadow-2xl relative flex flex-col ring-4 ring-offset-2 ring-accent-gold transform scale-100 lg:scale-105">
+                        <span class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-accent-gold text-teal-800 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">Most Popular</span>
+                        <h3 class="text-2xl font-montserrat font-semibold mb-2">Booster Pack</h3>
+                        <p class="text-teal-200 mb-4">200 Questions</p>
+                        <div class="my-4">
+                            <span class="text-5xl font-montserrat font-extrabold">₦4,000</span>
+                            <span class="text-teal-200">/30 Days</span>
+                        </div>
+                        <ul class="custom-list space-y-3 mb-8 text-left list-disc list-inside flex-grow pl-4 text-teal-100 marker:text-teal-200">
+                            <li>NMCN Standard Questions</li>
+                            <li>Develops Clinical Reasoning</li>
+                            <li>Shuffle & Randomization</li>
+                            <li>Immediate Results & Answer Review</li>
+                            <li>Advanced Performance Analytics</li>
+                            <li>Priority Email Support</li>
+                        </ul>
+                        <a href="exam-plans.html#standard-plans-details" class="mt-auto w-full bg-white text-primary-teal hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg text-center transition duration-300 text-base uppercase tracking-wider">Choose Plan</a>
+                    </div>
+                    <div class="pricing-card bg-white p-8 rounded-xl shadow-xl flex flex-col border-t-4 border-primary-teal">
+                        <h3 class="text-2xl font-montserrat font-semibold text-gray-800 mb-2">Pro Pack</h3>
+                        <p class="text-gray-500 mb-4">250 Questions</p>
+                         <div class="my-4">
+                            <span class="text-5xl font-montserrat font-extrabold text-primary-teal">₦5,000</span>
+                            <span class="text-gray-500">/30 Days</span>
+                        </div>
+                        <ul class="custom-list text-gray-600 space-y-3 mb-8 text-left list-disc list-inside flex-grow pl-4">
+                            <li>NMCN Standard Questions</li>
+                            <li>Develops Clinical Reasoning</li>
+                            <li>Shuffle & Randomization</li>
+                            <li>Immediate Results & Answer Review</li>
+                            <li>Comprehensive Performance Analytics</li>
+                            <li>Full Question Bank Access</li>
+                            <li>Direct WhatsApp Support</li>
+                        </ul>
+                        <a href="exam-plans.html#standard-plans-details" class="mt-auto w-full btn btn-secondary">Get Started</a>
+                    </div>
+                    <div class="pricing-card bg-white p-8 rounded-xl shadow-xl flex flex-col border-t-4 border-ph-cyan">
+                        <h3 class="text-2xl font-montserrat font-semibold text-gray-800 mb-2">Public Health CBT</h3>
+                        <p class="text-gray-500 mb-4">Specialized Focus</p>
+                         <div class="my-4">
+                            <span class="text-5xl font-montserrat font-extrabold text-ph-cyan">₦3,500</span>
+                            <span class="text-gray-500">/30 Days</span>
+                        </div>
+                        <ul class="custom-list-ph text-gray-600 space-y-3 mb-8 text-left list-disc list-inside flex-grow pl-4">
+                            <li>150+ Specialized Questions</li>
+                            <li>Public/Community Health Focus</li>
+                            <li>Develops Clinical Reasoning for PHN</li>
+                            <li>Shuffle & Randomization</li>
+                            <li>Immediate Results & Answer Review</li>
+                            <li>Targeted Progress Tracking</li>
+                        </ul>
+                        <a href="exam-plans.html#standard-plans-details" class="mt-auto w-full btn btn-ph-cyan">Enroll Now</a>
+                    </div>
+                </div>
+                 <p class="text-center text-gray-700 mt-12">
+                    All payments are securely processed.
+                    <a href="#how-it-works" class="text-primary-teal hover:underline font-semibold">Learn how it works &rarr;</a>
+                </p>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Your Journey to Exam Success in 4 Simple Steps</h2>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 text-center">
+                    <div class="flex flex-col items-center">
+                        <div class="relative mb-4">
+                            <div class="bg-teal-100 text-primary-teal rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                            </div>
+                            <span class="absolute -top-2 -right-2 bg-primary-teal text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">1</span>
+                        </div>
+                        <h3 class="text-xl font-montserrat font-semibold text-gray-800 mb-2">Register Account</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Quickly sign up and create your personalized learning profile.</p>
+                    </div>
+                     <div class="flex flex-col items-center">
+                        <div class="relative mb-4">
+                            <div class="bg-teal-100 text-primary-teal rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                            </div>
+                             <span class="absolute -top-2 -right-2 bg-primary-teal text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">2</span>
+                        </div>
+                        <h3 class="text-xl font-montserrat font-semibold text-gray-800 mb-2">Choose Plan & Pay</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Select your ideal mock exam package and complete secure payment.</p>
+                    </div>
+                     <div class="flex flex-col items-center">
+                        <div class="relative mb-4">
+                            <div class="bg-teal-100 text-primary-teal rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                            </div>
+                            <span class="absolute -top-2 -right-2 bg-primary-teal text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">3</span>
+                        </div>
+                        <h3 class="text-xl font-montserrat font-semibold text-gray-800 mb-2">Access Mock Exams</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Dive into realistic, timed CBT simulations anytime, anywhere.</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="relative mb-4">
+                            <div class="bg-teal-100 text-primary-teal rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                            </div>
+                            <span class="absolute -top-2 -right-2 bg-primary-teal text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">4</span>
+                        </div>
+                        <h3 class="text-xl font-montserrat font-semibold text-gray-800 mb-2">Track & Improve</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Review detailed analytics, identify weak areas, and refine your strategy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="py-16 md:py-24 bg-gray-100 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Success Stories from Our Students</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Hear how Academic Nightingale helped aspiring nurses pass their NMCN CBT exams with flying colors.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="testimonial-card bg-white p-8 rounded-xl shadow-xl">
+                        <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/60x60/E2E8F0/374151?text=SN" alt="Student Name" class="w-16 h-16 rounded-full mr-4 border-2 border-primary-teal" onerror="this.onerror=null;this.src='https://placehold.co/60x60/cccccc/ffffff?text=??';this.alt='Error loading image';">
+                            <div>
+                                <h4 class="font-montserrat font-semibold text-gray-800 text-lg">Sarah A.</h4>
+                                <p class="text-sm text-primary-teal font-medium">Passed NMCN RN Exam</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic leading-relaxed">"Academic Nightingale was a game-changer! The questions were so relevant, and the mock exams gave me the confidence I needed. I passed on my first attempt!"</p>
+                    </div>
+                    <div class="testimonial-card bg-white p-8 rounded-xl shadow-xl">
+                         <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/60x60/E2E8F0/374151?text=DO" alt="Student Name" class="w-16 h-16 rounded-full mr-4 border-2 border-primary-teal" onerror="this.onerror=null;this.src='https://placehold.co/60x60/cccccc/ffffff?text=??';this.alt='Error loading image';">
+                            <div>
+                                <h4 class="font-montserrat font-semibold text-gray-800 text-lg">David O.</h4>
+                                <p class="text-sm text-primary-teal font-medium">Passed Midwifery CBT</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic leading-relaxed">"The detailed analytics helped me focus on my weak areas. The platform is user-friendly and the support team is fantastic. Highly recommended!"</p>
+                    </div>
+                    <div class="testimonial-card bg-white p-8 rounded-xl shadow-xl md:col-span-2 lg:col-span-1">
+                         <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/60x60/E2E8F0/374151?text=CE" alt="Student Name" class="w-16 h-16 rounded-full mr-4 border-2 border-primary-teal" onerror="this.onerror=null;this.src='https://placehold.co/60x60/cccccc/ffffff?text=??';this.alt='Error loading image';">
+                            <div>
+                                <h4 class="font-montserrat font-semibold text-gray-800 text-lg">Chiamaka E.</h4>
+                                <p class="text-sm text-primary-teal font-medium">Future RN</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic leading-relaxed">"I loved the flexibility to study on my phone. The questions that develop clinical reasoning prepared me perfectly for the real exam. Thank you, Academic Nightingale!"</p>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="#all-testimonials" class="btn btn-secondary">Read More Success Stories</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Insights & Prep Strategies</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Stay updated with the latest NMCN exam tips, study techniques, and sample questions from our expert blog.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="blog-card bg-gray-50 rounded-xl shadow-lg overflow-hidden flex flex-col">
+                        <img src="https://placehold.co/600x400/0D9488/FFFFFF?text=CBT+Tips&font=lato" alt="Blog post image" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/969696?text=Image';this.alt='Error loading image';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="font-montserrat font-semibold text-xl text-gray-800 mb-3">Top 5 Strategies for Nailing Your CBT Exam</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">Discover proven techniques to manage your time, tackle tricky questions, and maximize your score...</p>
+                            <a href="#blog-post-1" class="text-primary-teal hover:underline font-semibold mt-auto self-start">Read More &rarr;</a>
+                        </div>
+                    </div>
+                     <div class="blog-card bg-gray-50 rounded-xl shadow-lg overflow-hidden flex flex-col">
+                        <img src="https://placehold.co/600x400/0D9488/FFFFFF?text=Study+Plan&font=lato" alt="Blog post image" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/969696?text=Image';this.alt='Error loading image';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="font-montserrat font-semibold text-xl text-gray-800 mb-3">Creating an Effective NMCN Study Plan</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">Learn how to structure your study schedule for optimal preparation and avoid last-minute cramming...</p>
+                            <a href="#blog-post-2" class="text-primary-teal hover:underline font-semibold mt-auto self-start">Read More &rarr;</a>
+                        </div>
+                    </div>
+                     <div class="blog-card bg-gray-50 rounded-xl shadow-lg overflow-hidden flex flex-col">
+                        <img src="https://placehold.co/600x400/0D9488/FFFFFF?text=Sample+Qs&font=lato" alt="Blog post image" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/969696?text=Image';this.alt='Error loading image';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="font-montserrat font-semibold text-xl text-gray-800 mb-3">Understanding Question Styles: Sample Questions</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">Get familiar with the question styles used in the NMCN CBT with these illustrative examples...</p>
+                            <a href="#blog-post-3" class="text-primary-teal hover:underline font-semibold mt-auto self-start">Read More &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                 <div class="text-center mt-12">
+                    <a href="#all-blog-posts" class="btn btn-primary">Visit Our Blog</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="final-cta" class="py-16 md:py-24 bg-primary-teal text-white hero-bg-pattern fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-6 text-white opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="text-3xl md:text-4xl font-montserrat font-bold mb-6">Ready to Secure Your Nursing Future?</h2>
+                <p class="text-lg text-teal-100 mb-10 max-w-xl mx-auto">Join thousands of Nigerian nursing students who have achieved exam success with Academic Nightingale. Your journey to becoming a licensed nurse starts here.</p>
+                <a href="exam-plans.html" class="btn btn-white-outline text-lg px-10 py-4 hover:shadow-xl">Start Practicing Today</a>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="bg-gray-800 text-gray-300 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                       <img src="https://i.ibb.co/67Cp3Mz0/Screenshot-2025-05-22-141208.png" alt="Academic Nightingale Icon" class="footer-logo" onerror="this.onerror=null;this.src='https://placehold.co/100x35/FFFFFF/0D9488?text=Icon&font=montserrat';this.alt='Error loading icon';">
+                       <span class="text-xl font-montserrat font-bold text-white ml-2">Academic Nightingale</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Empowering Nigeria's next generation of nurses and midwives with world-class NMCN CBT exam preparation.</p>
+                     <div class="flex items-center mt-2">
+                        <svg class="stethoscope-svg mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243a3 3 0 11-4.243-4.243" />
+                        </svg>
+                        <span class="text-xs text-gray-500">Dedicated to Your Success</span>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Explore</h5>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white hover:underline transition duration-300">About Us</a></li>
+                        <li><a href="#plans-top" class="text-gray-400 hover:text-white hover:underline transition duration-300">Exam Plans</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-white hover:underline transition duration-300">Our Features</a></li>
+                        <li><a href="index.html#how-it-works" class="text-gray-400 hover:text-white hover:underline transition duration-300">How It Works</a></li>
+                        <li><a href="index.html#testimonials" class="text-gray-400 hover:text-white hover:underline transition duration-300">Success Stories</a></li>
+                        <li><a href="index.html#blog" class="text-gray-400 hover:text-white hover:underline transition duration-300">Blog & Resources</a></li>
+                        <li><a href="#faq" class="text-gray-400 hover:text-white hover:underline transition duration-300">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Get In Touch</h5>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                            <a href="mailto:Nightingaleacademic@gmail.com" class="text-gray-400 hover:text-white hover:underline transition duration-300">Nightingaleacademic@gmail.com</a>
+                        </li>
+                         <li class="flex items-start"> <i class="fab fa-whatsapp w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://whatsapp.com/channel/0029VaW2i4qJuyAIGj7CRb0W" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">+234 907 710 3590</a>
+                        </li>
+                         <li class="flex items-start"> <i class="fab fa-telegram-plane w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://t.me/AcademicNightingale" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">Join Telegram Channel</a>
+                        </li>
+                        <li class="flex items-start"> <i class="fab fa-twitter w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://x.com/Academicnight?t=WtmtKWPcYkkfinWMxOgUoA&s=09" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">Follow us on X</a>
+                        </li>
+                         <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 mt-1 text-gray-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-400">Lagos, Nigeria (HQ)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Legal</h5>
+                    <ul class="space-y-3 text-sm mb-6">
+                        <li><a href="#privacy-policy" class="text-gray-400 hover:text-white hover:underline transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#terms-of-service" class="text-gray-400 hover:text-white hover:underline transition duration-300">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 mt-8 text-center text-sm text-gray-500">
+                &copy; <span id="currentYear"></span> Academic Nightingale. All Rights Reserved. Designed for Excellence.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0",
+          authDomain: "excellence-cbt.firebaseapp.com",
+          projectId: "excellence-cbt",
+          storageBucket: "excellence-cbt.appspot.com",
+          messagingSenderId: "697190795343",
+          appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a",
+          measurementId: "G-836KHSYF0Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app); // Initialize Firestore
+
+        // --- Navigation Auth State Handling ---
+        const navLoginDesktop = document.getElementById('navLoginDesktop');
+        const navSignupDesktop = document.getElementById('navSignupDesktop');
+        const navUserEmailDesktop = document.getElementById('navUserEmailDesktop');
+        const navLogoutDesktop = document.getElementById('navLogoutDesktop');
+        // const navCbtPortalDesktop = document.getElementById('navCbtPortalDesktop'); // This will be removed
+        const navDashboardDesktop = document.getElementById('navDashboardDesktop'); 
+
+        const navLoginMobile = document.getElementById('navLoginMobile');
+        const navSignupMobile = document.getElementById('navSignupMobile');
+        const navUserEmailMobile = document.getElementById('navUserEmailMobile');
+        const navLogoutMobile = document.getElementById('navLogoutMobile');
+        // const navCbtPortalMobile = document.getElementById('navCbtPortalMobile'); // This will be removed
+        const navDashboardMobile = document.getElementById('navDashboardMobile'); 
+
+
+        // Links/Buttons for "Try Free Quiz" that might change
+        const navTryQuizBtnMain = document.getElementById('nav-try-quiz-btn'); 
+        const mobileNavTryQuizBtnMain = document.getElementById('mobile-nav-try-quiz-btn'); 
+        const heroTryQuizBtn = document.getElementById('hero-try-quiz-btn'); 
+        const heroExplorePlansBtn = document.getElementById('hero-explore-plans-btn'); 
+
+
+        // --- Subscription Check Function ---
+        async function checkUserSubscription(userId) {
+            if (!userId) {
+                console.log("index.html - checkUserSubscription: No userId provided.");
+                return false;
+            }
+            try {
+                const subscriptionsRef = collection(db, "userSubscriptions", userId, "activePlans");
+                const now = Timestamp.now();
+                const q = query(subscriptionsRef,
+                                where("status", "==", "active"),
+                                where("expiryDate", ">", now));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    return true; 
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error("index.html - checkUserSubscription: Error checking user subscription:", error);
+                return false;
+            }
+        }
+
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) { // User is signed in
+                if(navLoginDesktop) navLoginDesktop.classList.remove('active');
+                if(navSignupDesktop) navSignupDesktop.classList.remove('active');
+                if(navUserEmailDesktop) { navUserEmailDesktop.textContent = user.email; navUserEmailDesktop.classList.add('active'); }
+                if(navLogoutDesktop) navLogoutDesktop.classList.add('active');
+                // if(navCbtPortalDesktop) navCbtPortalDesktop.classList.remove('active'); // Remove as element is gone
+                if(navDashboardDesktop) navDashboardDesktop.classList.add('active'); 
+
+
+                if(navLoginMobile) navLoginMobile.classList.remove('mobile-active');
+                if(navSignupMobile) navSignupMobile.classList.remove('mobile-active');
+                if(navUserEmailMobile) { navUserEmailMobile.textContent = user.email; navUserEmailMobile.classList.add('mobile-active'); }
+                if(navLogoutMobile) navLogoutMobile.classList.add('mobile-active');
+                // if(navCbtPortalMobile) navCbtPortalMobile.classList.remove('mobile-active'); // Remove as element is gone
+                if(navDashboardMobile) navDashboardMobile.classList.add('mobile-active'); 
+                
+
+                const hasActiveSubscription = await checkUserSubscription(user.uid);
+                console.log(`index.html - User ${user.uid} hasActiveSubscription: ${hasActiveSubscription}`);
+
+                if (hasActiveSubscription) {
+                    if(navTryQuizBtnMain) {
+                        navTryQuizBtnMain.textContent = "Dashboard"; // Changed to Dashboard
+                        navTryQuizBtnMain.href = "user_dashboard.html"; 
+                    }
+                    if(mobileNavTryQuizBtnMain) {
+                        mobileNavTryQuizBtnMain.textContent = "Dashboard"; // Changed to Dashboard
+                        mobileNavTryQuizBtnMain.href = "user_dashboard.html"; 
+                    }
+                    if(heroTryQuizBtn) {
+                        heroTryQuizBtn.textContent = "Go to Dashboard"; 
+                        heroTryQuizBtn.href = "user_dashboard.html";    
+                        heroTryQuizBtn.classList.remove('btn-white-outline', 'btn-primary'); 
+                        heroTryQuizBtn.classList.add('btn-red-solid'); 
+                        if(heroExplorePlansBtn) { 
+                            heroExplorePlansBtn.classList.remove('btn-primary', 'btn-red-solid');
+                            heroExplorePlansBtn.classList.add('btn-white-outline');
+                        }
+                    }
+                    // Removed logic for navCbtPortalDesktop/Mobile as elements are removed
+
+                } else { // Logged in, but NO active subscription
+                    if(navTryQuizBtnMain) {
+                        navTryQuizBtnMain.textContent = "Free Quiz";
+                        navTryQuizBtnMain.href = "#free-quiz-section";
+                    }
+                    if(mobileNavTryQuizBtnMain) {
+                        mobileNavTryQuizBtnMain.textContent = "Free Quiz";
+                        mobileNavTryQuizBtnMain.href = "#free-quiz-section";
+                    }
+                    if(heroTryQuizBtn) {
+                        heroTryQuizBtn.textContent = "Try Free Quiz";
+                        heroTryQuizBtn.href = "#free-quiz-section";
+                        heroTryQuizBtn.classList.remove('btn-primary', 'btn-red-solid');
+                        heroTryQuizBtn.classList.add('btn-white-outline');
+                        if(heroExplorePlansBtn) { 
+                            heroExplorePlansBtn.classList.remove('btn-white-outline', 'btn-red-solid');
+                            heroExplorePlansBtn.classList.add('btn-primary');
+                        }
+                    }
+                    // Removed logic for navCbtPortalDesktop/Mobile
+                }
+
+            } else { // User is signed out
+                if(navLoginDesktop) navLoginDesktop.classList.add('active');
+                if(navSignupDesktop) navSignupDesktop.classList.add('active');
+                if(navUserEmailDesktop) navUserEmailDesktop.classList.remove('active');
+                if(navLogoutDesktop) navLogoutDesktop.classList.remove('active');
+                // if(navCbtPortalDesktop) navCbtPortalDesktop.classList.remove('active'); 
+                if(navDashboardDesktop) navDashboardDesktop.classList.remove('active'); 
+
+                if(navLoginMobile) navLoginMobile.classList.add('mobile-active');
+                if(navSignupMobile) navSignupMobile.classList.add('mobile-active');
+                if(navUserEmailMobile) navUserEmailMobile.classList.remove('mobile-active');
+                if(navLogoutMobile) navLogoutMobile.classList.remove('mobile-active');
+                // if(navCbtPortalMobile) navCbtPortalMobile.classList.remove('mobile-active'); 
+                if(navDashboardMobile) navDashboardMobile.classList.remove('mobile-active'); 
+
+
+                if(navTryQuizBtnMain) {
+                    navTryQuizBtnMain.textContent = "Free Quiz";
+                    navTryQuizBtnMain.href = "#free-quiz-section";
+                }
+                if(mobileNavTryQuizBtnMain) {
+                    mobileNavTryQuizBtnMain.textContent = "Free Quiz";
+                    mobileNavTryQuizBtnMain.href = "#free-quiz-section";
+                }
+                if(heroTryQuizBtn) {
+                    heroTryQuizBtn.textContent = "Try Free Quiz";
+                    heroTryQuizBtn.href = "#free-quiz-section";
+                    heroTryQuizBtn.classList.remove('btn-primary', 'btn-red-solid');
+                    heroTryQuizBtn.classList.add('btn-white-outline');
+                    if(heroExplorePlansBtn) { 
+                        heroExplorePlansBtn.classList.remove('btn-white-outline', 'btn-red-solid');
+                        heroExplorePlansBtn.classList.add('btn-primary');
+                    }
+                }
+            }
+        });
+
+        // Logout functionality
+        function handleLogout(buttonElement) {
+            if (buttonElement) {
+                buttonElement.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        console.log("User signed out");
+                        window.location.href = 'index.html'; 
+                    }).catch((error) => {
+                        console.error("Sign out error:", error);
+                    });
+                });
+            }
+        }
+        handleLogout(navLogoutDesktop);
+        handleLogout(navLogoutMobile);
+
+
+        // --- Existing Script Logic (Mobile Menu, Year, Fade-in, Quiz) ---
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            const mobileLinks = mobileMenu.querySelectorAll('a:not(.nav-auth-item)');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!link.closest('#navAuthLinksMobile')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        const currentYearSpan = document.getElementById('currentYear');
+        if (currentYearSpan) {
+            currentYearSpan.textContent = new Date().getFullYear();
+        }
+
+        const sectionsToFade = document.querySelectorAll('.fade-in-section');
+        const sectionObserverOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const sectionIntersectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, sectionObserverOptions);
+        sectionsToFade.forEach(section => sectionIntersectionObserver.observe(section));
+
+        document.querySelectorAll('a[href^="exam-plans.html#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Allow default navigation
+            });
+        });
+
+        const freeQuizContentContainer = document.getElementById('free-quiz-section-content');
+        
+        const freeQuizData = [
+            {
+                question: "A patient is admitted with a diagnosis of acute myocardial infarction. Which of the following clinical manifestations would the nurse expect to find?",
+                options: ["Sudden, severe chest pain", "Gradual onset of fatigue", "Bounding peripheral pulses", "Elevated body temperature"],
+                answer: "Sudden, severe chest pain",
+                rationale: "Acute myocardial infarction (heart attack) typically presents with sudden, severe, and often crushing chest pain due to ischemia (lack of oxygen) to the heart muscle."
+            },
+            {
+                question: "The nurse is caring for a client with diabetes mellitus. Which of the following is a common long-term complication of diabetes?",
+                options: ["Acute gastritis", "Retinopathy", "Cholecystitis", "Peptic ulcer disease"],
+                answer: "Retinopathy",
+                rationale: "Retinopathy, damage to the blood vessels in the retina, is a common microvascular complication of long-term, poorly controlled diabetes mellitus due to chronic hyperglycemia."
+            },
+            {
+                question: "What is the primary purpose of administering an anticoagulant medication to a patient with deep vein thrombosis (DVT)?",
+                options: ["To dissolve the existing clot", "To prevent further clot formation", "To reduce leg pain and swelling", "To improve peripheral circulation"],
+                answer: "To prevent further clot formation",
+                rationale: "Anticoagulants (like heparin or warfarin) do not dissolve existing clots but work to prevent new clots from forming and existing clots from enlarging, allowing the body's natural processes to break down the clot over time."
+            },
+            {
+                question: "A nurse is assessing a newborn. Which finding is considered normal for a full-term neonate?",
+                options: ["Respiratory rate of 70 breaths/minute", "Heart rate of 90 beats/minute", "Presence of lanugo on the back", "Jaundice appearing within the first hour of life"],
+                answer: "Presence of lanugo on the back",
+                rationale: "Lanugo, fine downy hair, is commonly found on the back, shoulders, and forehead of full-term neonates and typically disappears within a few weeks. Other options are abnormal: normal RR is 30-60, HR is 110-160, and jaundice in the first hour is pathological."
+            },
+            {
+                question: "Which of the following actions by the nurse demonstrates an understanding of medical asepsis?",
+                options: ["Using sterile gloves for all patient contact", "Washing hands before and after patient care", "Leaving sterile supplies open on the bedside table", "Recapping used needles before disposal"],
+                answer: "Washing hands before and after patient care",
+                rationale: "Handwashing is the single most important practice in medical asepsis (clean technique) to reduce the transmission of microorganisms. Sterile gloves are for sterile procedures, not all contact."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+        let quizTimeLimit = 300;
+        let timeLeft = quizTimeLimit;
+        let timerInterval;
+        let quizActive = false;
+
+        function showLoader() {
+            if (!freeQuizContentContainer) return;
+            freeQuizContentContainer.innerHTML = `
+                <div class="quiz-loader">
+                    <div class="spinner"></div>
+                    <p>Loading Quiz...</p>
+                </div>`;
+        }
+
+        function initFreeQuiz() {
+            if (!freeQuizContentContainer) return;
+            showLoader();
+
+            setTimeout(() => {
+                currentQuestionIndex = 0;
+                userAnswers = [];
+                score = 0;
+                timeLeft = quizTimeLimit;
+                quizActive = false;
+                renderFreeQuizQuestion();
+            }, 700);
+        }
+
+        if (heroTryQuizBtn) {
+            heroTryQuizBtn.addEventListener('click', (e) => {
+                if (heroTryQuizBtn.getAttribute('href') === '#free-quiz-section') {
+                    e.preventDefault();
+                    document.getElementById('free-quiz-section').scrollIntoView({ behavior: 'smooth' });
+                    initFreeQuiz();
+                }
+            });
+        }
+        if (navTryQuizBtnMain) { 
+             navTryQuizBtnMain.addEventListener('click', (e) => {
+                if (navTryQuizBtnMain.getAttribute('href') === '#free-quiz-section') {
+                    e.preventDefault();
+                    document.getElementById('free-quiz-section').scrollIntoView({ behavior: 'smooth' });
+                    initFreeQuiz();
+                }
+            });
+        }
+        if (mobileNavTryQuizBtnMain) { 
+             mobileNavTryQuizBtnMain.addEventListener('click', (e) => {
+                if (mobileNavTryQuizBtnMain.getAttribute('href') === '#free-quiz-section') {
+                    const mobileMenuElement = document.getElementById('mobile-menu');
+                    if (mobileMenuElement) mobileMenuElement.classList.add('hidden');
+                    
+                    setTimeout(() => {
+                        document.getElementById('free-quiz-section').scrollIntoView({ behavior: 'smooth' });
+                        initFreeQuiz();
+                    }, 150);
+                }
+            });
+        }
+         if (freeQuizContentContainer) {
+            freeQuizContentContainer.addEventListener('click', function(event) {
+                if (event.target && event.target.id === 'start-free-quiz-btn') {
+                    event.preventDefault();
+                    initFreeQuiz();
+                }
+            });
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        function startTimer() {
+            quizActive = true;
+            const timerDisplay = document.getElementById('quiz-timer-display');
+            if(timerDisplay) timerDisplay.textContent = formatTime(timeLeft);
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if(timerDisplay) timerDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if(quizActive) {
+                        showQuizResults(true);
+                    }
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            quizActive = false;
+        }
+
+        function renderFreeQuizQuestion() {
+            if (!freeQuizContentContainer) return;
+            freeQuizContentContainer.innerHTML = '';
+
+            if (currentQuestionIndex < freeQuizData.length) {
+                const questionData = freeQuizData[currentQuestionIndex];
+
+                const progressPercentage = ((currentQuestionIndex + 1) / freeQuizData.length) * 100;
+                const quizHeaderHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <p class="text-sm text-gray-600">Question ${currentQuestionIndex + 1} of ${freeQuizData.length}</p>
+                        <div id="quiz-timer" class="font-montserrat font-semibold text-primary-teal text-lg">
+                            Time Left: <span id="quiz-timer-display">${formatTime(timeLeft)}</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar-bg w-full h-3 mb-6">
+                        <div class="progress-bar-fill" style="width: ${progressPercentage}%;"></div>
+                    </div>
+                `;
+
+                const questionCard = document.createElement('div');
+                questionCard.className = 'quiz-question-card';
+                questionCard.innerHTML = `
+                    ${quizHeaderHTML}
+                    <h3 class="font-montserrat text-xl md:text-2xl font-semibold text-gray-800 mb-6">${questionData.question}</h3>
+                    <div id="quiz-options-container">
+                        ${questionData.options.map((option, index) => `
+                            <label class="quiz-option" for="option-${index}" data-value="${option}">
+                                <input type="radio" name="quizOption" id="option-${index}" value="${option}">
+                                ${String.fromCharCode(65 + index)}. ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="mt-8 flex justify-end quiz-navigation">
+                        <button id="next-question-btn" class="btn btn-primary">
+                            ${currentQuestionIndex === freeQuizData.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                        </button>
+                    </div>
+                `;
+                freeQuizContentContainer.appendChild(questionCard);
+
+                document.querySelectorAll('.quiz-option').forEach(label => {
+                    label.addEventListener('click', function() {
+                        document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        this.querySelector('input[type="radio"]').checked = true;
+                    });
+                });
+
+                document.getElementById('next-question-btn').addEventListener('click', handleNextQuestion);
+                if(currentQuestionIndex === 0 && !quizActive) {
+                    startTimer();
+                }
+            } else {
+                showQuizResults(false);
+            }
+        }
+
+        function handleNextQuestion() {
+            if (!quizActive) return;
+            const selectedOption = freeQuizContentContainer.querySelector('input[name="quizOption"]:checked');
+            if (!selectedOption) {
+                const tempMsg = document.createElement('p');
+                tempMsg.textContent = "Please select an answer before proceeding.";
+                tempMsg.className = "text-red-500 text-sm mt-2 text-center";
+                const existingMsg = freeQuizContentContainer.querySelector('.text-red-500');
+                const navContainer = freeQuizContentContainer.querySelector('.quiz-navigation');
+                if(!existingMsg && navContainer) {
+                     navContainer.insertAdjacentElement('beforebegin', tempMsg);
+                }
+                setTimeout(() => { tempMsg.remove(); }, 2000);
+                return;
+            }
+            userAnswers[currentQuestionIndex] = selectedOption.value;
+            if (selectedOption.value === freeQuizData[currentQuestionIndex].answer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < freeQuizData.length) {
+                renderFreeQuizQuestion();
+            } else {
+                stopTimer();
+                showQuizResults(false);
+            }
+        }
+
+        function showQuizResults(timedOut = false) {
+            stopTimer();
+            let resultMessage = timedOut ?
+                `<p class="text-xl text-red-600 mb-2 font-semibold">Time's Up!</p>` :
+                `<h3 class="font-montserrat text-3xl font-bold text-primary-teal mb-4">Free Quiz Completed!</h3>`;
+
+            freeQuizContentContainer.innerHTML = `
+                <div class="quiz-results-card">
+                    ${resultMessage}
+                    <p class="text-xl text-gray-700 mb-2">Your Score: <span class="font-bold text-primary-teal">${score}</span> out of ${freeQuizData.length}</p>
+                    <p class="text-gray-600 mb-6">Review your answers and the correct solutions below.</p>
+
+                    <div id="quiz-corrections" class="text-left max-w-lg mx-auto mb-8">
+                        ${freeQuizData.map((item, index) => `
+                            <div class="correction-item">
+                                <p class="font-semibold text-gray-700 mb-2">${index + 1}. ${item.question}</p>
+                                <ul class="correction-options-list mb-2">
+                                    ${item.options.map(option => `
+                                        <li class="
+                                            ${option === item.answer ? 'option-correct' : ''}
+                                            ${option === userAnswers[index] && option !== item.answer ? 'option-user-selected-incorrect' : ''}
+                                            ${option === userAnswers[index] && option === item.answer ? 'option-user-selected-correct' : ''}
+                                        ">
+                                            ${option === item.answer ? '<i class="fas fa-check text-green-500 mr-2"></i>' : ''}
+                                            ${option === userAnswers[index] && option !== item.answer ? '<i class="fas fa-times text-red-500 mr-2"></i>' : ''}
+                                            ${option}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                                ${userAnswers[index] !== item.answer && userAnswers[index] ? `<p class="text-sm text-red-500">Your answer: ${userAnswers[index]}</p>` : ''}
+                                ${!userAnswers[index] && timedOut ? `<p class="text-sm text-red-500">Your answer: Not Answered (Time ran out)</p>` : ''}
+                                ${!userAnswers[index] && !timedOut && currentQuestionIndex > index ? `<p class="text-sm text-red-500">Your answer: Not Answered</p>` : ''}
+                                <div class="rationale">
+                                    <strong>Rationale:</strong> ${item.rationale}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <p class="text-lg text-gray-700 mb-6">Ready to ace your NMCN CBT exam? Unlock full access to thousands of questions, detailed analytics, and more!</p>
+                    <a href="exam-plans.html" class="btn btn-primary text-lg px-8 py-3">View Full Exam Plans & Subscribe</a>
+                    <button id="restart-quiz-btn" class="btn btn-secondary mt-4 ml-0 md:ml-3">Retake Free Quiz</button>
+                </div>
+            `;
+            document.getElementById('restart-quiz-btn').addEventListener('click', () => {
+                initFreeQuiz();
+            });
+        }
+
+    </script>
+
+</body>
+</html>
+" from the Canv

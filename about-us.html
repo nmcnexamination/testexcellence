@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Academic Nightingale - Our Mission & Story</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #374151; /* Tailwind gray-700 */
+            scroll-behavior: smooth;
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .bg-primary-teal {
+            background-color: #0D9488; /* teal-700 */
+        }
+        .text-primary-teal {
+            color: #0D9488; /* teal-700 */
+        }
+        .border-primary-teal {
+            border-color: #0D9488; /* teal-700 */
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem; 
+            font-weight: 600; 
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #0D9488;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary:hover {
+            background-color: #0F766E;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-secondary { /* Added for logout button */
+            background-color: transparent;
+            color: #0D9488; 
+            border: 2px solid #0D9488; 
+        }
+        .btn-secondary:hover {
+            background-color: #0D9488; 
+            color: white;
+            transform: translateY(-2px);
+        }
+        .site-logo {
+            height: 45px; 
+            width: auto;
+            margin-right: 0.75rem; 
+        }
+        .footer-logo {
+            height: 35px;
+            width: auto;
+            margin-right: 0.5rem;
+            object-fit: contain;
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-bg-pattern {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .team-member-card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); /* shadow-md */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .team-member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); /* shadow-lg */
+        }
+        .milestone-item {
+            position: relative;
+            padding-left: 2.5rem; /* Space for icon */
+            margin-bottom: 2rem;
+        }
+        .milestone-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem; /* w-8 */
+            height: 2rem; /* h-8 */
+            border-radius: 9999px; /* rounded-full */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0D9488; /* primary-teal */
+            color: white;
+        }
+        .milestone-line {
+            position: absolute;
+            left: 0.9375rem; /* Adjust to center with icon */
+            top: 2rem; /* Start below icon */
+            bottom: -1rem; /* Extend below text */
+            width: 2px;
+            background-color: #9CA3AF; /* gray-400 */
+        }
+        .milestone-item:last-child .milestone-line {
+            display: none; /* No line after the last item */
+        }
+        .stethoscope-svg {
+            width: 2rem;
+            height: 2rem;
+            color: #9CA3AF; /* Tailwind gray-400 */
+            opacity: 0.6;
+        }
+         /* Styles for auth status in nav */
+         .nav-auth-item { display: none; } /* Hidden by default */
+        .nav-auth-item.active { display: inline-block; } /* Shown by JS for desktop */
+        .nav-auth-item.mobile-active { display: block; } /* Shown by JS for mobile */
+        .nav-user-email {
+            font-size: 0.875rem; /* text-sm */
+            color: #4B5563; /* gray-600 */
+            margin-right: 0.75rem; /* mr-3 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="bg-white shadow-lg sticky top-0 z-50 w-full">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="index.html#home" class="flex items-center text-2xl font-montserrat font-bold text-primary-teal">
+                <img src="https://i.ibb.co/nNgF9T4T/Adobe-Express-file.png" alt="Academic Nightingale Logo" class="site-logo" onerror="this.onerror=null;this.src='https://placehold.co/180x45/0D9488/FFFFFF?text=Logo&font=montserrat';this.alt='Error loading logo';">
+            </a>
+            <div class="hidden lg:flex space-x-6 items-center">
+                <a href="index.html#home" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Home</a>
+                <a href="#about-top" class="text-primary-teal font-semibold transition duration-300">About Us</a> 
+                <a href="exam-plans.html" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Exam Plans</a>
+                <a href="index.html#features" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Features</a>
+                <a href="index.html#testimonials" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Testimonials</a>
+                <a href="index.html#free-quiz-section" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Free Quiz</a>
+                <a href="index.html#blog" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Blog</a>
+                <a href="index.html#contact" class="text-gray-600 hover:text-primary-teal font-medium transition duration-300">Contact</a>
+            </div>
+            <div id="navAuthLinksDesktopAbout" class="hidden lg:flex items-center space-x-3">
+                <a href="login.html" id="navLoginDesktopAbout" class="nav-auth-item text-gray-600 hover:text-primary-teal font-semibold py-2 px-4 rounded-lg text-sm transition duration-300">Login</a>
+                <a href="signup.html" id="navSignupDesktopAbout" class="nav-auth-item btn btn-primary text-sm">Sign Up Free</a>
+                <span id="navUserEmailDesktopAbout" class="nav-auth-item nav-user-email"></span>
+                <button id="navLogoutDesktopAbout" class="nav-auth-item btn btn-secondary text-sm">Logout</button>
+            </div>
+            <div class="lg:hidden">
+                <button id="mobile-menu-button-about" class="text-gray-700 focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu-about" class="lg:hidden hidden bg-white py-2 shadow-xl absolute w-full">
+            <a href="index.html#home" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Home</a>
+            <a href="#about-top" class="block px-6 py-3 text-primary-teal bg-teal-50 transition duration-300 font-semibold">About Us</a>
+            <a href="exam-plans.html" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Exam Plans</a>
+            <a href="index.html#features" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Features</a>
+            <a href="index.html#testimonials" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Testimonials</a>
+            <a href="index.html#free-quiz-section" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Free Quiz</a>
+            <a href="index.html#blog" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Blog</a>
+            <a href="index.html#contact" class="block px-6 py-3 text-gray-700 hover:bg-teal-50 hover:text-primary-teal transition duration-300 font-medium">Contact</a>
+            <div id="navAuthLinksMobileAbout" class="px-6 py-3 mt-2 border-t border-gray-200">
+                <a href="login.html" id="navLoginMobileAbout" class="nav-auth-item block text-center w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 mb-2">Login</a>
+                <a href="signup.html" id="navSignupMobileAbout" class="nav-auth-item block text-center w-full btn btn-primary mb-2">Sign Up Free</a>
+                <span id="navUserEmailMobileAbout" class="nav-auth-item block text-center nav-user-email mb-2"></span>
+                <button id="navLogoutMobileAbout" class="nav-auth-item block text-center w-full btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="about-top">
+        <section class="bg-primary-teal text-white py-20 md:py-28 hero-bg-pattern fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-5xl font-montserrat font-extrabold mb-4">About Academic Nightingale</h1>
+                <p class="text-lg md:text-xl text-teal-100 max-w-3xl mx-auto">
+                    Empowering Nigeria's Nursing Professionals Through Excellence in CBT Preparation.
+                </p>
+            </div>
+        </section>
+
+        <section id="our-story" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 lg:order-1">
+                        <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-6">Our Journey & Commitment</h2>
+                        <p class="text-gray-700 text-lg leading-relaxed mb-4">
+                            Academic Nightingale was founded with a singular vision: to bridge the gap in high-quality, NMCN-standard CBT preparation for nursing and midwifery students across Nigeria. We recognized the challenges aspiring professionals faced in accessing reliable, exam-focused resources and set out to create a platform that not only meets but exceeds these needs.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Our mission is to empower every student with the knowledge, skills, and confidence to excel in their council exams and embark on successful nursing careers. We are driven by a passion for education and a deep respect for the nursing profession.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed">
+                            Since our launch, we've proudly delivered thousands of practice questions, helped countless students accelerate their exam success rates, and become a trusted partner in their journey to licensure.
+                        </p>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <img src="https://placehold.co/600x450/0D9488/FFFFFF?text=Our+Mission+Visual&font=lato" alt="Team collaborating or students studying" class="rounded-xl shadow-xl w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x450/cccccc/969696?text=Image';this.alt='Error loading image';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="our-impact" class="py-16 md:py-24 bg-gray-50 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Our Impact & Milestones</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Charting a course for success, one student at a time.</p>
+                </div>
+                <div class="max-w-3xl mx-auto">
+                    <div class="milestone-item">
+                        <div class="milestone-icon">
+                            <i class="fas fa-flag-checkered"></i>
+                        </div>
+                        <div class="milestone-line"></div>
+                        <h3 class="font-montserrat font-semibold text-xl text-gray-800 mb-1">Founded to Serve</h3>
+                        <p class="text-sm text-gray-500 mb-2">Year of Inception</p>
+                        <p class="text-gray-600 leading-relaxed">Established to address the critical need for specialized NMCN CBT mock exam resources in Nigeria.</p>
+                    </div>
+                    <div class="milestone-item">
+                         <div class="milestone-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="milestone-line"></div>
+                        <h3 class="font-montserrat font-semibold text-xl text-gray-800 mb-1">Thousands Empowered</h3>
+                        <p class="text-sm text-gray-500 mb-2">Student Success</p>
+                        <p class="text-gray-600 leading-relaxed">Successfully supported thousands of students with high-quality practice questions and exam simulations, significantly boosting pass rates.</p>
+                    </div>
+                    <div class="milestone-item">
+                         <div class="milestone-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="milestone-line"></div>
+                        <h3 class="font-montserrat font-semibold text-xl text-gray-800 mb-1">Continuous Improvement</h3>
+                        <p class="text-sm text-gray-500 mb-2">Platform Evolution</p>
+                        <p class="text-gray-600 leading-relaxed">Consistently updating our question banks and platform features based on NMCN guidelines and student feedback to ensure maximum relevance and effectiveness.</p>
+                    </div>
+                    <div class="milestone-item">
+                         <div class="milestone-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3 class="font-montserrat font-semibold text-xl text-gray-800 mb-1">Community Focused</h3>
+                        <p class="text-sm text-gray-500 mb-2">Building Connections</p>
+                        <p class="text-gray-600 leading-relaxed">Fostering a supportive learning community through our channels and dedicated student support, helping students connect and learn together.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="our-team" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-montserrat font-bold text-primary-teal mb-4">Meet Our Dedicated Team</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">A passionate group of educators, nursing professionals, and tech experts committed to your success. (Content coming soon!)</p>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="team-member-card text-center">
+                        <img src="https://placehold.co/150x150/0D9488/FFFFFF?text=Team&font=lato" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-md border-4 border-white" onerror="this.onerror=null;this.src='https://placehold.co/150x150/cccccc/969696?text=??';this.alt='Error loading image';">
+                        <h3 class="font-montserrat font-semibold text-xl text-gray-800">Dr. Amina Yusuf</h3>
+                        <p class="text-primary-teal font-medium">Lead Educator & RN</p>
+                        <p class="text-sm text-gray-500 mt-2">"Our goal is to make quality exam prep accessible to every aspiring nurse in Nigeria."</p>
+                    </div>
+                    <div class="team-member-card text-center">
+                        <img src="https://placehold.co/150x150/0D9488/FFFFFF?text=Team&font=lato" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-md border-4 border-white" onerror="this.onerror=null;this.src='https://placehold.co/150x150/cccccc/969696?text=??';this.alt='Error loading image';">
+                        <h3 class="font-montserrat font-semibold text-xl text-gray-800">Chinedu Okoro</h3>
+                        <p class="text-primary-teal font-medium">Tech Lead & Developer</p>
+                        <p class="text-sm text-gray-500 mt-2">"Building a seamless and effective learning platform is my passion."</p>
+                    </div>
+                    <div class="team-member-card text-center">
+                        <img src="https://placehold.co/150x150/0D9488/FFFFFF?text=Team&font=lato" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4 shadow-md border-4 border-white" onerror="this.onerror=null;this.src='https://placehold.co/150x150/cccccc/969696?text=??';this.alt='Error loading image';">
+                        <h3 class="font-montserrat font-semibold text-xl text-gray-800">Fatima Bello</h3>
+                        <p class="text-primary-teal font-medium">Student Success Manager</p>
+                        <p class="text-sm text-gray-500 mt-2">"We're here to support you every step of your CBT preparation journey."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-20 bg-primary-teal text-white hero-bg-pattern fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-montserrat font-bold mb-6">Ready to Join the Ranks of Successful Nurses?</h2>
+                <p class="text-lg text-teal-100 mb-8 max-w-xl mx-auto">
+                    Academic Nightingale is more than just a mock exam platform; we are your partners in achieving your professional dreams.
+                </p>
+                <a href="exam-plans.html" class="btn bg-white text-primary-teal hover:bg-gray-100 text-lg px-10 py-3">Explore Our Plans</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="https://i.ibb.co/67Cp3Mz0/Screenshot-2025-05-22-141208.png" alt="Academic Nightingale Icon" class="footer-logo" onerror="this.onerror=null;this.src='https://placehold.co/100x35/FFFFFF/0D9488?text=Icon&font=montserrat';this.alt='Error loading icon';">
+                        <span class="text-xl font-montserrat font-bold text-white ml-2">Academic Nightingale</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Empowering Nigeria's next generation of nurses and midwives with world-class NMCN CBT exam preparation.</p>
+                     <div class="flex items-center mt-2">
+                        <svg class="stethoscope-svg mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243a3 3 0 11-4.243-4.243" />
+                        </svg>
+                        <span class="text-xs text-gray-500">Dedicated to Your Success</span>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Explore</h5>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#about-top" class="text-gray-400 hover:text-white hover:underline transition duration-300">About Us</a></li>
+                        <li><a href="exam-plans.html" class="text-gray-400 hover:text-white hover:underline transition duration-300">Exam Plans</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-white hover:underline transition duration-300">Our Features</a></li>
+                        <li><a href="index.html#how-it-works" class="text-gray-400 hover:text-white hover:underline transition duration-300">How It Works</a></li>
+                        <li><a href="index.html#testimonials" class="text-gray-400 hover:text-white hover:underline transition duration-300">Success Stories</a></li>
+                        <li><a href="index.html#blog" class="text-gray-400 hover:text-white hover:underline transition duration-300">Blog & Resources</a></li>
+                        <li><a href="index.html#faq" class="text-gray-400 hover:text-white hover:underline transition duration-300">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Get In Touch</h5>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                            <a href="mailto:Nightingaleacademic@gmail.com" class="text-gray-400 hover:text-white hover:underline transition duration-300">Nightingaleacademic@gmail.com</a>
+                        </li>
+                         <li class="flex items-start"> <i class="fab fa-whatsapp w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://whatsapp.com/channel/0029VaW2i4qJuyAIGj7CRb0W" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">+234 907 710 3590</a>
+                        </li>
+                         <li class="flex items-start"> <i class="fab fa-telegram-plane w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://t.me/AcademicNightingale" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">Join Telegram Channel</a>
+                        </li>
+                        <li class="flex items-start"> <i class="fab fa-twitter w-5 h-5 mr-3 mt-1 text-gray-400 flex-shrink-0"></i>
+                            <a href="https://x.com/Academicnight?t=WtmtKWPcYkkfinWMxOgUoA&s=09" target="_blank" class="text-gray-400 hover:text-white hover:underline transition duration-300">Follow us on X</a>
+                        </li>
+                         <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 mt-1 text-gray-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-400">Lagos, Nigeria (HQ)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-lg font-montserrat font-semibold text-white mb-5">Legal</h5>
+                    <ul class="space-y-3 text-sm mb-6">
+                        <li><a href="#privacy-policy" class="text-gray-400 hover:text-white hover:underline transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#terms-of-service" class="text-gray-400 hover:text-white hover:underline transition duration-300">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 mt-8 text-center text-sm text-gray-500">
+                &copy; <span id="currentYearAbout"></span> Academic Nightingale. All Rights Reserved. Designed for Excellence.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0",
+          authDomain: "excellence-cbt.firebaseapp.com",
+          projectId: "excellence-cbt",
+          storageBucket: "excellence-cbt.appspot.com",
+          messagingSenderId: "697190795343",
+          appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a",
+          measurementId: "G-836KHSYF0Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- Navigation Auth State Handling ---
+        const navLoginDesktopAbout = document.getElementById('navLoginDesktopAbout');
+        const navSignupDesktopAbout = document.getElementById('navSignupDesktopAbout');
+        const navUserEmailDesktopAbout = document.getElementById('navUserEmailDesktopAbout');
+        const navLogoutDesktopAbout = document.getElementById('navLogoutDesktopAbout');
+
+        const navLoginMobileAbout = document.getElementById('navLoginMobileAbout');
+        const navSignupMobileAbout = document.getElementById('navSignupMobileAbout');
+        const navUserEmailMobileAbout = document.getElementById('navUserEmailMobileAbout');
+        const navLogoutMobileAbout = document.getElementById('navLogoutMobileAbout');
+        
+        onAuthStateChanged(auth, (user) => {
+            if (user) { // User is signed in
+                // Desktop Nav
+                if(navLoginDesktopAbout) navLoginDesktopAbout.classList.remove('active'); else console.log("navLoginDesktopAbout not found");
+                if(navSignupDesktopAbout) navSignupDesktopAbout.classList.remove('active'); else console.log("navSignupDesktopAbout not found");
+                if(navUserEmailDesktopAbout) { navUserEmailDesktopAbout.textContent = user.email; navUserEmailDesktopAbout.classList.add('active'); } else { console.log("navUserEmailDesktopAbout not found");}
+                if(navLogoutDesktopAbout) navLogoutDesktopAbout.classList.add('active'); else console.log("navLogoutDesktopAbout not found");
+
+                // Mobile Nav
+                if(navLoginMobileAbout) navLoginMobileAbout.classList.remove('mobile-active'); else console.log("navLoginMobileAbout not found");
+                if(navSignupMobileAbout) navSignupMobileAbout.classList.remove('mobile-active'); else console.log("navSignupMobileAbout not found");
+                if(navUserEmailMobileAbout) { navUserEmailMobileAbout.textContent = user.email; navUserEmailMobileAbout.classList.add('mobile-active'); } else { console.log("navUserEmailMobileAbout not found");}
+                if(navLogoutMobileAbout) navLogoutMobileAbout.classList.add('mobile-active'); else console.log("navLogoutMobileAbout not found");
+
+            } else { // User is signed out
+                // Desktop Nav
+                if(navLoginDesktopAbout) navLoginDesktopAbout.classList.add('active'); else console.log("navLoginDesktopAbout not found");
+                if(navSignupDesktopAbout) navSignupDesktopAbout.classList.add('active'); else console.log("navSignupDesktopAbout not found");
+                if(navUserEmailDesktopAbout) navUserEmailDesktopAbout.classList.remove('active'); else console.log("navUserEmailDesktopAbout not found");
+                if(navLogoutDesktopAbout) navLogoutDesktopAbout.classList.remove('active'); else console.log("navLogoutDesktopAbout not found");
+                
+                // Mobile Nav
+                if(navLoginMobileAbout) navLoginMobileAbout.classList.add('mobile-active'); else console.log("navLoginMobileAbout not found");
+                if(navSignupMobileAbout) navSignupMobileAbout.classList.add('mobile-active'); else console.log("navSignupMobileAbout not found");
+                if(navUserEmailMobileAbout) navUserEmailMobileAbout.classList.remove('mobile-active'); else console.log("navUserEmailMobileAbout not found");
+                if(navLogoutMobileAbout) navLogoutMobileAbout.classList.remove('mobile-active'); else console.log("navLogoutMobileAbout not found");
+            }
+        });
+
+        // Logout functionality
+        function handleLogout(buttonElement) {
+            if (buttonElement) {
+                buttonElement.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        console.log("User signed out from about-us.html");
+                        window.location.href = 'index.html'; 
+                    }).catch((error) => {
+                        console.error("Sign out error:", error);
+                    });
+                });
+            }
+        }
+        handleLogout(navLogoutDesktopAbout);
+        handleLogout(navLogoutMobileAbout);
+
+
+        // --- Existing Script Logic (Mobile Menu, Year, Fade-in) ---
+        const menuButtonAbout = document.getElementById('mobile-menu-button-about');
+        const mobileMenuAbout = document.getElementById('mobile-menu-about');
+        if (menuButtonAbout && mobileMenuAbout) {
+            menuButtonAbout.addEventListener('click', () => {
+                mobileMenuAbout.classList.toggle('hidden');
+            });
+            const mobileLinksAbout = mobileMenuAbout.querySelectorAll('a:not(.nav-auth-item)');
+            mobileLinksAbout.forEach(link => {
+                link.addEventListener('click', () => {
+                     if (!link.closest('#navAuthLinksMobileAbout')) {
+                        mobileMenuAbout.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        const currentYearSpanAbout = document.getElementById('currentYearAbout');
+        if (currentYearSpanAbout) {
+            currentYearSpanAbout.textContent = new Date().getFullYear();
+        }
+
+        const sectionsToFadeAbout = document.querySelectorAll('.fade-in-section');
+        const sectionObserverOptionsAbout = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const sectionIntersectionObserverAbout = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, sectionObserverOptionsAbout);
+        sectionsToFadeAbout.forEach(section => sectionIntersectionObserverAbout.observe(section));
+    </script>
+
+</body>
+</html>

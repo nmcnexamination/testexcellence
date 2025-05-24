@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Upload Questions | Academic Nightingale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lato', sans-serif; color: #374151; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        .bg-primary-teal { background-color: #0D9488; }
+        .text-primary-teal { color: #0D9488; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; font-family: 'Montserrat', sans-serif; transition: all 0.3s ease-in-out; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; text-align: center; cursor: pointer; }
+        .btn-primary { background-color: #0D9488; color: white; }
+        .btn-primary:hover { background-color: #0F766E; }
+        .btn-primary:disabled { background-color: #9CA3AF; cursor: not-allowed; }
+        .form-select, .form-input {
+            width: 100%; padding: 0.75rem 1rem; border: 1px solid #D1D5DB;
+            border-radius: 0.375rem; transition: border-color 0.2s ease-in-out;
+            background-color: white;
+        }
+        .form-select:focus, .form-input:focus {
+            border-color: #0D9488; outline: none;
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+        }
+        .admin-container { max-width: 700px; margin: 2rem auto; padding: 2rem; background-color: white; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+        #adminContent.hidden, #loadingMessage.hidden, #authSection.hidden { display: none; }
+        .site-logo { height: 35px; width: auto; margin-right: 0.5rem; }
+
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="bg-white shadow-md py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://i.ibb.co/nNgF9T4T/Adobe-Express-file.png" alt="Academic Nightingale Logo" class="site-logo">
+                <span class="font-montserrat text-xl font-bold text-primary-teal">Admin Panel</span>
+            </div>
+            <div>
+                <a href="index.html" class="text-sm text-gray-600 hover:text-primary-teal mr-4">Back to Main Site</a>
+                <button id="adminLogoutBtn" class="btn btn-primary text-sm !py-2 !px-4 hidden">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <div id="loadingMessage" class="admin-container text-center">
+            <p class="text-lg">Loading Admin Panel...</p>
+        </div>
+
+        <div id="authSection" class="admin-container hidden">
+            <h2 class="text-2xl font-montserrat font-bold text-center text-primary-teal mb-6">Admin Login Required</h2>
+            <p class="text-center mb-4">This area is restricted. Please log in with an admin account.</p>
+            <p class="text-center text-sm text-gray-500"> (Note: For now, any logged-in user can access this page after login. True admin role checking will be added later.)</p>
+            <a href="login.html?redirect=admin.html" class="btn btn-primary block w-full max-w-xs mx-auto mt-4">Login</a>
+        </div>
+
+        <div id="adminContent" class="admin-container hidden">
+            <h1 class="text-3xl font-montserrat font-bold text-primary-teal mb-8 text-center">Manage Exam Questions & Settings</h1>
+
+            <form id="uploadForm">
+                <div class="mb-6">
+                    <label for="examPlanSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Exam Plan:</label>
+                    <select id="examPlanSelect" name="examPlanSelect" class="form-select" required>
+                        <option value="" disabled selected>Loading plans...</option>
+                    </select>
+                </div>
+
+                <div class="mb-6">
+                    <label for="timePerQuestion" class="block text-sm font-medium text-gray-700 mb-1">Time Per Question (seconds):</label>
+                    <input type="number" id="timePerQuestion" name="timePerQuestion" class="form-input" min="10" placeholder="e.g., 90">
+                    <p class="text-xs text-gray-500 mt-1">Set the default time for each question in this exam. Leave blank to use system default or keep existing.</p>
+                </div>
+
+                <div class="mb-6">
+                    <label for="aikenFile" class="block text-sm font-medium text-gray-700 mb-1">Aiken Format File (.txt) for Questions:</label>
+                    <input type="file" id="aikenFile" name="aikenFile" class="form-input" accept=".txt">
+                    <p class="text-xs text-gray-500 mt-1">Upload a new question file (optional if only updating settings).</p>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary w-full">Update Settings & Upload Questions</button>
+            </form>
+
+            <div id="uploadStatus" class="mt-6 text-center"></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0",
+            authDomain: "excellence-cbt.firebaseapp.com",
+            projectId: "excellence-cbt",
+            storageBucket: "excellence-cbt.appspot.com",
+            messagingSenderId: "697190795343",
+            appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a",
+            measurementId: "G-836KHSYF0Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const functions = getFunctions(app, 'us-central1'); 
+
+        const loadingMessageEl = document.getElementById('loadingMessage');
+        const authSectionEl = document.getElementById('authSection');
+        const adminContentEl = document.getElementById('adminContent');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+        const examPlanSelect = document.getElementById('examPlanSelect');
+        const timePerQuestionInput = document.getElementById('timePerQuestion');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const aikenFileEl = document.getElementById('aikenFile');
+
+
+        async function populateExamPlans() {
+            if (!examPlanSelect) return;
+            try {
+                const querySnapshot = await getDocs(collection(db, "cbtExams"));
+                examPlanSelect.innerHTML = '<option value="" disabled selected>Select an Exam Plan</option>'; 
+                if (querySnapshot.empty) {
+                    examPlanSelect.innerHTML = '<option value="" disabled selected>No exam plans found. Create one in Firestore first.</option>';
+                    return;
+                }
+                querySnapshot.forEach((docSnap) => {
+                    const plan = docSnap.data();
+                    const option = document.createElement('option');
+                    option.value = docSnap.id; 
+                    option.textContent = plan.title ? `${plan.title} (ID: ${docSnap.id})` : `Plan ID: ${docSnap.id}`;
+                    option.dataset.currentTimePerQuestion = plan.timePerQuestion || ''; // Store current time
+                    examPlanSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error fetching exam plans:", error);
+                examPlanSelect.innerHTML = '<option value="" disabled selected>Error loading plans</option>';
+                if (uploadStatus) uploadStatus.innerHTML = `<p class="text-red-500">Error loading exam plans: ${error.message}</p>`;
+            }
+        }
+
+        if (examPlanSelect) {
+            examPlanSelect.addEventListener('change', async (event) => {
+                const selectedOption = event.target.selectedOptions[0];
+                const currentTime = selectedOption.dataset.currentTimePerQuestion;
+                if (timePerQuestionInput) {
+                    if (currentTime) {
+                        timePerQuestionInput.value = currentTime;
+                        timePerQuestionInput.placeholder = `Current: ${currentTime}s (e.g., 90)`;
+                    } else {
+                        timePerQuestionInput.value = '';
+                        timePerQuestionInput.placeholder = 'e.g., 90 (No current value set)';
+                    }
+                }
+            });
+        }
+
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // TODO: Implement proper admin role check (e.g., via custom claims)
+                // For now, any logged-in user can see the admin page.
+                console.log("Admin page: User logged in", user.email);
+                if(loadingMessageEl) loadingMessageEl.classList.add('hidden');
+                if(authSectionEl) authSectionEl.classList.add('hidden');
+                if(adminContentEl) adminContentEl.classList.remove('hidden');
+                if(adminLogoutBtn) adminLogoutBtn.classList.remove('hidden');
+                
+                await populateExamPlans();
+
+            } else {
+                console.log("Admin page: No user logged in. Showing auth section.");
+                if(loadingMessageEl) loadingMessageEl.classList.add('hidden');
+                if(adminContentEl) adminContentEl.classList.add('hidden');
+                if(authSectionEl) authSectionEl.classList.remove('hidden');
+                if(adminLogoutBtn) adminLogoutBtn.classList.add('hidden');
+            }
+        });
+
+        if (adminLogoutBtn) {
+            adminLogoutBtn.addEventListener('click', () => {
+                signOut(auth).then(() => {
+                    console.log("Admin signed out");
+                }).catch(error => {
+                    console.error("Admin sign out error", error);
+                });
+            });
+        }
+
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if(submitBtn) submitBtn.disabled = true;
+                if(submitBtn) submitBtn.textContent = "Processing...";
+                if(uploadStatus) uploadStatus.innerHTML = '<p class="text-blue-500">Starting process...</p>';
+
+                const examId = examPlanSelect.value;
+                const file = aikenFileEl.files[0];
+                const timePerQuestionValue = timePerQuestionInput.value ? parseInt(timePerQuestionInput.value, 10) : null;
+
+                if (!examId) {
+                    if(uploadStatus) uploadStatus.innerHTML = '<p class="text-red-500">Please select an exam plan.</p>';
+                    if(submitBtn) submitBtn.disabled = false;
+                    if(submitBtn) submitBtn.textContent = "Update Settings & Upload Questions";
+                    return;
+                }
+
+                let settingsUpdated = false;
+                let questionsUploaded = false;
+                let finalMessage = "";
+
+                // 1. Update Time Per Question setting if provided
+                if (timePerQuestionValue !== null && !isNaN(timePerQuestionValue) && timePerQuestionValue >= 10) {
+                    try {
+                        const examDocRef = doc(db, "cbtExams", examId);
+                        await updateDoc(examDocRef, {
+                            timePerQuestion: timePerQuestionValue
+                        });
+                        settingsUpdated = true;
+                        finalMessage += `Time per question updated to ${timePerQuestionValue}s. `;
+                        console.log(`Time per question for exam ${examId} updated to ${timePerQuestionValue}s.`);
+                        // Update the dataset for the selected option in the dropdown
+                        const selectedOption = examPlanSelect.options[examPlanSelect.selectedIndex];
+                        if (selectedOption) {
+                             selectedOption.dataset.currentTimePerQuestion = timePerQuestionValue;
+                        }
+
+                    } catch (error) {
+                        console.error("Error updating timePerQuestion:", error);
+                        finalMessage += `Failed to update time per question: ${error.message}. `;
+                    }
+                } else if (timePerQuestionInput.value !== "") { // If value is entered but invalid
+                     finalMessage += `Invalid 'Time Per Question' value (must be >= 10). Setting not updated. `;
+                }
+
+
+                // 2. Upload Aiken questions if a file is selected
+                if (file) {
+                    if(uploadStatus) uploadStatus.innerHTML = `<p class="text-blue-500">${finalMessage}Processing question file...</p>`;
+                    const reader = new FileReader();
+                    reader.onload = async (event) => {
+                        const fileContent = event.target.result;
+                        try {
+                            const uploadAikenQuestions = httpsCallable(functions, 'uploadAikenQuestions');
+                            const result = await uploadAikenQuestions({ examId: examId, aikenText: fileContent });
+                            
+                            console.log("Upload function result:", result);
+                            if (result.data && result.data.success) {
+                                questionsUploaded = true;
+                                finalMessage += (result.data.message || 'Questions uploaded successfully!');
+                            } else {
+                                finalMessage += (result.data.message || 'Failed to upload questions.');
+                            }
+                        } catch (error) {
+                            console.error("Error calling uploadAikenQuestions function:", error);
+                            finalMessage += `Error uploading questions: ${error.message}.`;
+                        } finally {
+                            if(uploadStatus) uploadStatus.innerHTML = `<p class="${(settingsUpdated || questionsUploaded) ? 'text-green-500' : 'text-red-500'}">${finalMessage}</p>`;
+                            if(submitBtn) submitBtn.disabled = false;
+                            if(submitBtn) submitBtn.textContent = "Update Settings & Upload Questions";
+                            aikenFileEl.value = ''; // Clear the file input
+                        }
+                    };
+                    reader.onerror = (error) => {
+                        console.error("Error reading file:", error);
+                        finalMessage += "Error reading file.";
+                        if(uploadStatus) uploadStatus.innerHTML = `<p class="text-red-500">${finalMessage}</p>`;
+                        if(submitBtn) submitBtn.disabled = false;
+                        if(submitBtn) submitBtn.textContent = "Update Settings & Upload Questions";
+                    };
+                    reader.readAsText(file);
+                } else {
+                    // No file selected, just finalize based on settings update
+                    if (!settingsUpdated && timePerQuestionInput.value === "") {
+                         finalMessage = "No settings changed and no file selected for upload.";
+                    } else if (!settingsUpdated && finalMessage.includes("Invalid")) {
+                        // Only invalid time was entered, no file
+                    } else if (settingsUpdated) {
+                        // Settings were updated, no file
+                    }
+
+                    if(uploadStatus) uploadStatus.innerHTML = `<p class="${(settingsUpdated) ? 'text-green-500' : 'text-yellow-600'}">${finalMessage || "No action performed."}</p>`;
+                    if(submitBtn) submitBtn.disabled = false;
+                    if(submitBtn) submitBtn.textContent = "Update Settings & Upload Questions";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
