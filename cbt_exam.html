@@ -74,9 +74,11 @@
         #question-navigation-panel {
             width: 200px; /* Slightly reduced width */
             background-color: #f9fafb; border-right: 1px solid #e5e7eb;
-            padding: 0.75rem; overflow-y: auto; display: flex; flex-direction: column;
-            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+            padding: 0.75rem; 
+            display: flex; flex-direction: column;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, max-height 0.3s ease-in-out; /* Added max-height transition */
             transform: translateX(0);
+            overflow-y: auto; /* Ensure scrolling is enabled by default for desktop if content overflows */
         }
         #question-navigation-panel.hidden-desktop { /* Specific class for desktop hiding */
             transform: translateX(-100%);
@@ -130,14 +132,15 @@
         .all-questions-view .single-question-options { margin-top: 0.75rem;}
 
 
-        #options-container, .single-question-options { space-y-0.5rem; }
-
+        #options-container, .single-question-options { /* space-y-0.5rem; Tailwind class was here, now handled by margin on labels */ }
         .quiz-option-label {
             display: flex; align-items: center; padding: 0.75rem 1rem; /* Reduced padding */
             border: 1px solid #D1D5DB; border-radius: 0.375rem;
             cursor: pointer; transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
             background-color: #fff; font-size: 0.9rem; /* Smaller option text */
+            margin-bottom: 0.5rem; /* Replaces space-y for direct children */
         }
+        .quiz-option-label:last-child { margin-bottom: 0; }
         .quiz-option-label:hover { background-color: #F9FAFB; border-color: #A5B4FC; box-shadow: 0 0 0 1px rgba(165, 180, 252, 0.2); }
         .quiz-option-label.selected { background-color: #E0E7FF; border-color: #6366F1; font-weight: 500; box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3); }
         .quiz-option-input { margin-right: 0.5rem; width: 1rem; height: 1rem; accent-color: #0D9488; }
@@ -262,20 +265,33 @@
 
             .exam-main-area { flex-direction: column; }
             #question-navigation-panel {
-                width: 100%; max-height: 0px; /* Start collapsed */
-                order: -1; padding: 0; border-right: none; border-bottom: 1px solid #e5e7eb;
-                transform: translateY(0); overflow: hidden;
+                width: 100%; 
+                max-height: 0px; /* Start collapsed */
+                order: -1; 
+                padding: 0; 
+                border-right: none; 
+                border-bottom: 1px solid #e5e7eb;
+                transform: translateY(0); 
+                overflow-y: hidden; /* Initially hidden, JS will change to auto */
                 transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out, opacity 0.3s ease-in-out;
                 opacity: 0;
                 position: static; /* Ensure it's part of the flow */
             }
             #question-navigation-panel.mobile-visible { /* Class to show panel on mobile */
-                max-height: 150px; /* Adjust as needed */
+                max-height: 200px; /* Increased max-height for better visibility of more items */
                 padding: 0.5rem;
                 opacity: 1;
+                overflow-y: auto; /* Enable scrolling when visible and content overflows */
             }
-            .question-nav-grid { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)); gap: 0.2rem;}
-            .question-nav-item { width: 28px; height: 28px; font-size: 0.7rem; }
+            .question-nav-grid { 
+                grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); /* Slightly smaller items for mobile */
+                gap: 0.25rem; /* Adjusted gap */
+            }
+            .question-nav-item { 
+                width: 100%; /* Ensure items take full grid cell width */
+                height: 30px; /* Slightly smaller height */
+                font-size: 0.75rem; /* Adjusted font size */
+            }
             #main-exam-content { padding: 0.75rem; }
             #question-container { padding: 0.75rem; margin-bottom: 1rem;}
             #question-text { font-size: 1rem; line-height: 1.5; }
@@ -295,7 +311,8 @@
 </head>
 <body class="bg-gray-100">
     <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
-        <nav class="container mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center h-[56px]"> <a href="index.html#home" class="flex items-center text-xl font-montserrat font-bold text-primary-teal">
+        <nav class="container mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center h-[56px]">
+            <a href="index.html#home" class="flex items-center text-xl font-montserrat font-bold text-primary-teal">
                 <img src="https://i.ibb.co/nNgF9T4T/Adobe-Express-file.png" alt="Academic Nightingale Logo" class="site-logo" onerror="this.onerror=null;this.src='https://placehold.co/150x36/0D9488/FFFFFF?text=Logo&font=montserrat';this.alt='Error loading logo';">
             </a>
             <div id="navAuthLinksCBT" class="flex items-center space-x-2">
@@ -306,7 +323,8 @@
         </nav>
     </header>
 
-    <main class="pt-[56px]"> <div id="cbtLoadingMessage" class="message-card max-w-md mx-auto mt-8">
+    <main class="pt-[56px]">
+        <div id="cbtLoadingMessage" class="message-card max-w-md mx-auto mt-8">
             <div role="status" class="flex justify-center items-center mb-3">
                 <svg aria-hidden="true" class="w-7 h-7 text-gray-200 animate-spin dark:text-gray-600 fill-primary-teal" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 40.0107 89.3758 44.3488 88.7555 48.5437C88.2905 51.9706 87.1743 55.3379 85.4778 58.3718C84.8704 59.5098 83.9066 60.3978 82.7311 60.972C81.5556 61.5462 80.2297 61.7881 78.9079 61.676C76.3438 61.4343 74.0441 59.9769 72.5564 57.8117C71.0687 55.6466 70.4806 52.9878 70.9138 50.426C71.347 47.8642 72.7926 45.5576 75.0342 44.0095C77.2759 42.4614 80.0691 41.8387 82.8148 42.2466C83.8542 42.3948 84.8707 42.138 85.7529 41.5279C86.6351 40.9178 87.3532 40.0039 87.8314 39.0409Z" fill="currentFill"/></svg>
                 <span class="sr-only">Loading...</span>
@@ -332,7 +350,8 @@
                     </div>
                 </div>
                 <div id="exam-timer-top" class="my-1 sm:my-0">Time: 00:00</div>
-                <div class="exam-actions">
+                 <div class="exam-actions">
+                    <span id="network-status-indicator" class="online mr-2">Online</span>
                     <button id="view-mode-btn" class="btn btn-secondary !text-xs" title="Toggle View Mode">One by One</button>
                     <button id="calculator-btn" class="btn btn-secondary btn-icon !text-xs" title="Calculator"><i class="fas fa-calculator"></i></button>
                     <button id="help-btn" class="btn btn-secondary btn-icon !text-xs" title="Help/Instructions"><i class="fas fa-question-circle"></i></button>
@@ -341,8 +360,7 @@
             </div>
 
             <div class="exam-main-area">
-                <aside id="question-navigation-panel" class="hidden-desktop">
-                    <div class="nav-panel-header">
+                <aside id="question-navigation-panel" class="hidden-desktop"> <div class="nav-panel-header">
                         <h3 class="nav-panel-title">Question Map</h3>
                         <span id="nav-answered-count" class="text-xs text-gray-500">0/0 Answered</span>
                     </div>
@@ -387,6 +405,7 @@
                         <li>Flag questions for review using the <i class="far fa-flag"></i> button.</li>
                         <li>Click <strong>"Submit Exam"</strong> (top bar) to finish.</li>
                         <li>A basic <strong>Calculator</strong> is available (<i class="fas fa-calculator"></i>).</li>
+                        <li>Your progress is saved automatically to our servers.</li>
                     </ul>
                     <p>Good luck!</p>
                 </div>
@@ -398,25 +417,52 @@
     </main>
 
     <script type="module">
+        // Firebase SDK imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, getDoc, query, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut, 
+            signInAnonymously, // For anonymous sign-in if __initial_auth_token is not available
+            signInWithCustomToken // For custom token sign-in
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            doc, 
+            getDoc, 
+            setDoc, 
+            updateDoc,
+            query, 
+            where, 
+            getDocs, 
+            Timestamp,
+            serverTimestamp, // For server-side timestamps
+            onSnapshot, // For real-time updates (optional for this phase, but good for future)
+            enableNetwork, // To manually enable network
+            disableNetwork, // To manually disable network
+            setLogLevel // For debugging Firestore
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0",
-          authDomain: "excellence-cbt.firebaseapp.com",
-          projectId: "excellence-cbt",
-          storageBucket: "excellence-cbt.appspot.com",
-          messagingSenderId: "697190795343",
-          appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a",
-          measurementId: "G-836KHSYF0Q"
+        // --- Retrieve Firebase config and App ID from global variables ---
+        // These variables are expected to be injected into the global scope by the Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; // Default for local testing
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            // Provide your actual Firebase config here for local testing if __firebase_config is not available
+            apiKey: "AIzaSyAmiOWe_ECRGpWckAj3-fPtXdloSI31Xe0", // Replace with your actual API key for local testing
+            authDomain: "excellence-cbt.firebaseapp.com",
+            projectId: "excellence-cbt",
+            storageBucket: "excellence-cbt.appspot.com",
+            messagingSenderId: "697190795343",
+            appId: "1:697190795343:web:0ffb8af3b2fb9e148f823a", // Replace with your actual App ID
+            measurementId: "G-836KHSYF0Q" // Replace with your actual Measurement ID
         };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        
+        // Initialize Firebase App and Services
+        const fbApp = initializeApp(firebaseConfig);
+        const auth = getAuth(fbApp);
+        const db = getFirestore(fbApp);
+        setLogLevel('debug'); // Enable Firestore debug logging
 
         // DOM Elements
         const navUserEmailCBT = document.getElementById('navUserEmailCBT');
@@ -427,7 +473,7 @@
         const questionProgressTextEl = document.getElementById('question-progress-text');
         const progressBarFillEl = document.getElementById('progress-bar-fill');
         const examTimerTopEl = document.getElementById('exam-timer-top');
-        const calculatorBtn = document.getElementById('calculator-btn');
+        const calculatorBtn = document.getElementById('calculator-btn'); // Functionality not implemented in this scope
         const submitExamEarlyBtn = document.getElementById('submit-exam-early-btn');
         const questionNavGridEl = document.getElementById('question-nav-grid');
         const prevQuestionBtn = document.getElementById('prev-question-btn');
@@ -440,6 +486,8 @@
         const questionNavigationPanelEl = document.getElementById('question-navigation-panel');
         const viewModeBtn = document.getElementById('view-mode-btn');
         const navAnsweredCountEl = document.getElementById('nav-answered-count');
+        const networkStatusIndicator = document.getElementById('network-status-indicator');
+        const mainExamContentEl = document.getElementById('main-exam-content'); // Added for margin adjustment
 
         // Modal Elements
         const submitConfirmationModalEl = document.getElementById('submitConfirmationModal');
@@ -451,23 +499,35 @@
         const gotItInstructionsBtn = document.getElementById('gotItInstructionsBtn');
 
         // Exam State Variables
+        let currentUserId = null; // Will be set after authentication
         let allQuestions = [];
         let currentQuestionIndex = 0;
-        let userAnswers = {};
-        let questionStatus = [];
-        let questionFlags = [];
+        let userAnswers = {}; // Store as { questionId: selectedOptionId }
+        let questionStatus = []; // Array of 'unseen', 'seen', 'answered'
+        let questionFlags = []; // Array of booleans
         let examTimerInterval;
-        let timePerQuestionInSeconds = 90;
+        let timePerQuestionInSecondsDefault = 90; // Default if not set in exam doc
         let totalExamTimeInSeconds = 0;
         let timeLeftInSeconds = 0;
         let examSubmitted = false;
-        let currentViewMode = 'single';
-        let examStartTimeMs = 0;
-        let currentLoadedExamId = "";
+        let currentViewMode = 'single'; // 'single' or 'all'
+        let examStartTime = null; // Firestore Timestamp
+        let currentLoadedExamId = null;
         let currentLoadedExamTitle = "CBT Exam";
-        const EXAM_ID_TO_LOAD_DEFAULT = "Nursing Council Professional Exam";
-        const SESSION_STORAGE_EXAM_STATE_KEY = 'cbtExamInProgressState';
-        const SESSION_STORAGE_REVIEW_STATE_KEY = 'cbtExamReviewState';
+        let activeExamSessionId = null; // Firestore document ID for the active session
+        let activeExamSessionUnsubscribe = null; // For Firestore onSnapshot listener
+
+        const EXAM_ID_TO_LOAD_DEFAULT = "Nursing Council Professional Exam"; // Default if no examId in URL
+        const SAVE_INTERVAL_MS = 15000; // Save timer progress every 15 seconds
+        let lastTimerSaveTime = 0;
+
+
+        // --- Firestore Collection Paths ---
+        const getActiveExamSessionPath = (userId, sessionId) => `artifacts/${appId}/users/${userId}/activeExamSessions/${sessionId}`;
+        const getActiveExamSessionsCollectionPath = (userId) => `artifacts/${appId}/users/${userId}/activeExamSessions`;
+        const getExamResultsPath = (userId, resultId) => `artifacts/${appId}/users/${userId}/examResults/${resultId}`;
+        const getExamResultsCollectionPath = (userId) => `artifacts/${appId}/users/${userId}/examResults`;
+
 
         // --- Utility Functions ---
         function formatTime(totalSeconds) {
@@ -479,33 +539,67 @@
             return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
+        // --- Network Status Indicator ---
+        function updateNetworkStatus() {
+            if (!networkStatusIndicator) return;
+            if (navigator.onLine) {
+                networkStatusIndicator.textContent = 'Online';
+                networkStatusIndicator.classList.remove('offline');
+                networkStatusIndicator.classList.add('online');
+                enableNetwork(db).catch(err => console.warn("Error enabling network:", err)); 
+            } else {
+                networkStatusIndicator.textContent = 'Offline';
+                networkStatusIndicator.classList.remove('online');
+                networkStatusIndicator.classList.add('offline');
+            }
+        }
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        
+
         // --- Timer Functions ---
         function updateTimerDisplay() {
             if (examTimerTopEl) examTimerTopEl.textContent = `Time: ${formatTime(timeLeftInSeconds)}`;
         }
 
         function startExamTimer() {
-            if (allQuestions.length === 0 || examSubmitted) { stopExamTimer(); return; }
-            stopExamTimer();
-            if (timeLeftInSeconds <= 0 || totalExamTimeInSeconds <= 0 || timeLeftInSeconds > totalExamTimeInSeconds) {
-                 totalExamTimeInSeconds = allQuestions.length * timePerQuestionInSeconds;
-                 timeLeftInSeconds = totalExamTimeInSeconds;
+            if (allQuestions.length === 0 || examSubmitted) {
+                stopExamTimer();
+                return;
             }
-            if (!examStartTimeMs) examStartTimeMs = Date.now() - ((totalExamTimeInSeconds - timeLeftInSeconds) * 1000);
+            stopExamTimer(); 
+
             updateTimerDisplay();
-            examTimerInterval = setInterval(() => {
-                if (examSubmitted) { stopExamTimer(); return; }
+
+            examTimerInterval = setInterval(async () => {
+                if (examSubmitted) {
+                    stopExamTimer();
+                    return;
+                }
                 timeLeftInSeconds--;
                 updateTimerDisplay();
-                if (timeLeftInSeconds <= 0) submitExam(true);
+
+                if (timeLeftInSeconds <= 0) {
+                    console.log("Time's up! Auto-submitting exam.");
+                    await submitExam(true); 
+                } else {
+                    const now = Date.now();
+                    if (now - lastTimerSaveTime > SAVE_INTERVAL_MS) {
+                        await saveExamState({ timerOnly: true }); 
+                        lastTimerSaveTime = now;
+                    }
+                }
             }, 1000);
         }
-        function stopExamTimer() { clearInterval(examTimerInterval); }
+
+        function stopExamTimer() {
+            clearInterval(examTimerInterval);
+        }
 
         // --- UI Update Functions ---
         function updateProgressBar() {
             if (!progressBarFillEl || !questionProgressTextEl || !navAnsweredCountEl) return;
-            const answeredCount = questionStatus.filter(s => s === 'answered').length;
+            const answeredCount = Object.keys(userAnswers).length; 
             const progressPercent = allQuestions.length > 0 ? ((currentQuestionIndex + 1) / allQuestions.length) * 100 : 0;
             progressBarFillEl.style.width = `${progressPercent}%`;
             questionProgressTextEl.textContent = `Q: ${currentQuestionIndex + 1}/${allQuestions.length}`;
@@ -531,26 +625,42 @@
             const navItems = questionNavGridEl.querySelectorAll('.question-nav-item');
             navItems.forEach((item, index) => {
                 item.classList.remove('current', 'answered', 'seen', 'unseen', 'review-correct', 'review-incorrect', 'review-skipped', 'review-current');
+                
+                const questionId = allQuestions[index]?.id;
                 let baseContent = index + 1;
-                if (questionFlags[index]) item.innerHTML = `${baseContent} <i class="fas fa-flag text-xs ml-0.5"></i>`;
-                else item.textContent = baseContent;
-
-                if (examSubmitted) {
-                    const questionId = allQuestions[index]?.id;
-                    if (questionId && userAnswers[questionId] === allQuestions[index].correctOptionId) item.classList.add('review-correct');
-                    else if (questionId && userAnswers[questionId] !== undefined) item.classList.add('review-incorrect');
-                    else item.classList.add('review-skipped');
-                    if (index === currentQuestionIndex && currentViewMode === 'single') item.classList.add('review-current');
+                
+                if (questionFlags[index]) {
+                    item.innerHTML = `${baseContent} <i class="fas fa-flag text-xs ml-0.5"></i>`;
                 } else {
-                    if (index === currentQuestionIndex && currentViewMode === 'single') item.classList.add('current');
-                    switch(questionStatus[index]) {
-                        case 'answered': item.classList.add('answered'); break;
-                        case 'seen': item.classList.add('seen'); break;
-                        default: item.classList.add('unseen'); break;
+                    item.textContent = baseContent;
+                }
+
+                if (examSubmitted) { 
+                    if (questionId && userAnswers[questionId] === allQuestions[index].correctOptionId) {
+                        item.classList.add('review-correct');
+                    } else if (questionId && userAnswers[questionId] !== undefined) {
+                        item.classList.add('review-incorrect');
+                    } else {
+                        item.classList.add('review-skipped');
+                    }
+                    if (index === currentQuestionIndex && currentViewMode === 'single') {
+                        item.classList.add('review-current');
+                    }
+                } else { 
+                    if (index === currentQuestionIndex && currentViewMode === 'single') {
+                        item.classList.add('current');
+                    }
+                    if (userAnswers[questionId] !== undefined) {
+                        item.classList.add('answered');
+                    } else if (questionStatus[index] === 'seen') { 
+                        item.classList.add('seen');
+                    } else {
+                        item.classList.add('unseen');
                     }
                 }
             });
         }
+
 
         function updateNavigationButtons() {
             if(prevQuestionBtn) prevQuestionBtn.disabled = currentQuestionIndex === 0 || examSubmitted;
@@ -562,146 +672,443 @@
             }
         }
 
-        // --- Exam State Management ---
-        function saveExamState() {
-            if (examSubmitted) return;
-            const state = { currentLoadedExamId, currentLoadedExamTitle, allQuestions, userAnswers, questionStatus, questionFlags, currentQuestionIndex, timeLeftInSeconds, examStartTimeMs, totalExamTimeInSeconds, currentViewMode, inProgress: true };
-            try { sessionStorage.setItem(SESSION_STORAGE_EXAM_STATE_KEY, JSON.stringify(state)); } catch (e) { console.warn("Could not save exam state, possibly due to storage limits:", e); }
-        }
+        // --- Exam State Management with Firestore ---
+        async function saveExamState(options = {}) {
+            if (examSubmitted || !activeExamSessionId || !currentUserId) return;
+            console.log(`Saving exam state to Firestore for session: ${activeExamSessionId}, options:`, options);
 
-        function loadSavedExamState() {
-            const savedStateString = sessionStorage.getItem(SESSION_STORAGE_EXAM_STATE_KEY);
-            if (savedStateString) {
-                const savedState = JSON.parse(savedStateString);
-                if (savedState.inProgress && savedState.allQuestions && savedState.allQuestions.length > 0) {
-                    currentLoadedExamId = savedState.currentLoadedExamId; currentLoadedExamTitle = savedState.currentLoadedExamTitle; allQuestions = savedState.allQuestions; userAnswers = savedState.userAnswers || {}; questionStatus = savedState.questionStatus || allQuestions.map(() => 'unseen'); questionFlags = savedState.questionFlags || allQuestions.map(() => false); currentQuestionIndex = savedState.currentQuestionIndex || 0; examStartTimeMs = savedState.examStartTimeMs; totalExamTimeInSeconds = savedState.totalExamTimeInSeconds || (allQuestions.length * timePerQuestionInSeconds);
-                    const elapsedTimeSinceStartMs = examStartTimeMs ? (Date.now() - examStartTimeMs) : 0;
-                    const actualTimeLeftSeconds = totalExamTimeInSeconds - Math.floor(elapsedTimeSinceStartMs / 1000);
-                    if (actualTimeLeftSeconds <= 0 && examStartTimeMs > 0) { examSubmitted = false; submitExam(true); return true; }
-                    timeLeftInSeconds = actualTimeLeftSeconds > 0 ? actualTimeLeftSeconds : (savedState.timeLeftInSeconds || totalExamTimeInSeconds);
-                    currentViewMode = savedState.currentViewMode || 'single'; examSubmitted = false;
-                    if(viewModeBtn) viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One';
-                    if(submitExamEarlyBtn) submitExamEarlyBtn.disabled = false;
-                    if(examTimerTopEl) examTimerTopEl.classList.remove('hidden');
-                    renderQuestionNavigationPanel(); renderCurrentView(); updateNavigationButtons(); startExamTimer();
-                    if(cbtPageContent) cbtPageContent.classList.remove('hidden'); if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
-                    return true;
+            const sessionDocRef = doc(db, getActiveExamSessionPath(currentUserId, activeExamSessionId));
+            
+            let stateToSave = {
+                lastUpdated: serverTimestamp(), 
+                timeLeftSeconds: timeLeftInSeconds,
+            };
+
+            if (!options.timerOnly) { 
+                stateToSave = {
+                    ...stateToSave,
+                    currentQuestionIndex: currentQuestionIndex,
+                    userAnswers: userAnswers, 
+                    questionStatus: questionStatus, 
+                    questionFlags: questionFlags,   
+                    currentViewMode: currentViewMode,
+                };
+            }
+            
+            try {
+                await updateDoc(sessionDocRef, stateToSave);
+                console.log("Exam state saved successfully to Firestore.");
+            } catch (error) {
+                console.error("Error saving exam state to Firestore:", error);
+                if (networkStatusIndicator) {
+                    networkStatusIndicator.textContent = 'Save Failed!';
+                    networkStatusIndicator.classList.remove('online');
+                    networkStatusIndicator.classList.add('offline'); 
                 }
-            } return false;
+            }
         }
-
-        function saveReviewState() {
-            const reviewState = { currentLoadedExamId, currentLoadedExamTitle, allQuestions, userAnswers, questionFlags, questionStatus, examStartTimeMs, totalExamTimeInSeconds, isReviewMode: true };
-            try { sessionStorage.setItem(SESSION_STORAGE_REVIEW_STATE_KEY, JSON.stringify(reviewState)); } catch (e) { console.warn("Could not save review state:", e); }
-        }
-
-        function loadSavedReviewState() {
-            const savedReviewString = sessionStorage.getItem(SESSION_STORAGE_REVIEW_STATE_KEY);
-            if (savedReviewString) {
-                const savedReview = JSON.parse(savedReviewString);
-                if (savedReview.isReviewMode && savedReview.allQuestions && savedReview.allQuestions.length > 0) {
-                    currentLoadedExamId = savedReview.currentLoadedExamId; currentLoadedExamTitle = savedReview.currentLoadedExamTitle; allQuestions = savedReview.allQuestions; userAnswers = savedReview.userAnswers || {}; questionFlags = savedReview.questionFlags || allQuestions.map(() => false); questionStatus = savedReview.questionStatus || allQuestions.map(() => 'unseen'); examStartTimeMs = savedReview.examStartTimeMs; totalExamTimeInSeconds = savedReview.totalExamTimeInSeconds; examSubmitted = true;
-                    renderResultsPage();
-                    if(cbtPageContent) cbtPageContent.classList.remove('hidden'); if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
-                    return true;
-                }
-            } return false;
-        }
-        function clearExamSessionStorage() { sessionStorage.removeItem(SESSION_STORAGE_EXAM_STATE_KEY); sessionStorage.removeItem(SESSION_STORAGE_REVIEW_STATE_KEY); }
-
+        
         // --- Core Exam Logic ---
-        async function loadExam(examIdParam) {
+        async function initializeExam(examIdParam) {
             const urlParams = new URLSearchParams(window.location.search);
-            const examId = examIdParam || urlParams.get('examId') || EXAM_ID_TO_LOAD_DEFAULT;
+            const examIdFromUrl = urlParams.get('examId');
+            currentLoadedExamId = examIdParam || examIdFromUrl || EXAM_ID_TO_LOAD_DEFAULT;
 
             const loadingStatusTextEl = document.getElementById('loadingStatusText');
-            if (!examId) { if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error: Exam ID missing."; if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden'); return; }
-            if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Loading exam questions...";
-            currentLoadedExamId = examId;
+            if (!currentLoadedExamId) {
+                if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error: Exam ID missing.";
+                cbtLoadingMessage.classList.remove('hidden');
+                cbtPageContent.classList.add('hidden');
+                accessDeniedMessage.classList.add('hidden');
+                return;
+            }
+
+            if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Checking for active session...";
+
             try {
-                const examDocRef = doc(db, "cbtExams", examId); const examDocSnap = await getDoc(examDocRef);
-                if (examDocSnap.exists()) { currentLoadedExamTitle = examDocSnap.data().title || "CBT Exam"; timePerQuestionInSeconds = examDocSnap.data().timePerQuestion || 90; }
-                else { currentLoadedExamTitle = "CBT Exam (Default)"; }
-                const questionsRef = collection(db, "cbtExams", examId, "questions"); const qQuery = query(questionsRef); const querySnapshot = await getDocs(qQuery);
-                allQuestions = []; questionStatus = []; questionFlags = [];
-                querySnapshot.forEach((doc) => { allQuestions.push({ id: doc.id, ...doc.data() }); questionStatus.push('unseen'); questionFlags.push(false); });
-                if (allQuestions.length > 0) {
-                    currentQuestionIndex = 0; userAnswers = {}; examSubmitted = false; timeLeftInSeconds = 0; examStartTimeMs = 0; totalExamTimeInSeconds = 0; currentViewMode = 'single';
-                    if(viewModeBtn) { viewModeBtn.textContent = "View All"; viewModeBtn.disabled = false; }
-                    if(submitExamEarlyBtn) submitExamEarlyBtn.disabled = false;
-                    if(examTimerTopEl) examTimerTopEl.classList.remove('hidden');
-                    if(resultsViewWrapperEl) resultsViewWrapperEl.classList.add('hidden'); if(activeExamViewEl) activeExamViewEl.classList.remove('hidden'); if(quizContentAreaEl) quizContentAreaEl.innerHTML = ''; if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden');
-                    renderQuestionNavigationPanel(); renderCurrentView(); updateNavigationButtons(); startExamTimer();
-                    if(cbtPageContent) cbtPageContent.classList.remove('hidden'); if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
-                } else { if(loadingStatusTextEl) loadingStatusTextEl.textContent = "No questions for this exam."; if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden'); }
-            } catch (error) { console.error("Error loading exam questions for " + examId + ":", error); if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error loading exam. Try again."; if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); }
+                const activeSessionsColRef = collection(db, getActiveExamSessionsCollectionPath(currentUserId));
+                const q = query(activeSessionsColRef, 
+                                where("examId", "==", currentLoadedExamId),
+                                where("status", "==", "in-progress") 
+                               );
+                const querySnapshot = await getDocs(q);
+
+                let sessionData = null;
+                if (!querySnapshot.empty) {
+                    const sessionDoc = querySnapshot.docs[0]; 
+                    activeExamSessionId = sessionDoc.id;
+                    sessionData = sessionDoc.data();
+                    console.log(`Resuming active exam session: ${activeExamSessionId}`, sessionData);
+                    if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Resuming your session...";
+
+                    allQuestions = sessionData.allQuestionsLoaded || []; 
+                    currentLoadedExamTitle = sessionData.examTitle || "CBT Exam";
+                    currentQuestionIndex = sessionData.currentQuestionIndex || 0;
+                    userAnswers = sessionData.userAnswers || {};
+                    questionStatus = sessionData.questionStatus || allQuestions.map(() => 'unseen');
+                    questionFlags = sessionData.questionFlags || allQuestions.map(() => false);
+                    currentViewMode = sessionData.currentViewMode || 'single';
+                    examStartTime = sessionData.startTime; 
+                    totalExamTimeInSeconds = sessionData.totalExamTimeSeconds;
+
+                    const lastUpdated = sessionData.lastUpdated ? sessionData.lastUpdated.toDate() : new Date();
+                    const serverTimeNow = Date.now(); 
+                    const timeElapsedSinceLastSaveMs = serverTimeNow - lastUpdated.getTime();
+                    timeLeftInSeconds = Math.max(0, sessionData.timeLeftSeconds - Math.floor(timeElapsedSinceLastSaveMs / 1000));
+                    
+                    if (allQuestions.length === 0) { 
+                         if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Loading exam questions...";
+                         await fetchExamQuestionsAndDetails(currentLoadedExamId, true); 
+                    }
+
+                } else {
+                    console.log("No active session found. Starting new exam.");
+                    if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Loading exam questions...";
+                    await fetchExamQuestionsAndDetails(currentLoadedExamId, false); 
+
+                    activeExamSessionId = doc(collection(db, "some_temporary_placeholder")).id; // Generate client-side ID first
+                    const newSessionData = {
+                        userId: currentUserId,
+                        examId: currentLoadedExamId,
+                        examTitle: currentLoadedExamTitle,
+                        startTime: serverTimestamp(),
+                        lastUpdated: serverTimestamp(),
+                        totalExamTimeSeconds: totalExamTimeInSeconds,
+                        timeLeftSeconds: totalExamTimeInSeconds,
+                        currentQuestionIndex: 0,
+                        userAnswers: {},
+                        questionStatus: allQuestions.map(() => 'unseen'),
+                        questionFlags: allQuestions.map(() => false),
+                        status: "in-progress",
+                        currentViewMode: 'single',
+                        allQuestionsLoaded: allQuestions 
+                    };
+                    // Use the generated ID to set the document in the correct user-specific path
+                    await setDoc(doc(db, getActiveExamSessionPath(currentUserId, activeExamSessionId)), newSessionData);
+                    console.log(`New exam session created: ${activeExamSessionId}`);
+                    timeLeftInSeconds = totalExamTimeInSeconds; 
+                    examStartTime = Timestamp.now(); 
+                }
+
+                examSubmitted = false;
+                if(viewModeBtn) { viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One'; viewModeBtn.disabled = false; }
+                if(submitExamEarlyBtn) submitExamEarlyBtn.disabled = false;
+                if(examTimerTopEl) examTimerTopEl.classList.remove('hidden');
+                if(resultsViewWrapperEl) resultsViewWrapperEl.classList.add('hidden');
+                if(activeExamViewEl) activeExamViewEl.classList.remove('hidden');
+                if(quizContentAreaEl) quizContentAreaEl.innerHTML = '';
+                if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden');
+
+                renderQuestionNavigationPanel();
+                renderCurrentView();
+                updateNavigationButtons();
+                startExamTimer(); 
+
+                cbtPageContent.classList.remove('hidden');
+                cbtLoadingMessage.classList.add('hidden');
+                accessDeniedMessage.classList.add('hidden');
+
+            } catch (error) {
+                console.error("Error initializing exam (Firestore state):", error);
+                if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error loading exam. Try again.";
+                cbtLoadingMessage.classList.remove('hidden');
+                cbtPageContent.classList.add('hidden');
+            }
         }
+        
+        async function fetchExamQuestionsAndDetails(examId, isResuming = false) {
+            try {
+                const examDocRef = doc(db, "cbtExams", examId);
+                const examDocSnap = await getDoc(examDocRef);
+
+                if (examDocSnap.exists()) {
+                    currentLoadedExamTitle = examDocSnap.data().title || "CBT Exam";
+                    timePerQuestionInSecondsDefault = examDocSnap.data().timePerQuestion || 90;
+                } else {
+                    console.warn(`Exam document ${examId} not found in cbtExams. Using defaults.`);
+                    currentLoadedExamTitle = "CBT Exam (Default)";
+                }
+
+                const questionsRef = collection(db, "cbtExams", examId, "questions");
+                const qQuery = query(questionsRef); 
+                const querySnapshot = await getDocs(qQuery);
+                
+                allQuestions = []; 
+                querySnapshot.forEach((doc) => {
+                    allQuestions.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (!isResuming) { 
+                    questionStatus = allQuestions.map(() => 'unseen');
+                    questionFlags = allQuestions.map(() => false);
+                    userAnswers = {};
+                    currentQuestionIndex = 0;
+                    totalExamTimeInSeconds = allQuestions.length * timePerQuestionInSecondsDefault;
+                } else if (allQuestions.length > 0 && Object.keys(questionStatus).length !== allQuestions.length) {
+                    // This part might need sessionData if it was available before calling this
+                    // For now, let's assume if isResuming, sessionData was handled by initializeExam
+                    // and this function is mainly for fetching questions if not in sessionData.allQuestionsLoaded
+                    const sessionDocRef = doc(db, getActiveExamSessionPath(currentUserId, activeExamSessionId));
+                    const sessionDocSnap = await getDoc(sessionDocRef);
+                    if (sessionDocSnap.exists()) {
+                        const existingSessionData = sessionDocSnap.data();
+                        questionStatus = existingSessionData.questionStatus || allQuestions.map(() => 'unseen');
+                        questionFlags = existingSessionData.questionFlags || allQuestions.map(() => false);
+                    } else {
+                         questionStatus = allQuestions.map(() => 'unseen');
+                         questionFlags = allQuestions.map(() => false);
+                    }
+                }
+
+
+                if (allQuestions.length === 0) {
+                    throw new Error("No questions found for this exam.");
+                }
+            } catch (error) {
+                console.error(`Error fetching questions for exam ${examId}:`, error);
+                throw error; 
+            }
+        }
+
 
         function renderCurrentView() {
-             if (examSubmitted) { renderResultsPage(); return; }
-            if(resultsViewWrapperEl) resultsViewWrapperEl.classList.add('hidden'); if(activeExamViewEl) activeExamViewEl.classList.remove('hidden');
-            if (currentViewMode === 'single') { if (quizContentAreaEl) quizContentAreaEl.className = 'single-question-view'; displaySingleQuestion(); if (examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden'); }
-            else { if (quizContentAreaEl) quizContentAreaEl.className = 'all-questions-view'; displayAllQuestions(); if (examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden'); }
+             if (examSubmitted) {
+                renderResultsPage(); 
+                return;
+             }
+            if(resultsViewWrapperEl) resultsViewWrapperEl.classList.add('hidden');
+            if(activeExamViewEl) activeExamViewEl.classList.remove('hidden');
+
+            if (currentViewMode === 'single') {
+                if (quizContentAreaEl) quizContentAreaEl.className = 'single-question-view';
+                displaySingleQuestion();
+                if (examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden');
+            } else { 
+                if (quizContentAreaEl) quizContentAreaEl.className = 'all-questions-view';
+                displayAllQuestions();
+                if (examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden');
+            }
         }
 
-        function createFlagButton(index, uniqueIdPart) {
-            const flagBtn = document.createElement('button'); flagBtn.id = `flag-btn-${uniqueIdPart}-${index}`;
-            flagBtn.className = `btn btn-sm !py-0.5 !px-1.5 !text-xs ${questionFlags[index] ? 'btn-warning' : 'btn-secondary'}`;
-            flagBtn.title = questionFlags[index] ? "Unflag" : "Flag"; flagBtn.innerHTML = `<i class="fas fa-flag mr-0.5"></i> ${questionFlags[index] ? 'Flagged' : 'Flag'}`;
-            flagBtn.addEventListener('click', (event) => { event.stopPropagation(); if (examSubmitted) return; questionFlags[index] = !questionFlags[index];
-                flagBtn.innerHTML = `<i class="fas fa-flag mr-0.5"></i> ${questionFlags[index] ? 'Flagged' : 'Flag'}`; flagBtn.classList.toggle('btn-warning', questionFlags[index]); flagBtn.classList.toggle('btn-secondary', !questionFlags[index]);
-                updateQuestionNavigationHighlights(); saveExamState(); });
+        function createFlagButton(questionIndex, uniqueIdPart) {
+            const flagBtn = document.createElement('button');
+            flagBtn.id = `flag-btn-${uniqueIdPart}-${questionIndex}`;
+            flagBtn.className = `btn btn-sm !py-0.5 !px-1.5 !text-xs ${questionFlags[questionIndex] ? 'btn-warning' : 'btn-secondary'}`;
+            flagBtn.title = questionFlags[questionIndex] ? "Unflag" : "Flag";
+            flagBtn.innerHTML = `<i class="fas fa-flag mr-0.5"></i> ${questionFlags[questionIndex] ? 'Flagged' : 'Flag'}`;
+            
+            flagBtn.addEventListener('click', async (event) => {
+                event.stopPropagation();
+                if (examSubmitted) return;
+                questionFlags[questionIndex] = !questionFlags[questionIndex];
+                flagBtn.innerHTML = `<i class="fas fa-flag mr-0.5"></i> ${questionFlags[questionIndex] ? 'Flagged' : 'Flag'}`;
+                flagBtn.classList.toggle('btn-warning', questionFlags[questionIndex]);
+                flagBtn.classList.toggle('btn-secondary', !questionFlags[questionIndex]);
+                
+                updateQuestionNavigationHighlights();
+                await saveExamState(); 
+            });
             return flagBtn;
         }
 
         function displaySingleQuestion() {
             if (allQuestions.length === 0 || currentQuestionIndex < 0 || currentQuestionIndex >= allQuestions.length || !quizContentAreaEl) return;
-            const question = allQuestions[currentQuestionIndex]; if (!question) return;
-            if (questionStatus[currentQuestionIndex] === 'unseen') questionStatus[currentQuestionIndex] = 'seen';
+            const question = allQuestions[currentQuestionIndex];
+            if (!question || !question.id) {
+                console.error("Invalid question data at current index:", currentQuestionIndex, question);
+                quizContentAreaEl.innerHTML = `<p class="text-red-500 text-center p-4">Error: Could not load question ${currentQuestionIndex + 1}.</p>`;
+                return;
+            }
+
+            if (questionStatus[currentQuestionIndex] === 'unseen') {
+                questionStatus[currentQuestionIndex] = 'seen';
+            }
+
             const flagButton = createFlagButton(currentQuestionIndex, `single_${question.id}`);
-            quizContentAreaEl.innerHTML = `<div id="question-container"><p id="examTitleContextInPage">${currentLoadedExamTitle}</p><div class="question-header-actions"></div><p id="question-text">${question.questionText}</p></div><div id="options-container" class="space-y-1.5 mt-3">${(question.options && Array.isArray(question.options)) ? question.options.map(option => `<label class="quiz-option-label" for="option_single_${question.id}_${option.id}"><input type="radio" name="question_single_${question.id}" value="${option.id}" class="quiz-option-input mr-2" id="option_single_${question.id}_${option.id}" ${userAnswers[question.id] === option.id ? 'checked' : ''}>${option.id}. ${option.text}</label>`).join('') : '<p class="text-red-500 text-sm">Options not available.</p>'}</div>`;
-            const headerActionsContainer = quizContentAreaEl.querySelector('.question-header-actions'); if (headerActionsContainer) headerActionsContainer.appendChild(flagButton);
+            
+            quizContentAreaEl.innerHTML = `
+                <div id="question-container">
+                    <p id="examTitleContextInPage">${currentLoadedExamTitle}</p>
+                    <div class="question-header-actions"></div>
+                    <p id="question-text">${question.questionText}</p>
+                </div>
+                <div id="options-container" class="mt-3"> 
+                    ${(question.options && Array.isArray(question.options)) ? question.options.map(option => `
+                        <label class="quiz-option-label" for="option_single_${question.id}_${option.id}">
+                            <input type="radio" name="question_single_${question.id}" value="${option.id}" class="quiz-option-input mr-2" id="option_single_${question.id}_${option.id}" 
+                                   ${userAnswers[question.id] === option.id ? 'checked' : ''}>
+                            ${option.id}. ${option.text}
+                        </label>
+                    `).join('') : '<p class="text-red-500 text-sm">Options not available.</p>'}
+                </div>`;
+            
+            const headerActionsContainer = quizContentAreaEl.querySelector('.question-header-actions');
+            if (headerActionsContainer) headerActionsContainer.appendChild(flagButton);
+
             const optionLabels = quizContentAreaEl.querySelectorAll('.quiz-option-label');
-            optionLabels.forEach(label => { const radio = label.querySelector('input[type="radio"]'); if (radio && userAnswers[question.id] === radio.value) label.classList.add('selected');
-                label.addEventListener('click', () => { if (examSubmitted) return; if (radio) radio.checked = true; userAnswers[question.id] = radio.value; questionStatus[currentQuestionIndex] = 'answered'; optionLabels.forEach(lbl => lbl.classList.remove('selected')); label.classList.add('selected'); updateQuestionNavigationHighlights(); updateProgressBar(); saveExamState(); }); });
-            updateQuestionNavigationHighlights(); updateProgressBar();
+            optionLabels.forEach(label => {
+                const radio = label.querySelector('input[type="radio"]');
+                if (radio && userAnswers[question.id] === radio.value) {
+                    label.classList.add('selected');
+                }
+                label.addEventListener('click', async () => {
+                    if (examSubmitted) return;
+                    if (radio) {
+                        radio.checked = true;
+                        userAnswers[question.id] = radio.value; 
+                        questionStatus[currentQuestionIndex] = 'answered'; 
+                    }
+                    optionLabels.forEach(lbl => lbl.classList.remove('selected'));
+                    label.classList.add('selected');
+                    updateQuestionNavigationHighlights();
+                    updateProgressBar();
+                    await saveExamState(); 
+                });
+            });
+            updateQuestionNavigationHighlights();
+            updateProgressBar();
         }
 
         function displayAllQuestions() {
-            if (!quizContentAreaEl) return; quizContentAreaEl.innerHTML = '';
-            allQuestions.forEach((question, index) => { const questionBlock = document.createElement('div'); questionBlock.className = 'question-block'; questionBlock.id = `q-block-${index}`;
-                let optionsHTML = (question.options && Array.isArray(question.options)) ? question.options.map(option => `<label class="quiz-option-label ${userAnswers[question.id] === option.id ? 'selected' : ''}" for="option_all_${question.id}_${option.id}"><input type="radio" name="question_all_${question.id}" value="${option.id}" class="quiz-option-input mr-2" id="option_all_${question.id}_${option.id}" ${userAnswers[question.id] === option.id ? 'checked' : ''}>${option.id}. ${option.text}</label>`).join('') : '<p class="text-red-500 text-sm">Options not available.</p>';
+            if (!quizContentAreaEl) return;
+            quizContentAreaEl.innerHTML = '';
+            allQuestions.forEach((question, index) => {
+                if (!question || !question.id) {
+                    console.error("Invalid question data at index for 'all questions' view:", index, question);
+                    const errorBlock = document.createElement('div');
+                    errorBlock.className = 'question-block p-4 text-red-500 text-center';
+                    errorBlock.textContent = `Error: Could not load question ${index + 1}.`;
+                    quizContentAreaEl.appendChild(errorBlock);
+                    return; 
+                }
+
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'question-block';
+                questionBlock.id = `q-block-${index}`;
+
+                let optionsHTML = (question.options && Array.isArray(question.options)) ? 
+                    question.options.map(option => `
+                        <label class="quiz-option-label ${userAnswers[question.id] === option.id ? 'selected' : ''}" 
+                               for="option_all_${question.id}_${option.id}">
+                            <input type="radio" name="question_all_${question.id}" value="${option.id}" 
+                                   class="quiz-option-input mr-2" id="option_all_${question.id}_${option.id}" 
+                                   ${userAnswers[question.id] === option.id ? 'checked' : ''}>
+                            ${option.id}. ${option.text}
+                        </label>
+                    `).join('') : '<p class="text-red-500 text-sm">Options not available.</p>';
+
                 const flagButtonInAllView = createFlagButton(index, `all_${question.id}`);
-                questionBlock.innerHTML = `<div id="question-container"><div class="flex justify-between items-center"><p class="single-question-text-header">Q ${index + 1}</p><div class="question-header-actions-allview"></div></div><p id="question-text">${question.questionText}</p></div><div class="single-question-options mt-3">${optionsHTML}</div>`;
-                quizContentAreaEl.appendChild(questionBlock); const headerActionsContainerAllView = questionBlock.querySelector('.question-header-actions-allview'); if (headerActionsContainerAllView) headerActionsContainerAllView.appendChild(flagButtonInAllView);
+                
+                questionBlock.innerHTML = `
+                    <div id="question-container">
+                        <div class="flex justify-between items-center">
+                            <p class="single-question-text-header">Q ${index + 1}</p>
+                            <div class="question-header-actions-allview"></div>
+                        </div>
+                        <p id="question-text">${question.questionText}</p>
+                    </div>
+                    <div class="single-question-options mt-3">${optionsHTML}</div>`;
+                quizContentAreaEl.appendChild(questionBlock);
+                
+                const headerActionsContainerAllView = questionBlock.querySelector('.question-header-actions-allview');
+                if (headerActionsContainerAllView) headerActionsContainerAllView.appendChild(flagButtonInAllView);
+
                 const optionLabelsInBlock = questionBlock.querySelectorAll('.quiz-option-label');
-                optionLabelsInBlock.forEach(label => { const radio = label.querySelector('input[type="radio"]'); label.addEventListener('click', () => { if (examSubmitted) return; if (radio) radio.checked = true; userAnswers[question.id] = radio.value; questionStatus[index] = 'answered'; const parentBlock = label.closest('.question-block'); if (parentBlock) parentBlock.querySelectorAll('.quiz-option-label').forEach(lbl => lbl.classList.remove('selected')); label.classList.add('selected'); updateQuestionNavigationHighlights(); updateProgressBar(); saveExamState(); }); });
-                if (questionStatus[index] === 'unseen') questionStatus[index] = 'seen'; });
-            updateQuestionNavigationHighlights(); updateProgressBar();
+                optionLabelsInBlock.forEach(label => {
+                    const radio = label.querySelector('input[type="radio"]');
+                    label.addEventListener('click', async () => {
+                        if (examSubmitted) return;
+                        if (radio) {
+                            radio.checked = true;
+                            userAnswers[question.id] = radio.value; 
+                            questionStatus[index] = 'answered';
+                        }
+                        const parentBlock = label.closest('.question-block');
+                        if (parentBlock) {
+                            parentBlock.querySelectorAll('.quiz-option-label').forEach(lbl => lbl.classList.remove('selected'));
+                        }
+                        label.classList.add('selected');
+                        updateQuestionNavigationHighlights();
+                        updateProgressBar();
+                        await saveExamState(); 
+                    });
+                });
+                if (questionStatus[index] === 'unseen') {
+                     questionStatus[index] = 'seen';
+                }
+            });
+            updateQuestionNavigationHighlights();
+            updateProgressBar();
         }
 
-        function jumpToQuestion(index) {
-            if (index >= 0 && index < allQuestions.length) { currentQuestionIndex = index;
-                if (currentViewMode === 'single') { if (examSubmitted) { displaySingleReviewedQuestion(); const targetBlock = document.getElementById(`review-q-block-${index}`); if(targetBlock) targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' }); else { const resultsContainer = document.getElementById('results-view-wrapper'); if(resultsContainer) resultsContainer.scrollTop = 0; } } else { displaySingleQuestion(); if (quizContentAreaEl) quizContentAreaEl.scrollTop = 0; } }
-                else { const questionBlockId = examSubmitted ? `review-q-block-${index}` : `q-block-${index}`; const questionBlock = document.getElementById(questionBlockId); if (questionBlock) { questionBlock.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (!examSubmitted && questionStatus[index] === 'unseen') questionStatus[index] = 'seen'; } }
-                if (!examSubmitted) updateNavigationButtons(); updateQuestionNavigationHighlights(); if (!examSubmitted) updateProgressBar(); saveExamState(); }
+        async function jumpToQuestion(index) {
+            if (index >= 0 && index < allQuestions.length) {
+                currentQuestionIndex = index;
+                if (currentViewMode === 'single') {
+                    if (examSubmitted) {
+                        displaySingleReviewedQuestion(); 
+                        const targetBlock = document.getElementById(`review-q-block-${index}`);
+                        if(targetBlock) targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        else { const resultsContainer = document.getElementById('results-view-wrapper'); if(resultsContainer) resultsContainer.scrollTop = 0; }
+                    } else {
+                        displaySingleQuestion();
+                        if (quizContentAreaEl) quizContentAreaEl.scrollTop = 0;
+                    }
+                } else { 
+                    const questionBlockId = examSubmitted ? `review-q-block-${index}` : `q-block-${index}`;
+                    const questionBlock = document.getElementById(questionBlockId);
+                    if (questionBlock) {
+                        questionBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        if (!examSubmitted && questionStatus[index] === 'unseen') {
+                            questionStatus[index] = 'seen';
+                        }
+                    }
+                }
+                if (!examSubmitted) {
+                    updateNavigationButtons();
+                    updateQuestionNavigationHighlights();
+                    updateProgressBar();
+                    await saveExamState(); 
+                }
+            }
         }
 
         // --- Event Listeners for Navigation and Actions ---
-        if(nextQuestionBtn) nextQuestionBtn.addEventListener('click', () => { if (examSubmitted) return; if (currentQuestionIndex < allQuestions.length - 1) { currentQuestionIndex++; displaySingleQuestion(); } else { openSubmitModal(); } updateNavigationButtons(); saveExamState(); });
-        if(prevQuestionBtn) prevQuestionBtn.addEventListener('click', () => { if (examSubmitted) return; if (currentQuestionIndex > 0) { currentQuestionIndex--; displaySingleQuestion(); updateNavigationButtons(); saveExamState(); } });
+        if(nextQuestionBtn) {
+            nextQuestionBtn.addEventListener('click', async () => {
+                if (examSubmitted) return;
+                if (currentQuestionIndex < allQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    displaySingleQuestion();
+                    await saveExamState(); 
+                } else if (currentViewMode === 'single' && currentQuestionIndex === allQuestions.length -1) { // Added check for single view mode
+                    openSubmitModal();
+                }
+                updateNavigationButtons();
+            });
+        }
+        if(prevQuestionBtn) {
+            prevQuestionBtn.addEventListener('click', async () => {
+                if (examSubmitted) return;
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    displaySingleQuestion();
+                    updateNavigationButtons();
+                    await saveExamState(); 
+                }
+            });
+        }
+
         if(submitExamEarlyBtn) submitExamEarlyBtn.addEventListener('click', () => { if (examSubmitted) return; openSubmitModal(); });
-        if(calculatorBtn) calculatorBtn.addEventListener('click', () => { const calcModal = document.getElementById('calculatorModal'); if(calcModal) calcModal.classList.toggle('hidden'); else alert("Calculator UI to be implemented."); });
+        if(calculatorBtn) calculatorBtn.addEventListener('click', () => { alert("Calculator functionality coming soon!"); });
 
         if(toggleNavPanelBtn) {
             toggleNavPanelBtn.addEventListener('click', () => {
                 const isDesktop = window.innerWidth > 768;
                 if (isDesktop) {
                     questionNavigationPanelEl.classList.toggle('hidden-desktop');
-                    if (questionNavigationPanelEl.classList.contains('hidden-desktop')) {
-                         if(mainExamContentEl) mainExamContentEl.style.marginLeft = '0';
-                    } else {
-                         if(mainExamContentEl) mainExamContentEl.style.marginLeft = questionNavigationPanelEl.offsetWidth + 'px';
+                    if (mainExamContentEl) {
+                         mainExamContentEl.style.marginLeft = questionNavigationPanelEl.classList.contains('hidden-desktop') ? '0' : questionNavigationPanelEl.offsetWidth + 'px';
                     }
                 } else { // Mobile
                     questionNavigationPanelEl.classList.toggle('mobile-visible');
@@ -710,7 +1117,28 @@
                 toggleNavPanelBtn.title = (questionNavigationPanelEl.classList.contains('hidden-desktop') || !questionNavigationPanelEl.classList.contains('mobile-visible')) ? "Show Nav" : "Hide Nav";
             });
         }
-        if (viewModeBtn) { viewModeBtn.addEventListener('click', () => { if (examSubmitted) { currentViewMode = currentViewMode === 'single' ? 'all' : 'single'; viewModeBtn.textContent = currentViewMode === 'single' ? "All (Review)" : "One by One (Review)"; viewModeBtn.title = currentViewMode === 'single' ? "All Questions Review" : "One by One Review"; if (currentViewMode === 'single') { currentQuestionIndex = 0; displaySingleReviewedQuestion(); } else { renderDetailedReview(document.querySelector('#review-filter-buttons .btn-filter.active')?.dataset.filter || 'all'); } return; } currentViewMode = currentViewMode === 'single' ? 'all' : 'single'; viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One'; viewModeBtn.title = currentViewMode === 'single' ? 'All Questions View' : 'One by One View'; renderCurrentView(); updateNavigationButtons(); saveExamState(); }); }
+        if (viewModeBtn) {
+            viewModeBtn.addEventListener('click', async () => {
+                if (examSubmitted) { 
+                    currentViewMode = currentViewMode === 'single' ? 'all' : 'single';
+                    viewModeBtn.textContent = currentViewMode === 'single' ? "All (Review)" : "One by One (Review)";
+                    viewModeBtn.title = currentViewMode === 'single' ? "All Questions Review" : "One by One Review";
+                    if (currentViewMode === 'single') {
+                        currentQuestionIndex = 0; 
+                        displaySingleReviewedQuestion();
+                    } else {
+                        renderDetailedReview(document.querySelector('#review-filter-buttons .btn-filter.active')?.dataset.filter || 'all');
+                    }
+                    return;
+                }
+                currentViewMode = currentViewMode === 'single' ? 'all' : 'single';
+                viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One';
+                viewModeBtn.title = currentViewMode === 'single' ? 'All Questions View' : 'One by One View';
+                renderCurrentView();
+                updateNavigationButtons();
+                await saveExamState(); 
+            });
+        }
 
         // Modal Functions & Event Listeners
         function openSubmitModal() { if(submitConfirmationModalEl) submitConfirmationModalEl.classList.add('active'); }
@@ -725,90 +1153,385 @@
         if(gotItInstructionsBtn) gotItInstructionsBtn.addEventListener('click', closeInstructionsModal);
 
         // --- Results Page Logic ---
-        function renderResultsPage(timedOut = false) {
-            examSubmitted = true; stopExamTimer();
-            if(activeExamViewEl) activeExamViewEl.classList.add('hidden'); if(resultsViewWrapperEl) resultsViewWrapperEl.classList.remove('hidden');
-            if(examTimerTopEl) examTimerTopEl.classList.add('hidden'); if(submitExamEarlyBtn) { submitExamEarlyBtn.disabled = true; submitExamEarlyBtn.classList.add('hidden');}
+        async function renderResultsPage(timedOut = false) {
+            examSubmitted = true; 
+            stopExamTimer();
+            if(activeExamViewEl) activeExamViewEl.classList.add('hidden');
+            if(resultsViewWrapperEl) resultsViewWrapperEl.classList.remove('hidden');
+            if(examTimerTopEl) examTimerTopEl.classList.add('hidden');
+            if(submitExamEarlyBtn) { submitExamEarlyBtn.disabled = true; submitExamEarlyBtn.classList.add('hidden');}
             if(viewModeBtn) { viewModeBtn.disabled = false; currentViewMode = 'all'; viewModeBtn.textContent = "One by One (Review)"; viewModeBtn.title = "One by One Review"; }
             if(examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden');
+
             let score = 0, correctCount = 0, wrongCount = 0, skippedCount = 0;
             const examDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-            const timeSpentMs = examStartTimeMs > 0 ? (Date.now() - examStartTimeMs) : totalExamTimeInSeconds * 1000;
-            const timeSpentFormatted = formatTime(Math.floor(timeSpentMs / 1000));
-            allQuestions.forEach((q, index) => { const userAnswer = userAnswers[q.id]; if (userAnswer === q.correctOptionId) { correctCount++; questionStatus[index] = 'correct'; } else if (userAnswer !== undefined) { wrongCount++; questionStatus[index] = 'incorrect'; } else { skippedCount++; questionStatus[index] = 'skipped'; } });
-            score = correctCount; updateQuestionNavigationHighlights();
+            
+            let timeSpentFormatted = "N/A";
+            if (examStartTime && typeof examStartTime.toDate === 'function') {
+                const endTime = Date.now();
+                const startTimeMs = examStartTime.toDate().getTime();
+                const timeSpentMs = endTime - startTimeMs;
+                timeSpentFormatted = formatTime(Math.max(0, Math.floor(timeSpentMs / 1000)));
+            } else { 
+                const timeTaken = totalExamTimeInSeconds - timeLeftInSeconds;
+                timeSpentFormatted = formatTime(Math.max(0, timeTaken));
+            }
+
+
+            allQuestions.forEach((q, index) => {
+                const userAnswer = userAnswers[q.id]; 
+                if (userAnswer === q.correctOptionId) {
+                    correctCount++;
+                    questionStatus[index] = 'correct'; 
+                } else if (userAnswer !== undefined) {
+                    wrongCount++;
+                    questionStatus[index] = 'incorrect';
+                } else {
+                    skippedCount++;
+                    questionStatus[index] = 'skipped';
+                }
+            });
+            score = correctCount;
+            updateQuestionNavigationHighlights(); 
+
             const percentageScore = allQuestions.length > 0 ? ((score / allQuestions.length) * 100).toFixed(1) : 0;
             const percentageContainerClass = parseFloat(percentageScore) >= 50 ? 'score-percentage-container pass' : 'score-percentage-container fail';
-            let summaryHTML = `<div class="results-summary-card"><h2 class="text-2xl">Exam Results</h2><p class="text-xs text-gray-500 mb-2">For: ${currentLoadedExamTitle} | Date: ${examDate}</p>${timedOut ? "<p class='text-red-500 font-semibold mb-2 text-sm'>Time's up! Auto-submitted.</p>" : ""}<div class="score-display-grid"><div class="score-overall"><div class="score-value-main">${score}/${allQuestions.length}</div><div class="${percentageContainerClass} mt-1"><p class="score-percentage-main">${percentageScore}%</p></div></div><ul class="score-breakdown-list text-xs"><li><span class="label correct">Correct</span><span class="count">${correctCount}</span></li><li><span class="label wrong">Wrong</span><span class="count">${wrongCount}</span></li><li><span class="label skipped">Skipped</span><span class="count">${skippedCount}</span></li><li class="pt-1 mt-1 border-t"><span class="label">Time Spent</span><span class="count">${timeSpentFormatted}</span></li><li><span class="label">Total Time</span><span class="count">${formatTime(totalExamTimeInSeconds)}</span></li></ul></div><div class="mt-4"><button id="retakeExamBtnResults" class="btn btn-primary !text-xs">Retake</button><a href="index.html" class="btn btn-secondary !text-xs mt-2 sm:mt-0 sm:ml-2">Home</a></div></div><div id="review-filter-buttons" class="my-3 flex justify-center gap-1 flex-wrap"><button class="btn btn-filter active" data-filter="all">All</button><button class="btn btn-filter" data-filter="correct">Correct</button><button class="btn btn-filter" data-filter="incorrect">Incorrect</button><button class="btn btn-filter" data-filter="skipped">Skipped</button><button class="btn btn-filter" data-filter="flagged">Flagged</button></div><div id="detailed-results-container"></div>`;
+            
+            let summaryHTML = `
+                <div class="results-summary-card">
+                    <h2 class="text-2xl">Exam Results</h2>
+                    <p class="text-xs text-gray-500 mb-2">For: ${currentLoadedExamTitle} | Date: ${examDate}</p>
+                    ${timedOut ? "<p class='text-red-500 font-semibold mb-2 text-sm'>Time's up! Auto-submitted.</p>" : ""}
+                    <div class="score-display-grid">
+                        <div class="score-overall">
+                            <div class="score-value-main">${score}/${allQuestions.length}</div>
+                            <div class="${percentageContainerClass} mt-1"><p class="score-percentage-main">${percentageScore}%</p></div>
+                        </div>
+                        <ul class="score-breakdown-list text-xs">
+                            <li><span class="label correct">Correct</span><span class="count">${correctCount}</span></li>
+                            <li><span class="label wrong">Wrong</span><span class="count">${wrongCount}</span></li>
+                            <li><span class="label skipped">Skipped</span><span class="count">${skippedCount}</span></li>
+                            <li class="pt-1 mt-1 border-t"><span class="label">Time Spent</span><span class="count">${timeSpentFormatted}</span></li>
+                            <li><span class="label">Total Time</span><span class="count">${formatTime(totalExamTimeInSeconds)}</span></li>
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <button id="retakeExamBtnResults" class="btn btn-primary !text-xs">Retake Exam</button>
+                        <a href="index.html" class="btn btn-secondary !text-xs mt-2 sm:mt-0 sm:ml-2">Back to Home</a>
+                    </div>
+                </div>
+                <div id="review-filter-buttons" class="my-3 flex justify-center gap-1 flex-wrap">
+                    <button class="btn btn-filter active" data-filter="all">All</button>
+                    <button class="btn btn-filter" data-filter="correct">Correct</button>
+                    <button class="btn btn-filter" data-filter="incorrect">Incorrect</button>
+                    <button class="btn btn-filter" data-filter="skipped">Skipped</button>
+                    <button class="btn btn-filter" data-filter="flagged">Flagged</button>
+                </div>
+                <div id="detailed-results-container"></div>`;
+            
             if(resultsViewWrapperEl) resultsViewWrapperEl.innerHTML = summaryHTML;
-            const retakeBtn = document.getElementById('retakeExamBtnResults'); if (retakeBtn) retakeBtn.addEventListener('click', () => { clearExamSessionStorage(); if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); const loadingStatusTextEl = document.getElementById('loadingStatusText'); if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Restarting..."; loadExam(currentLoadedExamId || EXAM_ID_TO_LOAD_DEFAULT); });
-            document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(button => button.addEventListener('click', (e) => { document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(btn => btn.classList.remove('active')); e.target.classList.add('active'); renderDetailedReview(e.target.dataset.filter); }));
-            renderDetailedReview('all'); saveReviewState();
+
+            const retakeBtn = document.getElementById('retakeExamBtnResults');
+            if (retakeBtn) {
+                retakeBtn.addEventListener('click', () => {
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden');
+                    if(cbtPageContent) cbtPageContent.classList.add('hidden');
+                    const loadingStatusTextEl = document.getElementById('loadingStatusText');
+                    if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Restarting exam...";
+                    activeExamSessionId = null; 
+                    initializeExam(currentLoadedExamId);
+                });
+            }
+
+            document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderDetailedReview(e.target.dataset.filter);
+                });
+            });
+            renderDetailedReview('all'); 
         }
 
         function displaySingleReviewedQuestion() {
-            const container = document.getElementById('detailed-results-container'); if (!container || allQuestions.length === 0 || !examSubmitted) return;
+            const container = document.getElementById('detailed-results-container');
+            if (!container || allQuestions.length === 0 || !examSubmitted) return;
             if (currentQuestionIndex < 0 || currentQuestionIndex >= allQuestions.length) currentQuestionIndex = 0;
-            const q = allQuestions[currentQuestionIndex]; const userAnswer = userAnswers[q.id];
-            let optionsHTML = (q.options && Array.isArray(q.options)) ? q.options.map(opt => { let liClass = 'result-option'; let indicator = ''; if (opt.id === q.correctOptionId) { liClass += ' correct-answer-style'; indicator = ' <i class="fas fa-check text-green-500 text-xs"></i> (Correct)'; } if (userAnswer === opt.id) { liClass += ' user-selected-style'; if (opt.id === q.correctOptionId) indicator += ' (Your Pick)'; else { liClass += ' incorrect-answer-style'; indicator = ` <i class="fas fa-times text-red-500 text-xs"></i> (Your Pick)${indicator.includes('(Correct)') ? indicator.replace(' (Correct)', '') : ''}`; } } return `<li class="${liClass}"><span class="result-option-text">${opt.id}. ${opt.text}</span><span class="result-option-indicator">${indicator}</span></li>`; }).join('') : '<li>No options.</li>';
-            container.innerHTML = `<h3 class="text-lg font-semibold text-gray-700 my-2 text-center font-montserrat">Reviewing Q ${currentQuestionIndex + 1}/${allQuestions.length}</h3><div class="result-question-item" id="review-q-block-${currentQuestionIndex}"><div class="result-question-text-container"><div class="flex justify-between items-center"><p class="result-question-text">${currentQuestionIndex + 1}. ${q.questionText}</p>${questionFlags[currentQuestionIndex] ? '<i class="fas fa-flag text-red-500 text-xs" title="Flagged"></i>' : ''}</div></div><ul class="result-options-list">${optionsHTML}</ul>${q.rationale ? `<div class="result-rationale"><strong>Rationale:</strong> ${q.rationale}</div>` : ''}</div>`;
-            if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden'); updateNavigationButtons(); updateQuestionNavigationHighlights();
+
+            const q = allQuestions[currentQuestionIndex];
+            const userAnswer = userAnswers[q.id]; 
+
+            let optionsHTML = (q.options && Array.isArray(q.options)) ? q.options.map(opt => {
+                let liClass = 'result-option';
+                let indicator = '';
+                if (opt.id === q.correctOptionId) {
+                    liClass += ' correct-answer-style';
+                    indicator = ' <i class="fas fa-check text-green-500 text-xs"></i> (Correct)';
+                }
+                if (userAnswer === opt.id) {
+                    liClass += ' user-selected-style';
+                    if (opt.id === q.correctOptionId) {
+                        indicator += ' (Your Pick)';
+                    } else {
+                        liClass += ' incorrect-answer-style';
+                        indicator = ` <i class="fas fa-times text-red-500 text-xs"></i> (Your Pick)${indicator.includes('(Correct)') ? indicator.replace(' (Correct)', '') : ''}`;
+                    }
+                }
+                return `<li class="${liClass}"><span class="result-option-text">${opt.id}. ${opt.text}</span><span class="result-option-indicator">${indicator}</span></li>`;
+            }).join('') : '<li>No options.</li>';
+
+            container.innerHTML = `
+                <h3 class="text-lg font-semibold text-gray-700 my-2 text-center font-montserrat">Reviewing Q ${currentQuestionIndex + 1}/${allQuestions.length}</h3>
+                <div class="result-question-item" id="review-q-block-${currentQuestionIndex}">
+                    <div class="result-question-text-container">
+                        <div class="flex justify-between items-center">
+                            <p class="result-question-text">${currentQuestionIndex + 1}. ${q.questionText}</p>
+                            ${questionFlags[currentQuestionIndex] ? '<i class="fas fa-flag text-red-500 text-xs" title="Flagged"></i>' : ''}
+                        </div>
+                    </div>
+                    <ul class="result-options-list">${optionsHTML}</ul>
+                    ${q.rationale ? `<div class="result-rationale"><strong>Rationale:</strong> ${q.rationale}</div>` : ''}
+                </div>`;
+            
+            if(examBottomNavigationEl) { 
+                 examBottomNavigationEl.classList.remove('hidden');
+                 if(prevQuestionBtn) prevQuestionBtn.disabled = currentQuestionIndex === 0;
+                 if(nextQuestionBtn) {
+                    nextQuestionBtn.textContent = (currentQuestionIndex === allQuestions.length - 1) ? "End Review" : "Next";
+                    nextQuestionBtn.disabled = false; 
+                 }
+            }
+            updateQuestionNavigationHighlights(); 
         }
 
         function renderDetailedReview(filter = 'all') {
-            const container = document.getElementById('detailed-results-container'); if (!container || !examSubmitted) return;
-            if (currentViewMode === 'single' && examSubmitted) { displaySingleReviewedQuestion(); if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden'); return; }
-            if(examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden');
-            let reviewHTML = `<h3 class="text-lg font-semibold text-gray-700 my-3 text-center font-montserrat hidden">Detailed Review</h3>`;
-            reviewHTML += allQuestions.filter((q, index) => { const isCorrect = userAnswers[q.id] === q.correctOptionId; const isAnswered = userAnswers[q.id] !== undefined; const isSkipped = !isAnswered; if (filter === 'all') return true; if (filter === 'correct') return isCorrect; if (filter === 'incorrect') return isAnswered && !isCorrect; if (filter === 'skipped') return isSkipped; if (filter === 'flagged') return questionFlags[index]; return true; })
-            .map((q, filteredArrayIndex) => { const displayIndex = allQuestions.findIndex(aq => aq.id === q.id); const userAnswer = userAnswers[q.id];
-                return `<div class="result-question-item" id="review-q-block-${displayIndex}"><div class="result-question-text-container"><div class="flex justify-between items-center"><p class="result-question-text">${displayIndex + 1}. ${q.questionText}</p>${questionFlags[displayIndex] ? '<i class="fas fa-flag text-red-500 text-xs" title="Flagged"></i>' : ''}</div></div><ul class="result-options-list">${(q.options && Array.isArray(q.options) ? q.options.map(opt => { let liClass = 'result-option'; let indicator = ''; if (opt.id === q.correctOptionId) { liClass += ' correct-answer-style'; indicator = ' <i class="fas fa-check text-green-500 text-xs"></i> (Correct)'; } if (userAnswer === opt.id) { liClass += ' user-selected-style'; if (opt.id === q.correctOptionId) indicator += ' (Your Pick)'; else { liClass += ' incorrect-answer-style'; indicator = ` <i class="fas fa-times text-red-500 text-xs"></i> (Your Pick)${indicator.includes('(Correct)') ? indicator.replace(' (Correct)', '') : ''}`; } } return `<li class="${liClass}"><span class="result-option-text">${opt.id}. ${opt.text}</span><span class="result-option-indicator">${indicator}</span></li>`; }).join('') : '<li>No options.</li>')}</ul>${q.rationale ? `<div class="result-rationale"><strong>Rationale:</strong> ${q.rationale}</div>` : ''}</div>`; }).join('');
+            const container = document.getElementById('detailed-results-container');
+            if (!container || !examSubmitted) return;
+
+            if (currentViewMode === 'single' && examSubmitted) {
+                displaySingleReviewedQuestion();
+                if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden'); 
+                return;
+            }
+            if(examBottomNavigationEl) examBottomNavigationEl.classList.add('hidden'); 
+
+            let reviewHTML = `<h3 class="text-lg font-semibold text-gray-700 my-3 text-center font-montserrat hidden">Detailed Review (${filter})</h3>`;
+            reviewHTML += allQuestions.filter((q, index) => {
+                const isCorrect = userAnswers[q.id] === q.correctOptionId;
+                const isAnswered = userAnswers[q.id] !== undefined;
+                const isSkipped = !isAnswered;
+                if (filter === 'all') return true;
+                if (filter === 'correct') return isCorrect;
+                if (filter === 'incorrect') return isAnswered && !isCorrect;
+                if (filter === 'skipped') return isSkipped;
+                if (filter === 'flagged') return questionFlags[index];
+                return true;
+            })
+            .map((q, filteredArrayIndex) => { 
+                const originalIndex = allQuestions.findIndex(aq => aq.id === q.id); 
+                const userAnswer = userAnswers[q.id];
+                
+                return `
+                    <div class="result-question-item" id="review-q-block-${originalIndex}">
+                        <div class="result-question-text-container">
+                            <div class="flex justify-between items-center">
+                                <p class="result-question-text">${originalIndex + 1}. ${q.questionText}</p>
+                                ${questionFlags[originalIndex] ? '<i class="fas fa-flag text-red-500 text-xs" title="Flagged"></i>' : ''}
+                            </div>
+                        </div>
+                        <ul class="result-options-list">
+                            ${(q.options && Array.isArray(q.options) ? q.options.map(opt => {
+                                let liClass = 'result-option';
+                                let indicator = '';
+                                if (opt.id === q.correctOptionId) {
+                                    liClass += ' correct-answer-style';
+                                    indicator = ' <i class="fas fa-check text-green-500 text-xs"></i> (Correct)';
+                                }
+                                if (userAnswer === opt.id) {
+                                    liClass += ' user-selected-style';
+                                    if (opt.id === q.correctOptionId) {
+                                        indicator += ' (Your Pick)';
+                                    } else {
+                                        liClass += ' incorrect-answer-style';
+                                        indicator = ` <i class="fas fa-times text-red-500 text-xs"></i> (Your Pick)${indicator.includes('(Correct)') ? indicator.replace(' (Correct)', '') : ''}`;
+                                    }
+                                }
+                                return `<li class="${liClass}"><span class="result-option-text">${opt.id}. ${opt.text}</span><span class="result-option-indicator">${indicator}</span></li>`;
+                            }).join('') : '<li>No options.</li>')}
+                        </ul>
+                        ${q.rationale ? `<div class="result-rationale"><strong>Rationale:</strong> ${q.rationale}</div>` : ''}
+                    </div>`;
+            }).join('');
             container.innerHTML = reviewHTML;
         }
 
-        function submitExam(timedOut = false) { if (examSubmitted && !timedOut) return; examSubmitted = true; renderResultsPage(timedOut); sessionStorage.removeItem(SESSION_STORAGE_EXAM_STATE_KEY); }
+        async function submitExam(timedOut = false) {
+            if (examSubmitted && !timedOut) return; 
+            examSubmitted = true;
+            stopExamTimer();
+            
+            console.log("Submitting exam. Timed out:", timedOut);
+
+            if (activeExamSessionId && currentUserId) {
+                const sessionDocRef = doc(db, getActiveExamSessionPath(currentUserId, activeExamSessionId));
+                try {
+                    await updateDoc(sessionDocRef, {
+                        status: "submitted",
+                        timeLeftSeconds: Math.max(0, timeLeftInSeconds), 
+                        userAnswers: userAnswers,
+                        questionStatus: questionStatus,
+                        questionFlags: questionFlags,
+                        submissionType: timedOut ? "timed_out" : "manual",
+                        submittedAt: serverTimestamp()
+                    });
+                    console.log("Active exam session marked as submitted in Firestore.");
+
+                } catch (error) {
+                    console.error("Error updating exam session to submitted in Firestore:", error);
+                }
+            }
+            renderResultsPage(timedOut);
+        }
+
 
         // --- User Authentication and Subscription Check ---
-        async function checkUserSubscription(userId) { if (!userId) return false; try { const subscriptionsRef = collection(db, "userSubscriptions", userId, "activePlans"); const now = Timestamp.now(); const q = query(subscriptionsRef, where("status", "==", "active"), where("expiryDate", ">", now)); const querySnapshot = await getDocs(q); return !querySnapshot.empty; } catch (error) { console.error("cbt_exam.html - Error checking subscription:", error); return false; } }
+        async function checkUserSubscription(userIdToCheck) {
+            if (!userIdToCheck) return false;
+            try {
+                const subscriptionsRef = collection(db, "userSubscriptions", userIdToCheck, "activePlans");
+                const now = Timestamp.now();
+                const q = query(subscriptionsRef, 
+                                where("status", "==", "active"),
+                                where("expiryDate", ">", now));
+                const querySnapshot = await getDocs(q);
+                return !querySnapshot.empty;
+            } catch (error) {
+                console.error("cbt_exam.html - Error checking subscription:", error);
+                return false; 
+            }
+        }
+
         onAuthStateChanged(auth, async (user) => {
+            updateNetworkStatus(); 
             const loadingStatusTextEl = document.getElementById('loadingStatusText');
             if (user) {
+                currentUserId = user.uid; 
                 if(navUserEmailCBT) { navUserEmailCBT.textContent = user.email; navUserEmailCBT.classList.add('active'); }
                 if(navLogoutCBT) navLogoutCBT.classList.add('active');
+                
                 if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Verifying subscription...";
-                const hasActiveSubscription = await checkUserSubscription(user.uid);
-                if (hasActiveSubscription) { if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden'); if (loadSavedReviewState()) {} else if (loadSavedExamState()) {} else { clearExamSessionStorage(); await loadExam(); } }
-                else { if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.remove('hidden'); }
-            } else {
-                if(navUserEmailCBT) navUserEmailCBT.classList.remove('active'); if(navLogoutCBT) navLogoutCBT.classList.remove('active');
-                if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
-                if(cbtLoadingMessage) { cbtLoadingMessage.classList.remove('hidden'); if(loadingStatusTextEl) loadingStatusTextEl.innerHTML = '<p class="text-lg text-red-500">Access Denied. Please log in. Redirecting...</p>'; }
-                setTimeout(() => { sessionStorage.setItem('redirectAfterLogin', window.location.href); window.location.href = 'login.html'; }, 2500);
+                const hasActiveSubscription = await checkUserSubscription(currentUserId);
+
+                if (hasActiveSubscription) {
+                    accessDeniedMessage.classList.add('hidden');
+                    await initializeExam(); 
+                } else {
+                    cbtPageContent.classList.add('hidden');
+                    cbtLoadingMessage.classList.add('hidden');
+                    accessDeniedMessage.classList.remove('hidden');
+                }
+            } else { 
+                currentUserId = null;
+                if(navUserEmailCBT) navUserEmailCBT.classList.remove('active');
+                if(navLogoutCBT) navLogoutCBT.classList.remove('active');
+                
+                cbtPageContent.classList.add('hidden');
+                accessDeniedMessage.classList.add('hidden');
+                if(cbtLoadingMessage) {
+                    cbtLoadingMessage.classList.remove('hidden');
+                    if(loadingStatusTextEl) loadingStatusTextEl.innerHTML = '<p class="text-lg text-red-500">Access Denied. Please log in. Redirecting...</p>';
+                }
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    console.log("Attempting sign-in with custom token...");
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Successfully signed in with custom token.");
+                    } catch (error) {
+                        console.error("Error signing in with custom token:", error);
+                        if(loadingStatusTextEl) loadingStatusTextEl.innerHTML = '<p class="text-lg text-red-500">Authentication error. Please try logging in manually.</p>';
+                        setTimeout(() => { window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`; }, 3000);
+                    }
+                } else {
+                    console.log("No custom token, redirecting to login page.");
+                    sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                    setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+                }
             }
         });
-        if (navLogoutCBT) navLogoutCBT.addEventListener('click', () => { clearExamSessionStorage(); signOut(auth).catch((error) => console.error("Sign out error:", error)); });
+        
+        if (navLogoutCBT) {
+            navLogoutCBT.addEventListener('click', async () => {
+                if (activeExamSessionId && !examSubmitted) {
+                    console.log("Attempting to save final state before logout...");
+                    await saveExamState({ timerOnly: false }); 
+                }
+                if (activeExamSessionUnsubscribe) {
+                    activeExamSessionUnsubscribe(); 
+                }
+                signOut(auth).catch((error) => console.error("Sign out error:", error));
+            });
+        }
 
         // Initial setup for nav panel visibility based on screen size
         function initialNavPanelSetup() {
             const isDesktop = window.innerWidth > 768;
-            if (questionNavigationPanelEl) {
+            if (questionNavigationPanelEl && mainExamContentEl) { // Added mainExamContentEl check
                 if (isDesktop) {
-                    questionNavigationPanelEl.classList.remove('hidden-desktop', 'mobile-visible'); // Ensure it's visible by default on desktop
-                    if(mainExamContentEl) mainExamContentEl.style.marginLeft = questionNavigationPanelEl.offsetWidth + 'px';
+                    questionNavigationPanelEl.classList.remove('hidden-desktop', 'mobile-visible');
+                    mainExamContentEl.style.marginLeft = questionNavigationPanelEl.offsetWidth + 'px';
                     toggleNavPanelBtn.innerHTML = '<i class="fas fa-times"></i>';
                     toggleNavPanelBtn.title = "Hide Nav";
-
                 } else { // Mobile
-                    questionNavigationPanelEl.classList.remove('hidden-desktop');
-                    questionNavigationPanelEl.classList.remove('mobile-visible'); // Start hidden on mobile
-                    if(mainExamContentEl) mainExamContentEl.style.marginLeft = '0';
+                    questionNavigationPanelEl.classList.remove('hidden-desktop', 'mobile-visible'); // Ensure it starts hidden on mobile correctly
+                    mainExamContentEl.style.marginLeft = '0';
                     toggleNavPanelBtn.innerHTML = '<i class="fas fa-bars"></i>';
                     toggleNavPanelBtn.title = "Show Nav";
                 }
             }
         }
         window.addEventListener('load', initialNavPanelSetup);
-        window.addEventListener('resize', initialNavPanelSetup); // Re-evaluate on resize
+        window.addEventListener('resize', initialNavPanelSetup);
+
+        document.addEventListener('visibilitychange', async () => {
+            if (!activeExamSessionId || examSubmitted || !currentUserId) return;
+
+            if (document.visibilityState === 'hidden') {
+                console.log("Page hidden, ensuring exam state is saved.");
+                stopExamTimer(); 
+                await saveExamState({ timerOnly: false }); 
+            } else if (document.visibilityState === 'visible') {
+                console.log("Page visible, re-syncing exam state and resuming timer.");
+                const sessionDocRef = doc(db, getActiveExamSessionPath(currentUserId, activeExamSessionId));
+                try {
+                    const docSnap = await getDoc(sessionDocRef);
+                    if (docSnap.exists()) {
+                        const sessionData = docSnap.data();
+                        if (sessionData.status === "in-progress") {
+                            currentQuestionIndex = sessionData.currentQuestionIndex;
+                            userAnswers = sessionData.userAnswers;
+                            questionStatus = sessionData.questionStatus;
+                            questionFlags = sessionData.questionFlags;
+                            
+                            const lastUpdated = sessionData.lastUpdated.toDate();
+                            const serverTimeNow = Date.now(); 
+                            const timeElapsedSinceLastSaveMs = serverTimeNow - lastUpdated.getTime();
+                            timeLeftInSeconds = Math.max(0, sessionData.timeLeftSeconds - Math.floor(timeElapsedSinceLastSaveMs / 1000));
+                            
+                            renderCurrentView(); 
+                            updateNavigationButtons();
+                            updateProgressBar();
+                            updateQuestionNavigationHighlights();
+                            startExamTimer(); 
+                        } else if (sessionData.status === "submitted") {
+                            examSubmitted = true;
+                            renderResultsPage(sessionData.submissionType === "timed_out");
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error re-syncing exam state on visibility change:", error);
+                }
+            }
+        });
 
     </script>
 </body>
