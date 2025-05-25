@@ -75,13 +75,13 @@
             width: 200px; /* Slightly reduced width */
             background-color: #f9fafb; border-right: 1px solid #e5e7eb;
             padding: 0.75rem; overflow-y: auto; display: flex; flex-direction: column;
-            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, padding 0.3s ease-in-out; /* Added padding transition */
             transform: translateX(0);
         }
         #question-navigation-panel.hidden-desktop { /* Specific class for desktop hiding */
             transform: translateX(-100%);
             width: 0; /* Collapse width when hidden on desktop */
-            padding: 0;
+            padding: 0; /* Collapse padding */
             border-right: none;
         }
         .nav-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;}
@@ -418,7 +418,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // DOM Elements
+        // DOM Elements - Ensure these are declared at the top of the module scope
         const navUserEmailCBT = document.getElementById('navUserEmailCBT');
         const navLogoutCBT = document.getElementById('navLogoutCBT');
         const cbtLoadingMessage = document.getElementById('cbtLoadingMessage');
@@ -440,6 +440,7 @@
         const questionNavigationPanelEl = document.getElementById('question-navigation-panel');
         const viewModeBtn = document.getElementById('view-mode-btn');
         const navAnsweredCountEl = document.getElementById('nav-answered-count');
+        const mainExamContentEl = document.getElementById('main-exam-content'); // Declared for use in initialNavPanelSetup
 
         // Modal Elements
         const submitConfirmationModalEl = document.getElementById('submitConfirmationModal');
@@ -465,7 +466,7 @@
         let examStartTimeMs = 0;
         let currentLoadedExamId = "";
         let currentLoadedExamTitle = "CBT Exam";
-        const EXAM_ID_TO_LOAD_DEFAULT = "Nursing Council Professional Exam";
+        const EXAM_ID_TO_LOAD_DEFAULT = "Nursing Council Professional Exam"; // Fallback if no ID in URL
         const SESSION_STORAGE_EXAM_STATE_KEY = 'cbtExamInProgressState';
         const SESSION_STORAGE_REVIEW_STATE_KEY = 'cbtExamReviewState';
 
@@ -497,7 +498,7 @@
                 if (examSubmitted) { stopExamTimer(); return; }
                 timeLeftInSeconds--;
                 updateTimerDisplay();
-                if (timeLeftInSeconds <= 0) submitExam(true);
+                if (timeLeftInSeconds <= 0) submitExam(true); // Auto-submit
             }, 1000);
         }
         function stopExamTimer() { clearInterval(examTimerInterval); }
@@ -535,18 +536,18 @@
                 if (questionFlags[index]) item.innerHTML = `${baseContent} <i class="fas fa-flag text-xs ml-0.5"></i>`;
                 else item.textContent = baseContent;
 
-                if (examSubmitted) {
+                if (examSubmitted) { // Review Mode
                     const questionId = allQuestions[index]?.id;
                     if (questionId && userAnswers[questionId] === allQuestions[index].correctOptionId) item.classList.add('review-correct');
                     else if (questionId && userAnswers[questionId] !== undefined) item.classList.add('review-incorrect');
                     else item.classList.add('review-skipped');
                     if (index === currentQuestionIndex && currentViewMode === 'single') item.classList.add('review-current');
-                } else {
+                } else { // Active Exam Mode
                     if (index === currentQuestionIndex && currentViewMode === 'single') item.classList.add('current');
                     switch(questionStatus[index]) {
                         case 'answered': item.classList.add('answered'); break;
                         case 'seen': item.classList.add('seen'); break;
-                        default: item.classList.add('unseen'); break;
+                        default: item.classList.add('unseen'); break; // 'unseen' or default
                     }
                 }
             });
@@ -574,20 +575,28 @@
             if (savedStateString) {
                 const savedState = JSON.parse(savedStateString);
                 if (savedState.inProgress && savedState.allQuestions && savedState.allQuestions.length > 0) {
+                    const examIdFromUrl = new URLSearchParams(window.location.search).get('examId');
+                    // If there's an examId in the URL, and it doesn't match the saved examId, this state is not for the current context.
+                    if (examIdFromUrl && savedState.currentLoadedExamId && savedState.currentLoadedExamId !== examIdFromUrl) {
+                        console.log(`Saved exam state for '${savedState.currentLoadedExamId}' does not match current URL examId '${examIdFromUrl}'. Ignoring saved state.`);
+                        return false; 
+                    }
+
                     currentLoadedExamId = savedState.currentLoadedExamId; currentLoadedExamTitle = savedState.currentLoadedExamTitle; allQuestions = savedState.allQuestions; userAnswers = savedState.userAnswers || {}; questionStatus = savedState.questionStatus || allQuestions.map(() => 'unseen'); questionFlags = savedState.questionFlags || allQuestions.map(() => false); currentQuestionIndex = savedState.currentQuestionIndex || 0; examStartTimeMs = savedState.examStartTimeMs; totalExamTimeInSeconds = savedState.totalExamTimeInSeconds || (allQuestions.length * timePerQuestionInSeconds);
                     const elapsedTimeSinceStartMs = examStartTimeMs ? (Date.now() - examStartTimeMs) : 0;
                     const actualTimeLeftSeconds = totalExamTimeInSeconds - Math.floor(elapsedTimeSinceStartMs / 1000);
-                    if (actualTimeLeftSeconds <= 0 && examStartTimeMs > 0) { examSubmitted = false; submitExam(true); return true; }
+                    if (actualTimeLeftSeconds <= 0 && examStartTimeMs > 0) { examSubmitted = false; submitExam(true); return true; } // Time expired while away
                     timeLeftInSeconds = actualTimeLeftSeconds > 0 ? actualTimeLeftSeconds : (savedState.timeLeftInSeconds || totalExamTimeInSeconds);
                     currentViewMode = savedState.currentViewMode || 'single'; examSubmitted = false;
+                    
                     if(viewModeBtn) viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One';
                     if(submitExamEarlyBtn) submitExamEarlyBtn.disabled = false;
                     if(examTimerTopEl) examTimerTopEl.classList.remove('hidden');
                     renderQuestionNavigationPanel(); renderCurrentView(); updateNavigationButtons(); startExamTimer();
                     if(cbtPageContent) cbtPageContent.classList.remove('hidden'); if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
-                    return true;
+                    return true; // Successfully restored matching state
                 }
-            } return false;
+            } return false; // No valid or non-matching state found
         }
 
         function saveReviewState() {
@@ -599,6 +608,13 @@
             const savedReviewString = sessionStorage.getItem(SESSION_STORAGE_REVIEW_STATE_KEY);
             if (savedReviewString) {
                 const savedReview = JSON.parse(savedReviewString);
+                const examIdFromUrl = new URLSearchParams(window.location.search).get('examId');
+                 // If there's an examId in the URL, and it doesn't match the saved review examId, this state is not for the current context.
+                if (examIdFromUrl && savedReview.currentLoadedExamId && savedReview.currentLoadedExamId !== examIdFromUrl) {
+                    console.log(`Saved review state for '${savedReview.currentLoadedExamId}' does not match current URL examId '${examIdFromUrl}'. Ignoring saved review state.`);
+                    return false;
+                }
+
                 if (savedReview.isReviewMode && savedReview.allQuestions && savedReview.allQuestions.length > 0) {
                     currentLoadedExamId = savedReview.currentLoadedExamId; currentLoadedExamTitle = savedReview.currentLoadedExamTitle; allQuestions = savedReview.allQuestions; userAnswers = savedReview.userAnswers || {}; questionFlags = savedReview.questionFlags || allQuestions.map(() => false); questionStatus = savedReview.questionStatus || allQuestions.map(() => 'unseen'); examStartTimeMs = savedReview.examStartTimeMs; totalExamTimeInSeconds = savedReview.totalExamTimeInSeconds; examSubmitted = true;
                     renderResultsPage();
@@ -607,24 +623,30 @@
                 }
             } return false;
         }
-        function clearExamSessionStorage() { sessionStorage.removeItem(SESSION_STORAGE_EXAM_STATE_KEY); sessionStorage.removeItem(SESSION_STORAGE_REVIEW_STATE_KEY); }
+        function clearExamSessionStorage() { sessionStorage.removeItem(SESSION_STORAGE_EXAM_STATE_KEY); sessionStorage.removeItem(SESSION_STORAGE_REVIEW_STATE_KEY); console.log("Exam session storage cleared.");}
 
         // --- Core Exam Logic ---
         async function loadExam(examIdParam) {
             const urlParams = new URLSearchParams(window.location.search);
-            const examId = examIdParam || urlParams.get('examId') || EXAM_ID_TO_LOAD_DEFAULT;
+            // Prioritize examIdParam (passed directly), then URL, then default
+            const examId = examIdParam || urlParams.get('examId') || EXAM_ID_TO_LOAD_DEFAULT; 
 
             const loadingStatusTextEl = document.getElementById('loadingStatusText');
             if (!examId) { if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error: Exam ID missing."; if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden'); return; }
+            
+            console.log(`Attempting to load exam with ID: ${examId}`);
             if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Loading exam questions...";
-            currentLoadedExamId = examId;
+            currentLoadedExamId = examId; // Set the globally tracked exam ID
+
             try {
                 const examDocRef = doc(db, "cbtExams", examId); const examDocSnap = await getDoc(examDocRef);
                 if (examDocSnap.exists()) { currentLoadedExamTitle = examDocSnap.data().title || "CBT Exam"; timePerQuestionInSeconds = examDocSnap.data().timePerQuestion || 90; }
-                else { currentLoadedExamTitle = "CBT Exam (Default)"; }
+                else { currentLoadedExamTitle = "CBT Exam (Not Found)"; console.warn(`Exam document with ID '${examId}' not found.`); }
+                
                 const questionsRef = collection(db, "cbtExams", examId, "questions"); const qQuery = query(questionsRef); const querySnapshot = await getDocs(qQuery);
                 allQuestions = []; questionStatus = []; questionFlags = [];
                 querySnapshot.forEach((doc) => { allQuestions.push({ id: doc.id, ...doc.data() }); questionStatus.push('unseen'); questionFlags.push(false); });
+                
                 if (allQuestions.length > 0) {
                     currentQuestionIndex = 0; userAnswers = {}; examSubmitted = false; timeLeftInSeconds = 0; examStartTimeMs = 0; totalExamTimeInSeconds = 0; currentViewMode = 'single';
                     if(viewModeBtn) { viewModeBtn.textContent = "View All"; viewModeBtn.disabled = false; }
@@ -633,8 +655,12 @@
                     if(resultsViewWrapperEl) resultsViewWrapperEl.classList.add('hidden'); if(activeExamViewEl) activeExamViewEl.classList.remove('hidden'); if(quizContentAreaEl) quizContentAreaEl.innerHTML = ''; if(examBottomNavigationEl) examBottomNavigationEl.classList.remove('hidden');
                     renderQuestionNavigationPanel(); renderCurrentView(); updateNavigationButtons(); startExamTimer();
                     if(cbtPageContent) cbtPageContent.classList.remove('hidden'); if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
-                } else { if(loadingStatusTextEl) loadingStatusTextEl.textContent = "No questions for this exam."; if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden'); }
-            } catch (error) { console.error("Error loading exam questions for " + examId + ":", error); if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error loading exam. Try again."; if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); }
+                } else { 
+                    if(loadingStatusTextEl) loadingStatusTextEl.textContent = `No questions found for exam: ${currentLoadedExamTitle} (ID: ${examId}).`; 
+                    console.warn(`No questions found for exam ID: ${examId}`);
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden'); 
+                }
+            } catch (error) { console.error(`Error loading exam questions for ID '${examId}':`, error); if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Error loading exam. Please try again."; if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); }
         }
 
         function renderCurrentView() {
@@ -696,18 +722,33 @@
         if(toggleNavPanelBtn) {
             toggleNavPanelBtn.addEventListener('click', () => {
                 const isDesktop = window.innerWidth > 768;
+                const currentPanel = document.getElementById('question-navigation-panel'); // Fetch fresh
+                const currentMainContent = document.getElementById('main-exam-content'); // Fetch fresh
+                const currentToggleButton = document.getElementById('toggle-nav-panel-btn'); // Fetch fresh
+
+                if (!currentPanel || !currentMainContent || !currentToggleButton) return;
+
                 if (isDesktop) {
-                    questionNavigationPanelEl.classList.toggle('hidden-desktop');
-                    if (questionNavigationPanelEl.classList.contains('hidden-desktop')) {
-                         if(mainExamContentEl) mainExamContentEl.style.marginLeft = '0';
+                    currentPanel.classList.toggle('hidden-desktop');
+                    if (currentPanel.classList.contains('hidden-desktop')) {
+                         currentMainContent.style.marginLeft = '0';
+                         currentToggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+                         currentToggleButton.title = "Show Nav";
                     } else {
-                         if(mainExamContentEl) mainExamContentEl.style.marginLeft = questionNavigationPanelEl.offsetWidth + 'px';
+                         currentMainContent.style.marginLeft = currentPanel.offsetWidth + 'px';
+                         currentToggleButton.innerHTML = '<i class="fas fa-times"></i>';
+                         currentToggleButton.title = "Hide Nav";
                     }
                 } else { // Mobile
-                    questionNavigationPanelEl.classList.toggle('mobile-visible');
+                    currentPanel.classList.toggle('mobile-visible');
+                    if (currentPanel.classList.contains('mobile-visible')) {
+                        currentToggleButton.innerHTML = '<i class="fas fa-times"></i>';
+                        currentToggleButton.title = "Hide Nav";
+                    } else {
+                        currentToggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+                        currentToggleButton.title = "Show Nav";
+                    }
                 }
-                toggleNavPanelBtn.innerHTML = (questionNavigationPanelEl.classList.contains('hidden-desktop') || !questionNavigationPanelEl.classList.contains('mobile-visible')) ? '<i class="fas fa-bars"></i>' : '<i class="fas fa-times"></i>';
-                toggleNavPanelBtn.title = (questionNavigationPanelEl.classList.contains('hidden-desktop') || !questionNavigationPanelEl.classList.contains('mobile-visible')) ? "Show Nav" : "Hide Nav";
             });
         }
         if (viewModeBtn) { viewModeBtn.addEventListener('click', () => { if (examSubmitted) { currentViewMode = currentViewMode === 'single' ? 'all' : 'single'; viewModeBtn.textContent = currentViewMode === 'single' ? "All (Review)" : "One by One (Review)"; viewModeBtn.title = currentViewMode === 'single' ? "All Questions Review" : "One by One Review"; if (currentViewMode === 'single') { currentQuestionIndex = 0; displaySingleReviewedQuestion(); } else { renderDetailedReview(document.querySelector('#review-filter-buttons .btn-filter.active')?.dataset.filter || 'all'); } return; } currentViewMode = currentViewMode === 'single' ? 'all' : 'single'; viewModeBtn.textContent = currentViewMode === 'single' ? 'View All' : 'One by One'; viewModeBtn.title = currentViewMode === 'single' ? 'All Questions View' : 'One by One View'; renderCurrentView(); updateNavigationButtons(); saveExamState(); }); }
@@ -741,7 +782,7 @@
             const percentageContainerClass = parseFloat(percentageScore) >= 50 ? 'score-percentage-container pass' : 'score-percentage-container fail';
             let summaryHTML = `<div class="results-summary-card"><h2 class="text-2xl">Exam Results</h2><p class="text-xs text-gray-500 mb-2">For: ${currentLoadedExamTitle} | Date: ${examDate}</p>${timedOut ? "<p class='text-red-500 font-semibold mb-2 text-sm'>Time's up! Auto-submitted.</p>" : ""}<div class="score-display-grid"><div class="score-overall"><div class="score-value-main">${score}/${allQuestions.length}</div><div class="${percentageContainerClass} mt-1"><p class="score-percentage-main">${percentageScore}%</p></div></div><ul class="score-breakdown-list text-xs"><li><span class="label correct">Correct</span><span class="count">${correctCount}</span></li><li><span class="label wrong">Wrong</span><span class="count">${wrongCount}</span></li><li><span class="label skipped">Skipped</span><span class="count">${skippedCount}</span></li><li class="pt-1 mt-1 border-t"><span class="label">Time Spent</span><span class="count">${timeSpentFormatted}</span></li><li><span class="label">Total Time</span><span class="count">${formatTime(totalExamTimeInSeconds)}</span></li></ul></div><div class="mt-4"><button id="retakeExamBtnResults" class="btn btn-primary !text-xs">Retake</button><a href="index.html" class="btn btn-secondary !text-xs mt-2 sm:mt-0 sm:ml-2">Home</a></div></div><div id="review-filter-buttons" class="my-3 flex justify-center gap-1 flex-wrap"><button class="btn btn-filter active" data-filter="all">All</button><button class="btn btn-filter" data-filter="correct">Correct</button><button class="btn btn-filter" data-filter="incorrect">Incorrect</button><button class="btn btn-filter" data-filter="skipped">Skipped</button><button class="btn btn-filter" data-filter="flagged">Flagged</button></div><div id="detailed-results-container"></div>`;
             if(resultsViewWrapperEl) resultsViewWrapperEl.innerHTML = summaryHTML;
-            const retakeBtn = document.getElementById('retakeExamBtnResults'); if (retakeBtn) retakeBtn.addEventListener('click', () => { clearExamSessionStorage(); if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); const loadingStatusTextEl = document.getElementById('loadingStatusText'); if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Restarting..."; loadExam(currentLoadedExamId || EXAM_ID_TO_LOAD_DEFAULT); });
+            const retakeBtn = document.getElementById('retakeExamBtnResults'); if (retakeBtn) retakeBtn.addEventListener('click', () => { clearExamSessionStorage(); if(cbtLoadingMessage) cbtLoadingMessage.classList.remove('hidden'); if(cbtPageContent) cbtPageContent.classList.add('hidden'); const loadingStatusTextEl = document.getElementById('loadingStatusText'); if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Restarting..."; loadExam(currentLoadedExamId); }); // Pass currentLoadedExamId for retake
             document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(button => button.addEventListener('click', (e) => { document.querySelectorAll('#review-filter-buttons .btn-filter').forEach(btn => btn.classList.remove('active')); e.target.classList.add('active'); renderDetailedReview(e.target.dataset.filter); }));
             renderDetailedReview('all'); saveReviewState();
         }
@@ -770,45 +811,81 @@
 
         // --- User Authentication and Subscription Check ---
         async function checkUserSubscription(userId) { if (!userId) return false; try { const subscriptionsRef = collection(db, "userSubscriptions", userId, "activePlans"); const now = Timestamp.now(); const q = query(subscriptionsRef, where("status", "==", "active"), where("expiryDate", ">", now)); const querySnapshot = await getDocs(q); return !querySnapshot.empty; } catch (error) { console.error("cbt_exam.html - Error checking subscription:", error); return false; } }
+        
         onAuthStateChanged(auth, async (user) => {
             const loadingStatusTextEl = document.getElementById('loadingStatusText');
             if (user) {
                 if(navUserEmailCBT) { navUserEmailCBT.textContent = user.email; navUserEmailCBT.classList.add('active'); }
                 if(navLogoutCBT) navLogoutCBT.classList.add('active');
                 if(loadingStatusTextEl) loadingStatusTextEl.textContent = "Verifying subscription...";
+                
                 const hasActiveSubscription = await checkUserSubscription(user.uid);
-                if (hasActiveSubscription) { if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden'); if (loadSavedReviewState()) {} else if (loadSavedExamState()) {} else { clearExamSessionStorage(); await loadExam(); } }
-                else { if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.remove('hidden'); }
-            } else {
+                if (hasActiveSubscription) {
+                    if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
+                    
+                    const examIdFromUrl = new URLSearchParams(window.location.search).get('examId');
+
+                    if (loadSavedReviewState()) { // This now also checks if review state matches examIdFromUrl
+                        console.log("Loaded saved review state matching current exam context.");
+                    } else if (loadSavedExamState()) { // This now also checks if in-progress state matches examIdFromUrl
+                        console.log("Loaded saved in-progress exam state matching current exam context.");
+                    } else { 
+                        console.log("No valid saved state found or saved state mismatch. Loading exam from URL or default.");
+                        clearExamSessionStorage(); 
+                        await loadExam(examIdFromUrl); // Pass examIdFromUrl explicitly
+                    }
+                } else { 
+                    if(cbtPageContent) cbtPageContent.classList.add('hidden'); 
+                    if(cbtLoadingMessage) cbtLoadingMessage.classList.add('hidden'); 
+                    if(accessDeniedMessage) accessDeniedMessage.classList.remove('hidden'); 
+                }
+            } else { // User is not signed in
                 if(navUserEmailCBT) navUserEmailCBT.classList.remove('active'); if(navLogoutCBT) navLogoutCBT.classList.remove('active');
                 if(cbtPageContent) cbtPageContent.classList.add('hidden'); if(accessDeniedMessage) accessDeniedMessage.classList.add('hidden');
                 if(cbtLoadingMessage) { cbtLoadingMessage.classList.remove('hidden'); if(loadingStatusTextEl) loadingStatusTextEl.innerHTML = '<p class="text-lg text-red-500">Access Denied. Please log in. Redirecting...</p>'; }
                 setTimeout(() => { sessionStorage.setItem('redirectAfterLogin', window.location.href); window.location.href = 'login.html'; }, 2500);
             }
         });
+
         if (navLogoutCBT) navLogoutCBT.addEventListener('click', () => { clearExamSessionStorage(); signOut(auth).catch((error) => console.error("Sign out error:", error)); });
 
         // Initial setup for nav panel visibility based on screen size
         function initialNavPanelSetup() {
             const isDesktop = window.innerWidth > 768;
-            if (questionNavigationPanelEl) {
-                if (isDesktop) {
-                    questionNavigationPanelEl.classList.remove('hidden-desktop', 'mobile-visible'); // Ensure it's visible by default on desktop
-                    if(mainExamContentEl) mainExamContentEl.style.marginLeft = questionNavigationPanelEl.offsetWidth + 'px';
-                    toggleNavPanelBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    toggleNavPanelBtn.title = "Hide Nav";
+            // Robustly get elements inside the function
+            const panel = document.getElementById('question-navigation-panel');
+            const mainContent = document.getElementById('main-exam-content'); // Renamed from mainExamContentEl for clarity in this function
+            const toggleButton = document.getElementById('toggle-nav-panel-btn');
 
-                } else { // Mobile
-                    questionNavigationPanelEl.classList.remove('hidden-desktop');
-                    questionNavigationPanelEl.classList.remove('mobile-visible'); // Start hidden on mobile
-                    if(mainExamContentEl) mainExamContentEl.style.marginLeft = '0';
-                    toggleNavPanelBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                    toggleNavPanelBtn.title = "Show Nav";
+            if (!panel || !mainContent || !toggleButton) {
+                // console.warn("initialNavPanelSetup: One or more required layout elements not found. Skipping.");
+                return; 
+            }
+
+            if (isDesktop) {
+                panel.classList.remove('hidden-desktop', 'mobile-visible');
+                if (panel.offsetWidth > 0) { // Check if panel is actually taking space
+                    mainContent.style.marginLeft = panel.offsetWidth + 'px';
+                } else {
+                     mainContent.style.marginLeft = '0'; // If panel somehow has no width, don't apply margin
                 }
+                toggleButton.innerHTML = '<i class="fas fa-times"></i>';
+                toggleButton.title = "Hide Nav";
+            } else { // Mobile
+                panel.classList.remove('hidden-desktop'); // Ensure desktop hiding class is off
+                // mobile-visible class will be handled by the toggle button itself
+                if (!panel.classList.contains('mobile-visible')) { // If it's not meant to be visible
+                    panel.style.maxHeight = '0px'; // Keep it collapsed by default on mobile if not 'mobile-visible'
+                    panel.style.opacity = '0';
+                    panel.style.padding = '0';
+                }
+                mainContent.style.marginLeft = '0';
+                toggleButton.innerHTML = panel.classList.contains('mobile-visible') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                toggleButton.title = panel.classList.contains('mobile-visible') ? "Hide Nav" : "Show Nav";
             }
         }
         window.addEventListener('load', initialNavPanelSetup);
-        window.addEventListener('resize', initialNavPanelSetup); // Re-evaluate on resize
+        window.addEventListener('resize', initialNavPanelSetup);
 
     </script>
 </body>
